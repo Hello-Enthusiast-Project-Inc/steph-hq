@@ -5016,6 +5016,16 @@ const MEALS_API = '/api/meals';
 const MEALS_KEY = 'lumen-steph-2026';
 
 function renderMealLogFromData(meals) {
+  // Flatten any nested records (e.g. {key,data:[...]} format from Lumen posts)
+  const flat = [];
+  (meals || []).forEach(m => {
+    if (m.data && Array.isArray(m.data)) {
+      m.data.forEach(item => { if (item.date) flat.push(item); });
+    } else if (m.date) {
+      flat.push(m);
+    }
+  });
+  meals = flat;
   mealData = meals;
   mealLogDate = mealLogDate || new Date().toLocaleDateString('en-CA');
   updateMealDateNav();
