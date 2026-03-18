@@ -8666,10 +8666,15 @@ function ppOpenUnit(year, idx) {
     <a href="${amzBase}${encodeURIComponent(b.t+' '+b.a)}" onclick="event.preventDefault();window.open('${amzBase}${encodeURIComponent(b.t+' '+b.a)}')" style="font-size:11px;color:var(--brown);font-family:-apple-system,sans-serif;text-decoration:none;padding:4px 8px;background:var(--card);border-radius:8px;flex-shrink:0;margin-left:8px;">Amazon →</a>
   </div>`).join('');
 
-  const daysHtml = u.days.map((d,di)=>`<div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;">
-    <div style="font-size:12px;font-weight:700;color:var(--brown);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:4px;">${d.day.toUpperCase()} · ${d.focus}</div>
-    <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:4px;">📖 ${d.book}</div>
-    <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;">🎯 ${d.activity}</div>
+  const daysHtml = u.days.map((d,di)=>`<div id="pp-day-${di}" style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;cursor:pointer;" onclick="ppToggleDay(${di})">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-size:12px;font-weight:700;color:var(--brown);letter-spacing:0.5px;font-family:-apple-system,sans-serif;">${d.day.toUpperCase()} · ${d.focus}</div>
+      <div id="pp-day-arrow-${di}" style="font-size:14px;color:var(--brown);transition:transform 0.2s;">▸</div>
+    </div>
+    <div id="pp-day-body-${di}" style="display:none;margin-top:10px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:6px;">📖 ${d.book}</div>
+      <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;">🎯 ${d.activity}</div>
+    </div>
   </div>`).join('');
 
   const suppliesHtml = u.supplies.map(s=>`<div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;padding:5px 0;border-bottom:1px solid rgba(0,0,0,0.05);">• ${s}</div>`).join('');
@@ -8687,6 +8692,14 @@ function ppOpenUnit(year, idx) {
     <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📅 DAILY LESSONS</div>
     ${daysHtml}`;
   showScreen('kids-rush-pp-unit');
+}
+function ppToggleDay(di) {
+  const body = document.getElementById('pp-day-body-' + di);
+  const arrow = document.getElementById('pp-day-arrow-' + di);
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (arrow) arrow.style.transform = isOpen ? '' : 'rotate(90deg)';
 }
 function renderPP() {
   renderPPCurrentUnit();
