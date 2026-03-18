@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v265 2026-03-17 -->
+<!-- v266 2026-03-17 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4960,10 +4960,10 @@ async function refreshMealPlan() {
   if (btn) { btn.textContent = '✅ Sent!'; btn.disabled = true; }
   if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:16px 0;">Request sent to Lumen — she'll message you with a new plan shortly 🌿</div>`;
   try {
-    await fetch(`${USERDATA_API}`, {
+    await fetch(`https://steph-hq-deploy.vercel.app/api/notify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-lumen-key': USERDATA_KEY },
-      body: JSON.stringify({ key: 'steph-meal-plan-refresh', data: { requestedAt: new Date().toISOString(), handled: false } })
+      body: JSON.stringify({ message: '🌿 New meal plan please!' })
     });
   } catch(e) {
     if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:12px 0;">Couldn't reach Lumen right now — try again soon.</div>`;
