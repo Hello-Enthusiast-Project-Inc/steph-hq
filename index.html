@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v264 2026-03-13 -->
+<!-- v265 2026-03-17 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -748,10 +748,7 @@
       <span style="font-size:28px;">🌟</span>
       <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Long Term Goals</span>
     </div>
-    <div class="tile" onclick="showScreen('wellness')" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;">
-      <span style="font-size:28px;">🌿</span>
-      <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Wellness</span>
-    </div>
+
     <div class="tile" onclick="showScreen('gifts')" style="display:flex;flex-direction:row;align-items:center;gap:12px;padding:18px 20px;border-radius:20px;">
       <span style="font-size:28px;">🎁</span>
       <span style="font-family:-apple-system,sans-serif;font-size:15px;font-weight:600;color:var(--text);">Gift Ideas</span>
@@ -1818,101 +1815,6 @@
 
 <!-- APPLIANCES -->
 <!-- WELLNESS HOME -->
-<div class="screen" id="screen-wellness">
-  <div class="header">
-    <span class="back" onclick="showScreen('todo')">← To-Do</span>
-    <h1>Wellness 🌿</h1>
-  </div>
-  <div class="grid">
-    <div class="tile" onclick="showScreen('wellness-goals')">
-      <span class="tile-emoji">🎯</span>
-      <span class="tile-label">Goals</span>
-    </div>
-    <div class="tile" onclick="showScreen('wellness-selfcare')">
-      <span class="tile-emoji">🧖</span>
-      <span class="tile-label">Self Care</span>
-    </div>
-    <div class="tile" onclick="showScreen('wellness-mood')">
-      <span class="tile-emoji">💭</span>
-      <span class="tile-label">Mood Tracker</span>
-    </div>
-  </div>
-</div>
-
-<!-- WELLNESS: GOALS -->
-<div class="screen" id="screen-wellness-goals">
-  <div class="header">
-    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
-    <h1>Goals 🎯</h1>
-  </div>
-  <div id="wellness-goals-section" class="list-section">
-    <div id="wellness-goals-list"></div>
-  </div>
-  <div class="add-row">
-    <input class="add-input" id="wellness-goals-input" placeholder="Add a goal..." onkeydown="if(event.key==='Enter')addWellness('goals')">
-    <button class="add-btn" onclick="addWellness('goals')">Add</button>
-  </div>
-</div>
-
-<!-- WELLNESS: SELF CARE -->
-<div class="screen" id="screen-wellness-selfcare">
-  <div class="header">
-    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
-    <h1>Self Care 🧖</h1>
-  </div>
-  <div id="wellness-selfcare-section" class="list-section">
-    <div id="wellness-selfcare-list"></div>
-  </div>
-  <div class="add-row">
-    <input class="add-input" id="wellness-selfcare-input" placeholder="Add self care item..." onkeydown="if(event.key==='Enter')addWellness('selfcare')">
-    <button class="add-btn" onclick="addWellness('selfcare')">Add</button>
-  </div>
-</div>
-
-<!-- WELLNESS: MOOD TRACKER -->
-<div class="screen" id="screen-wellness-mood">
-  <div class="header">
-    <span class="back" onclick="showScreen('wellness')">← Wellness</span>
-    <h1>Daily Check-in 💭</h1>
-  </div>
-  <div class="list-section" style="padding-bottom:0;">
-
-    <!-- MOOD -->
-    <h2 style="margin-bottom:10px;">How are you feeling? 🌊</h2>
-    <div style="display:flex;gap:8px;padding-bottom:16px;">
-      <button onclick="selectMood('😔','Low')" id="mood-btn-1" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:12px 4px;font-size:24px;cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">😔<br><span style="font-size:10px;color:var(--text-light);">Low</span></button>
-      <button onclick="selectMood('😐','Okay')" id="mood-btn-2" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:12px 4px;font-size:24px;cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">😐<br><span style="font-size:10px;color:var(--text-light);">Okay</span></button>
-      <button onclick="selectMood('🙂','Good')" id="mood-btn-3" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:12px 4px;font-size:24px;cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">🙂<br><span style="font-size:10px;color:var(--text-light);">Good</span></button>
-      <button onclick="selectMood('😊','Great')" id="mood-btn-4" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:12px 4px;font-size:24px;cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">😊<br><span style="font-size:10px;color:var(--text-light);">Great</span></button>
-      <button onclick="selectMood('🤩','Amazing')" id="mood-btn-5" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:12px 4px;font-size:24px;cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">🤩<br><span style="font-size:10px;color:var(--text-light);">Amazing</span></button>
-    </div>
-
-    <!-- ENERGY -->
-    <h2 style="margin-bottom:10px;">Energy level ⚡</h2>
-    <div style="display:flex;gap:8px;padding-bottom:16px;">
-      <button onclick="selectEnergy('Low')" id="energy-btn-low" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:10px 4px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">🪫 Low</button>
-      <button onclick="selectEnergy('Medium')" id="energy-btn-medium" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:10px 4px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">⚡ Medium</button>
-      <button onclick="selectEnergy('High')" id="energy-btn-high" style="flex:1;background:var(--card);border:2px solid transparent;border-radius:16px;padding:10px 4px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;font-family:-apple-system,sans-serif;transition:border 0.15s;">🔋 High</button>
-    </div>
-
-    <!-- GRATEFUL -->
-    <h2 style="margin-bottom:8px;">Grateful for... 🙏</h2>
-    <textarea id="mood-grateful" placeholder="What are you grateful for today?" style="width:100%;background:var(--card);border:none;border-radius:16px;padding:14px;font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;height:70px;margin-bottom:12px;box-sizing:border-box;"></textarea>
-
-    <!-- FREE WRITE -->
-    <h2 style="margin-bottom:8px;">How I&apos;m feeling... 📝</h2>
-    <textarea id="mood-freewrite" placeholder="Anything on your mind... (optional)" style="width:100%;background:var(--card);border:none;border-radius:16px;padding:14px;font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;height:80px;margin-bottom:16px;box-sizing:border-box;"></textarea>
-
-    <button onclick="saveCheckin()" style="width:100%;background:var(--brown);color:#fff;border:none;border-radius:16px;padding:14px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;margin-bottom:24px;">Save Day ✨</button>
-  </div>
-
-  <!-- HISTORY -->
-  <div class="list-section">
-    <h2 style="margin-bottom:10px;">History</h2>
-    <div id="mood-log-list"></div>
-  </div>
-</div>
-
 <!-- THRIVE HOME -->
 <div class="screen" id="screen-thrive">
   <div class="header">
@@ -2699,7 +2601,7 @@ const TODO_ITEMS = [
   { id: 114, text: 'Add Rush\'s fingerprint to door + left thumb', done: false, cat: '🏠 House & Organizing', time: '5min' },
   { id: 115, text: 'Hot glue gun baby gate', done: false, cat: '🏠 House & Organizing', time: '10min' },
   { id: 116, text: 'Organize kitchen drawers', done: false, cat: '🏠 House & Organizing', time: '30min' },
-  { id: 116, text: 'Book hair appointment — deadline March 3rd', done: false, cat: '💅 Personal', time: '5min' },
+  { id: 116, text: 'Book hair appointment — deadline March 3rd', done: false, cat: '📅 Day to Day', time: '5min' },
   { id: 117, text: 'Book Hayes 6-month appointment (Celine Quinn)', done: false, cat: '👶 Kids & Health', time: '5min' },
   { id: 118, text: 'Book Hayes 9-month appointment (Dr. Wong)', done: false, cat: '👶 Kids & Health', time: '5min' },
   { id: 119, text: 'Send Rush and Hayes birth photos to Lumen for Chatbooks', done: false, cat: '📸 Photos', time: '5min' },
@@ -2713,6 +2615,8 @@ const TODO_ITEMS = [
   { id: 127, text: 'Buy Kristin Ess Weightless Shine Leave-In — Shoppers', done: false, cat: '🛒 Shopping', time: '10min' },
   { id: 128, text: 'Buy Not Your Mother\'s Curl Talk Mousse — Shoppers', done: false, cat: '🛒 Shopping', time: '10min' },
   { id: 129, text: 'Build closet boxes for linen closet', done: false, cat: '🏠 House & Organizing', time: '1hr' },
+  { id: 130, text: "Send Joel's birthday invites", done: false, cat: '📅 Day to Day', time: '10min' },
+  { id: 131, text: 'Edit and send baptism invites', done: false, cat: '📅 Day to Day', time: '10min' },
 ];
 
 const GROCERY_ITEMS = [
@@ -3658,7 +3562,7 @@ function saveEdit(listId, id, text) {
 // ---- TODO ----
 const TODO_CATS = [
   { cat: '🏠 House & Organizing', emoji: '🏠' },
-  { cat: '💅 Personal', emoji: '💅' },
+  { cat: '📅 Day to Day', emoji: '💅' },
   { cat: '👶 Kids & Health', emoji: '👶' },
   { cat: '📸 Photos', emoji: '📸' },
   { cat: '🛒 Shopping', emoji: '🛒' },
@@ -4802,23 +4706,23 @@ function deleteMoodEntry(id) {
 
 // ---- MEAL TABS ----
 // ---- MEAL PLAN DATA (replaced by Lumen cron each Sunday) ----
-const MEAL_PLAN_DATA = { week: 'Mar 9–11, 2026', days: [
+const MEAL_PLAN_DATA = { week: 'Mar 16–18, 2026', days: [
   { day: 'Monday', meals: [
-    { type: 'Breakfast', name: 'Greek yogurt parfait — Liberté 11%, raspberries, Carbonaut granola + 1 scoop protein powder stirred in', url: null, recipe: 'Ingredients:\n- ¾ cup Liberté 11% Greek yogurt\n- 1 scoop vanilla protein powder\n- ½ cup raspberries\n- ⅓ cup Carbonaut granola\n\nMethod:\n1. Stir protein powder into yogurt until smooth.\n2. Layer in a bowl or jar: yogurt, then raspberries, then granola on top.\n3. Eat immediately so granola stays crunchy.', macros: '~420 cal · 38g protein · 30g carbs · 16g fat' },
-    { type: 'Lunch', name: 'Napa Chicken Salad with Sesame Dressing', url: 'https://pinchofyum.com/napa-chicken-salad-with-sesame-dressing', recipe: null, desc: 'Pinch of Yum — rotisserie chicken, napa cabbage, cashews, homemade sesame dressing', macros: '~430 cal · 34g protein · 28g carbs · 18g fat' },
-    { type: 'Dinner', name: 'HBH Thai Turkey Meatballs in Coconut Curry Sauce', url: 'https://www.halfbakedharvest.com/thai-turkey-meatballs/', recipe: null, desc: 'Half Baked Harvest — ground turkey meatballs in creamy red curry coconut sauce with bell peppers, served over jasmine rice', macros: '~580 cal · 42g protein · 45g carbs · 20g fat' }
+    { type: 'Breakfast', name: 'Greek yogurt parfait — Liberté 11%, sliced strawberries, granola + protein powder stirred in', url: null, recipe: 'Ingredients:\n- ¾ cup Liberté 11% Greek yogurt\n- 1 scoop vanilla protein powder\n- ½ cup sliced fresh strawberries\n- ⅓ cup granola\n- 1 tsp honey (optional)\n\nMethod:\n1. Stir protein powder into yogurt until smooth.\n2. Layer in a bowl: yogurt base, strawberries, granola on top.\n3. Drizzle with honey if using. Eat immediately so granola stays crunchy.', macros: '~420 cal · 38g protein · 32g carbs · 15g fat' },
+    { type: 'Lunch', name: 'Spicy Chicken Meal Prep Bowls with Rice & Beans', url: 'https://pinchofyum.com/spicy-chicken-meal-prep', recipe: null, desc: 'Pinch of Yum — spiced chicken thighs over rice and beans with a bright cilantro sauce. Meal-prep friendly and so satisfying.', macros: '~470 cal · 42g protein · 38g carbs · 14g fat' },
+    { type: 'Dinner', name: 'One Pot Marry Me Chicken Pasta', url: 'https://www.halfbakedharvest.com/marry-me-chicken-pasta/', recipe: null, desc: 'Half Baked Harvest — pan-seared Italian chicken in a creamy sun-dried tomato sauce with pasta and spinach. One pot, done in 30 min.', macros: '~580 cal · 44g protein · 38g carbs · 22g fat' }
   ]},
   { day: 'Tuesday', meals: [
-    { type: 'Breakfast', name: 'Protein smoothie — vanilla protein, frozen banana, almond butter, oat milk, spinach', url: null, recipe: 'Ingredients:\n- 1 scoop vanilla protein powder\n- 1 frozen banana\n- 1 tbsp almond butter\n- 1 cup oat milk\n- 1 large handful baby spinach\n- 4–5 ice cubes\n\nMethod:\n1. Add everything to a blender.\n2. Blend until smooth and creamy.\n3. Add more oat milk if too thick.', macros: '~420 cal · 32g protein · 42g carbs · 12g fat' },
-    { type: 'Lunch', name: 'Chopped Thai-Inspired Chicken Salad', url: 'https://pinchofyum.com/chopped-thai-chicken-salad', recipe: null, desc: 'Pinch of Yum — crunchy cabbage, chicken, peanut dressing, so fresh and filling', macros: '~400 cal · 33g protein · 28g carbs · 17g fat' },
-    { type: 'Dinner', name: 'HBH Sheet Pan Lemon Balsamic Chicken & Potatoes', url: 'https://www.halfbakedharvest.com/lemon-balsamic-chicken-and-potatoes/', recipe: null, desc: 'Half Baked Harvest — garlic-balsamic chicken roasted with baby potatoes, finished with herbed olives and feta tzatziki', macros: '~560 cal · 45g protein · 38g carbs · 18g fat' }
+    { type: 'Breakfast', name: 'Protein smoothie — vanilla protein, frozen banana, almond butter, oat milk, spinach', url: null, recipe: 'Ingredients:\n- 1 scoop vanilla protein powder\n- 1 frozen banana\n- 1 tbsp almond butter\n- 1 cup oat milk\n- 1 large handful baby spinach\n- 4–5 ice cubes\n\nMethod:\n1. Add everything to a blender.\n2. Blend until smooth and creamy.\n3. Add extra oat milk if too thick. Drink immediately.', macros: '~420 cal · 32g protein · 42g carbs · 12g fat' },
+    { type: 'Lunch', name: 'Crockpot Chicken Bowls with Yellow Rice & Cilantro Pesto', url: 'https://pinchofyum.com/crockpot-chicken-bowls-with-yellow-rice-and-cilantro-pesto', recipe: null, desc: 'Pinch of Yum — slow cooker shredded chicken over golden turmeric rice with a bright cilantro pesto drizzle.', macros: '~460 cal · 40g protein · 36g carbs · 15g fat' },
+    { type: 'Dinner', name: 'One Pan Baked Pesto Orzo with Chicken Meatballs', url: 'https://www.ambitiouskitchen.com/chicken-meatball-pesto-orzo/', recipe: null, desc: 'Ambitious Kitchen — zucchini-packed chicken meatballs baked over creamy pesto orzo with mushrooms and lemon. A true crowd pleaser.', macros: '~560 cal · 46g protein · 40g carbs · 20g fat' }
   ]},
   { day: 'Wednesday', meals: [
-    { type: 'Breakfast', name: 'High-protein overnight oats with almond butter & berries', url: 'https://www.ambitiouskitchen.com/peanut-butter-overnight-oats/', recipe: null, desc: 'Ambitious Kitchen — swap PB for almond butter, top with raspberries or blueberries', macros: '~400 cal · 28g protein · 44g carbs · 14g fat' },
-    { type: 'Lunch', name: 'Ground beef & veggie rice bowl with avocado', url: null, recipe: 'Ingredients:\n- 150g lean ground beef (90/10)\n- ¾ cup cooked brown rice\n- ½ avocado, sliced\n- ½ cup shredded red cabbage\n- ½ cup diced cucumber\n- 2 tbsp soy sauce\n- 1 tsp sesame oil\n- 1 tsp sriracha (optional)\n- 1 green onion, sliced\n- Sesame seeds\n\nMethod:\n1. Brown ground beef in a pan over med-high heat, season with salt, pepper, garlic powder.\n2. Add soy sauce and sesame oil, stir and cook 1 more min.\n3. Assemble bowls: rice, beef, cabbage, cucumber, avocado.\n4. Drizzle with sriracha, top with green onion and sesame seeds.', macros: '~480 cal · 36g protein · 38g carbs · 18g fat' },
-    { type: 'Dinner', name: 'HBH Weeknight Sticky Ginger Sesame Chicken Meatballs', url: 'https://www.halfbakedharvest.com/weeknight-sticky-ginger-sesame-chicken-meatballs/', recipe: null, desc: 'Half Baked Harvest — ground chicken (or turkey) meatballs in a sticky sesame-ginger soy sauce, served over rice with broccoli', macros: '~560 cal · 44g protein · 42g carbs · 18g fat' }
+    { type: 'Breakfast', name: 'High-protein overnight oats — almond butter, banana, chia seeds', url: null, recipe: 'Ingredients:\n- ½ cup rolled oats\n- 1 scoop vanilla protein powder\n- 1 tbsp almond butter\n- 1 tbsp chia seeds\n- 1 cup oat milk\n- ½ banana, sliced\n- Pinch of cinnamon\n\nMethod:\n1. The night before: stir oats, protein powder, chia seeds, oat milk, and cinnamon together in a jar.\n2. Cover and refrigerate overnight.\n3. In the morning, top with almond butter and sliced banana.', macros: '~420 cal · 32g protein · 46g carbs · 14g fat' },
+    { type: 'Lunch', name: 'Crispy Chicken Tikka Bowls with Mint Sauce', url: 'https://pinchofyum.com/crispy-chicken-tikka-bowls-with-mint-sauce', recipe: null, desc: 'Pinch of Yum — crispy spiced chicken tikka served over rice or quinoa with a cool mint yogurt sauce. Incredible flavour.', macros: '~480 cal · 44g protein · 34g carbs · 16g fat' },
+    { type: 'Dinner', name: 'HBH Crockpot French Onion Chicken and Orzo', url: 'https://www.halfbakedharvest.com/french-onion-chicken-and-orzo/', recipe: null, desc: 'Half Baked Harvest — slow cooker French onion chicken in white wine and herbs, served over creamy parmesan orzo. So cozy.', macros: '~570 cal · 46g protein · 38g carbs · 20g fat' }
   ]}
-]}; // replaced by Lumen each week
+]}; // replaced by Lumen each Sunday
 
 async function requestMealPlanRefresh() {
   const btn = document.getElementById('plan-refresh-btn');
@@ -5053,46 +4957,22 @@ async function loadMealPlan() {
 async function refreshMealPlan() {
   const btn = document.getElementById('meal-plan-refresh-btn');
   const el = document.getElementById('meal-plan-content');
-  if (btn) { btn.textContent = '⏳'; btn.disabled = true; }
-  if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:16px 0;">Asking Lumen for a new plan... 🌿</div>`;
+  if (btn) { btn.textContent = '✅ Sent!'; btn.disabled = true; }
+  if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:16px 0;">Request sent to Lumen — she'll message you with a new plan shortly 🌿</div>`;
   try {
-    // Flag to Lumen that a refresh was requested
     await fetch(`${USERDATA_API}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-lumen-key': USERDATA_KEY },
-      body: JSON.stringify({ key: 'steph-meal-plan-refresh', data: { requestedAt: new Date().toISOString() } })
+      body: JSON.stringify({ key: 'steph-meal-plan-refresh', data: { requestedAt: new Date().toISOString(), handled: false } })
     });
-    // Poll for updated plan (up to 30s)
-    let attempts = 0;
-    const existing = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
-    const existingUpdated = existing ? existing.updatedAt : null;
-    while (attempts < 10) {
-      await new Promise(r => setTimeout(r, 3000));
-      const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
-      const data = await res.json();
-      const newPlan = data['steph-meal-plan'];
-      if (newPlan && newPlan.updatedAt !== existingUpdated) {
-        const oldPlan2 = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
-        if (oldPlan2) {
-          const hist2 = JSON.parse(localStorage.getItem('steph-meal-plan-history') || '[]');
-          hist2.unshift(oldPlan2);
-          const trimmed2 = hist2.slice(0, 5);
-          localStorage.setItem('steph-meal-plan-history', JSON.stringify(trimmed2));
-          saveUserdata('steph-meal-plan-history', trimmed2);
-        }
-        localStorage.setItem('steph-meal-plan', JSON.stringify(newPlan));
-        await loadMealPlan();
-        break;
-      }
-      attempts++;
-    }
-    if (attempts >= 10) {
-      if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:12px 0;">Plan request sent to Lumen — check back in a moment! 🌿</div>`;
-    }
   } catch(e) {
     if (el) el.innerHTML = `<div style="color:var(--text-light);text-align:center;padding:12px 0;">Couldn't reach Lumen right now — try again soon.</div>`;
+    if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
+    return;
   }
-  if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
+  setTimeout(() => {
+    if (btn) { btn.textContent = '↻ Refresh'; btn.disabled = false; }
+  }, 5000);
 }
 
 function showAddTemplateSheet() {
