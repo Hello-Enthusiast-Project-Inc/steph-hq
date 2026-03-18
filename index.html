@@ -17368,15 +17368,34 @@ function deletePlaydate(id) {
 const USERDATA_API = 'https://steph-hq-deploy.vercel.app/api/userdata';
 const USERDATA_KEY = 'lumen-steph-2026';
 
+// --- Race condition fix (Option A) ---
+// Track which keys have a pending save in flight.
+// loadUserdata() will not overwrite those keys until the save completes.
+const _pendingSaveKeys = new Set();
+
 async function saveUserdata(key, data) {
+  // 1. Write to localStorage immediately (optimistic)
   localStorage.setItem(key, JSON.stringify(data));
+  // 2. Mark this key as pending so loadUserdata won't overwrite it
+  _pendingSaveKeys.add(key);
   try {
-    await fetch(USERDATA_API, {
+    const res = await fetch(USERDATA_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-lumen-key': USERDATA_KEY },
       body: JSON.stringify({ key, data })
     });
-  } catch(e) {}
+    const ok = res.ok;
+    showSaveToast(ok);
+    if (!ok) {
+      // Save failed — keep in localStorage, will sync on next load
+      console.warn('saveUserdata: server returned', res.status, 'for key', key);
+    }
+  } catch(e) {
+    showSaveToast(false);
+    console.warn('saveUserdata: network error for key', key, e);
+  } finally {
+    _pendingSaveKeys.delete(key);
+  }
 }
 
 const ALL_USERDATA_KEYS = [
@@ -17402,6 +17421,8 @@ async function loadUserdata() {
       const data = await res.json();
       _userdataCache = data;
       ALL_USERDATA_KEYS.forEach(key => {
+        // Option A: skip overwriting any key that has a save currently in flight
+        if (_pendingSaveKeys.has(key)) return;
         if (data[key] !== undefined) localStorage.setItem(key, JSON.stringify(data[key]));
       });
     } catch(e) {}
@@ -17694,8 +17715,34 @@ function checkForUpdates() {
   window.location.replace(url);
 }
 
+// ---- SAVE TOAST ----
+function showSaveToast(ok) {
+  let el = document.getElementById('save-toast');
+  if (!el) return;
+  clearTimeout(el._timer);
+  el.textContent = ok ? '✅ Saved' : '⚠️ Save failed — will retry';
+  el.style.background = ok ? '#4caf50' : '#e07b6a';
+  el.style.opacity = '1';
+  el.style.transform = 'translateY(0)';
+  el._timer = setTimeout(() => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+  }, ok ? 2000 : 4000);
+}
+
 // ---- INIT ----
 renderToday();
 </script>
+
+<!-- SAVE TOAST -->
+<div id="save-toast" style="
+  position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#4caf50;color:white;padding:10px 20px;border-radius:20px;
+  font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;
+  box-shadow:0 4px 16px rgba(0,0,0,0.2);z-index:9999;
+  opacity:0;transition:opacity 0.25s,transform 0.25s;pointer-events:none;
+  white-space:nowrap;
+"></div>
+
 </body>
 </html>
