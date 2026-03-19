@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Jenn Wright Fitness — Client Portal</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fdf9f6;
+    --card: #ffffff;
+    --card2: #f5f0eb;
+    --accent: #c8956c;
+    --accent-dark: #a5724a;
+    --accent-light: #f0ddd0;
+    --text: #2d2018;
+    --text-light: #8a7060;
+    --green: #7a9e7e;
+    --radius: 16px;
+    --shadow: 0 2px 16px rgba(80,50,30,0.10);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 100%; max-width: 480px;
+    background: #fff;
+    border-top: 1px solid #ecddd4;
+    display: flex;
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    gap: 3px; padding: 10px 4px 8px;
+    background: none; border: none; cursor: pointer;
+    font-size: 10px; color: var(--text-light);
+    font-weight: 500; letter-spacing: 0.3px;
+    transition: color 0.2s;
+  }
+  .nav-btn.active { color: var(--accent); }
+  .nav-btn svg { width: 22px; height: 22px; }
+
+  /* SCREENS */
+  .screen { display: none; padding: 0 0 80px 0; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* HEADER */
+  .header {
+    background: linear-gradient(135deg, #c8956c 0%, #a5724a 100%);
+    color: white;
+    padding: 48px 20px 24px;
+    position: relative;
+  }
+  .header-logo {
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; opacity: 0.85; margin-bottom: 6px;
+  }
+  .header h1 { font-size: 24px; font-weight: 700; }
+  .header p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+  .header-badge {
+    position: absolute; top: 48px; right: 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px; padding: 6px 12px;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+  }
+
+  /* SECTION */
+  .section { padding: 20px 16px 0; }
+  .section-title {
+    font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+
+  /* PROGRAM CARD */
+  .program-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .program-card:active { transform: scale(0.98); }
+  .program-banner {
+    height: 120px;
+    background: linear-gradient(135deg, #c8956c, #a5724a);
+    display: flex; align-items: flex-end; padding: 14px;
+    position: relative;
+  }
+  .program-banner.green { background: linear-gradient(135deg, #7a9e7e, #5a7e5e); }
+  .program-banner.slate { background: linear-gradient(135deg, #7a8a9e, #5a6a7e); }
+  .program-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+  }
+  .program-name { font-size: 18px; font-weight: 700; color: white; line-height: 1.2; }
+  .program-meta {
+    padding: 12px 14px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .program-info { font-size: 12px; color: var(--text-light); }
+  .program-progress {
+    height: 4px; background: #f0e8e0; margin: 0 14px 14px;
+    border-radius: 2px; overflow: hidden;
+  }
+  .program-progress-fill {
+    height: 100%; background: var(--accent); border-radius: 2px;
+    transition: width 0.5s ease;
+  }
+
+  /* EXERCISE CARD */
+  .exercise-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  .exercise-card:active { transform: scale(0.98); }
+  .exercise-row {
+    display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  }
+  .exercise-thumb {
+    width: 56px; height: 56px; border-radius: 10px;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .exercise-thumb svg { width: 24px; height: 24px; color: var(--accent); }
+  .play-overlay {
+    position: absolute; inset: 0;
+    background: rgba(200,149,108,0.15);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .exercise-info { flex: 1; }
+  .exercise-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .exercise-sets {
+    font-size: 12px; color: var(--text-light);
+    display: flex; gap: 8px;
+  }
+  .exercise-chip {
+    background: var(--accent-light); color: var(--accent-dark);
+    border-radius: 6px; padding: 2px 7px;
+    font-size: 11px; font-weight: 600;
+  }
+  .exercise-check {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 2px solid #ddd; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .exercise-check.done { background: var(--green); border-color: var(--green); }
+
+  /* VIDEO MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6); z-index: 200;
+    align-items: flex-end; justify-content: center;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: white; border-radius: 24px 24px 0 0;
+    width: 100%; max-width: 480px;
+    max-height: 90vh; overflow-y: auto;
+    padding: 0 0 40px;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .modal-handle {
+    width: 40px; height: 4px; background: #ddd; border-radius: 2px;
+    margin: 12px auto 16px;
+  }
+  .modal-video {
+    width: 100%; aspect-ratio: 16/9;
+    background: #1a1a1a;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .modal-video-placeholder {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+  }
+  .play-btn {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: rgba(200,149,108,0.9);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .modal-body { padding: 20px 20px 0; }
+  .modal-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+  .modal-subtitle { font-size: 13px; color: var(--text-light); margin-bottom: 20px; }
+  .modal-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .chip {
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+  }
+  .chip-accent { background: var(--accent-light); color: var(--accent-dark); }
+  .chip-green { background: #e0f0e0; color: #3a7a3a; }
+  .chip-gray { background: #f0f0f0; color: #666; }
+  .modal-notes {
+    background: var(--card2); border-radius: 12px; padding: 14px;
+    font-size: 13px; line-height: 1.6; color: var(--text-light);
+    margin-bottom: 20px;
+  }
+  .modal-notes strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 12px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* BUTTONS */
+  .btn-primary {
+    display: block; width: 100%; padding: 15px;
+    background: linear-gradient(135deg, #c8956c, #a5724a);
+    color: white; border: none; border-radius: 14px;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    text-align: center; letter-spacing: 0.3px;
+    transition: opacity 0.2s;
+  }
+  .btn-primary:active { opacity: 0.85; }
+  .btn-outline {
+    display: block; width: 100%; padding: 14px;
+    background: transparent; color: var(--accent);
+    border: 2px solid var(--accent); border-radius: 14px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    text-align: center; margin-top: 10px;
+    transition: all 0.2s;
+  }
+
+  /* STATS ROW */
+  .stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card {
+    background: var(--card);
+    border-radius: 14px; padding: 14px 10px;
+    text-align: center; box-shadow: var(--shadow);
+  }
+  .stat-value { font-size: 22px; font-weight: 700; color: var(--accent); }
+  .stat-label { font-size: 10px; color: var(--text-light); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+  /* PROFILE */
+  .profile-header {
+    background: linear-gradient(135deg, #c8956c 0%, #a5724a 100%);
+    padding: 48px 20px 30px; text-align: center; color: white;
+  }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700; color: white;
+    border: 3px solid rgba(255,255,255,0.5);
+  }
+  .profile-name { font-size: 20px; font-weight: 700; }
+  .profile-sub { font-size: 13px; opacity: 0.8; margin-top: 4px; }
+
+  .list-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0e8e0;
+    cursor: pointer;
+  }
+  .list-item:last-child { border-bottom: none; }
+  .list-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent-light);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .list-label { flex: 1; font-size: 14px; font-weight: 500; }
+  .list-value { font-size: 13px; color: var(--text-light); }
+
+  /* JENN CARD */
+  .jenn-card {
+    background: linear-gradient(135deg, #f5ede5, #edddd0);
+    border-radius: var(--radius); padding: 16px;
+    margin-bottom: 12px; display: flex; gap: 14px; align-items: center;
+  }
+  .jenn-avatar {
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700; color: white;
+  }
+  .jenn-msg { font-size: 13px; line-height: 1.5; color: var(--text); }
+  .jenn-name { font-size: 11px; font-weight: 700; color: var(--accent); margin-top: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* TODAY WORKOUT */
+  .day-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 16px; border-bottom: 1px solid #f0e8e0;
+  }
+  .day-title { font-size: 15px; font-weight: 700; }
+  .day-sub { font-size: 12px; color: var(--text-light); }
+  .day-badge {
+    background: var(--accent-light); color: var(--accent-dark);
+    border-radius: 8px; padding: 4px 10px;
+    font-size: 11px; font-weight: 700;
+  }
+
+  .close-btn {
+    position: absolute; top: 16px; right: 16px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: 18px;
+  }
+
+  /* PROGRAM DETAIL */
+  #screen-program { background: var(--bg); }
+  .program-hero {
+    height: 180px;
+    background: linear-gradient(135deg, #c8956c, #a5724a);
+    padding: 48px 20px 20px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    position: relative;
+  }
+  .back-btn {
+    position: absolute; top: 48px; left: 16px;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+  }
+
+  .week-tabs {
+    display: flex; gap: 8px; padding: 14px 16px;
+    overflow-x: auto; scrollbar-width: none;
+  }
+  .week-tab {
+    flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    border: none; background: var(--card2); color: var(--text-light);
+    transition: all 0.2s;
+  }
+  .week-tab.active { background: var(--accent); color: white; }
+
+  .day-block { margin-bottom: 8px; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%);
+    background: #2d2018; color: white; border-radius: 20px;
+    padding: 10px 20px; font-size: 13px; font-weight: 600;
+    z-index: 300; opacity: 0; transition: opacity 0.3s;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" onclick="showScreen('home')" id="nav-home">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    Home
+  </button>
+  <button class="nav-btn" onclick="showScreen('programs')" id="nav-programs">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    Programs
+  </button>
+  <button class="nav-btn" onclick="showScreen('today')" id="nav-today">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    Today
+  </button>
+  <button class="nav-btn" onclick="showScreen('profile')" id="nav-profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profile
+  </button>
+</nav>
+
+<!-- ===== HOME SCREEN ===== -->
+<div class="screen active" id="screen-home">
+  <div class="header">
+    <div class="header-logo">Jenn Wright Fitness</div>
+    <h1>Hey Sarah! 👋</h1>
+    <p>Week 3 of your program. Keep it up!</p>
+    <div class="header-badge">🔥 12-day streak</div>
+  </div>
+
+  <div class="section" style="margin-top:16px;">
+    <div class="jenn-card">
+      <div class="jenn-avatar">J</div>
+      <div>
+        <div class="jenn-msg">"Great work this week Sarah — your squat form has improved so much. Push hard today! 💪"</div>
+        <div class="jenn-name">Jenn Wright · Your Trainer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Your Stats</div>
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-value">18</div>
+        <div class="stat-label">Workouts</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">3</div>
+        <div class="stat-label">Programs</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">85%</div>
+        <div class="stat-label">Complete</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Today's Workout</div>
+    <div class="card" style="overflow:hidden;">
+      <div class="day-header">
+        <div>
+          <div class="day-title">Lower Body Strength</div>
+          <div class="day-sub">5 exercises · ~40 min</div>
+        </div>
+        <div class="day-badge">Day 3</div>
+      </div>
+      <div style="padding:12px 12px 0;">
+        <div class="exercise-card" onclick="openExercise('squat')">
+          <div class="exercise-row">
+            <div class="exercise-thumb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M12 7v8M9 22l3-7 3 7M6 12l6 2 6-2"/></svg>
+            </div>
+            <div class="exercise-info">
+              <div class="exercise-name">Goblet Squat</div>
+              <div class="exercise-sets">
+                <span class="exercise-chip">4 sets</span>
+                <span class="exercise-chip">12 reps</span>
+                <span class="exercise-chip">20 lbs</span>
+              </div>
+            </div>
+            <div class="exercise-check done" id="check-squat">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="exercise-card" onclick="openExercise('rdl')">
+          <div class="exercise-row">
+            <div class="exercise-thumb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M12 7v5l-4 4M12 12l4 4"/></svg>
+            </div>
+            <div class="exercise-info">
+              <div class="exercise-name">Romanian Deadlift</div>
+              <div class="exercise-sets">
+                <span class="exercise-chip">3 sets</span>
+                <span class="exercise-chip">10 reps</span>
+                <span class="exercise-chip">30 lbs</span>
+              </div>
+            </div>
+            <div class="exercise-check" id="check-rdl" onclick="toggleCheck(event,'rdl')"></div>
+          </div>
+        </div>
+        <div class="exercise-card" onclick="openExercise('lunge')">
+          <div class="exercise-row">
+            <div class="exercise-thumb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M6 6l6 4 6-4M6 18l6-4 6 4"/></svg>
+            </div>
+            <div class="exercise-info">
+              <div class="exercise-name">Reverse Lunge</div>
+              <div class="exercise-sets">
+                <span class="exercise-chip">3 sets</span>
+                <span class="exercise-chip">10 each</span>
+                <span class="exercise-chip">BW</span>
+              </div>
+            </div>
+            <div class="exercise-check" id="check-lunge" onclick="toggleCheck(event,'lunge')"></div>
+          </div>
+        </div>
+      </div>
+      <div style="padding:12px;">
+        <button class="btn-primary" onclick="showScreen('today')">Start Workout →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRAMS SCREEN ===== -->
+<div class="screen" id="screen-programs">
+  <div class="header" style="padding-bottom:20px;">
+    <div class="header-logo">Jenn Wright Fitness</div>
+    <h1>Your Programs</h1>
+    <p>Prescribed by Jenn, built for you.</p>
+  </div>
+
+  <div class="section" style="margin-top:16px;">
+    <div class="section-title">Active</div>
+    <div class="program-card" onclick="showScreen('program-detail')">
+      <div class="program-banner">
+        <div>
+          <div class="program-label">Weeks 1–8</div>
+          <div class="program-name">Post-Natal Strength Foundation</div>
+        </div>
+      </div>
+      <div class="program-meta">
+        <div class="program-info">Week 3 of 8 · 4 days/week</div>
+        <div style="font-size:12px;color:var(--accent);font-weight:700;">38% done</div>
+      </div>
+      <div class="program-progress">
+        <div class="program-progress-fill" style="width:38%"></div>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:8px;">Completed</div>
+    <div class="program-card">
+      <div class="program-banner green">
+        <div>
+          <div class="program-label">4 Weeks</div>
+          <div class="program-name">Movement & Mobility Reset</div>
+        </div>
+      </div>
+      <div class="program-meta">
+        <div class="program-info">Completed Feb 2026 · 3 days/week</div>
+        <div style="font-size:12px;color:var(--green);font-weight:700;">✓ Done</div>
+      </div>
+      <div class="program-progress">
+        <div class="program-progress-fill" style="width:100%;background:var(--green)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROGRAM DETAIL SCREEN ===== -->
+<div class="screen" id="screen-program-detail">
+  <div class="program-hero">
+    <button class="back-btn" onclick="showScreen('programs')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div style="color:rgba(255,255,255,0.7);font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Post-Natal Strength Foundation</div>
+    <div style="color:white;font-size:22px;font-weight:700;">Week 3</div>
+    <div style="color:rgba(255,255,255,0.8);font-size:13px;margin-top:2px;">4 days · 38% complete</div>
+  </div>
+
+  <div class="week-tabs">
+    <button class="week-tab" onclick="selectWeek(this,1)">Week 1</button>
+    <button class="week-tab" onclick="selectWeek(this,2)">Week 2</button>
+    <button class="week-tab active" onclick="selectWeek(this,3)">Week 3</button>
+    <button class="week-tab" onclick="selectWeek(this,4)">Week 4</button>
+    <button class="week-tab" onclick="selectWeek(this,5)">Week 5</button>
+  </div>
+
+  <div class="section">
+    <!-- Day 1 -->
+    <div class="card day-block">
+      <div class="day-header">
+        <div>
+          <div class="day-title">Day 1 — Upper Body Push</div>
+          <div class="day-sub">4 exercises · ~35 min</div>
+        </div>
+        <div class="day-badge" style="background:#e0f0e0;color:#3a7a3a;">✓ Done</div>
+      </div>
+    </div>
+    <!-- Day 2 -->
+    <div class="card day-block">
+      <div class="day-header">
+        <div>
+          <div class="day-title">Day 2 — Lower Body Strength</div>
+          <div class="day-sub">5 exercises · ~40 min</div>
+        </div>
+        <div class="day-badge" style="background:#e0f0e0;color:#3a7a3a;">✓ Done</div>
+      </div>
+    </div>
+    <!-- Day 3 -->
+    <div class="card day-block" onclick="showScreen('today')" style="cursor:pointer;">
+      <div class="day-header">
+        <div>
+          <div class="day-title">Day 3 — Pull & Core</div>
+          <div class="day-sub">5 exercises · ~40 min</div>
+        </div>
+        <div class="day-badge">Today →</div>
+      </div>
+      <div style="padding:0 14px 14px;">
+        <div class="exercise-card" style="margin-bottom:6px;" onclick="openExercise('row')">
+          <div class="exercise-row">
+            <div class="exercise-thumb">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h16M12 5l7 7-7 7"/></svg>
+            </div>
+            <div class="exercise-info">
+              <div class="exercise-name">Dumbbell Row</div>
+              <div class="exercise-sets">
+                <span class="exercise-chip">3 sets</span>
+                <span class="exercise-chip">12 reps</span>
+                <span class="exercise-chip">15 lbs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Day 4 -->
+    <div class="card day-block">
+      <div class="day-header">
+        <div>
+          <div class="day-title">Day 4 — Full Body Circuit</div>
+          <div class="day-sub">6 exercises · ~45 min</div>
+        </div>
+        <div class="day-badge" style="background:#f0f0f0;color:#999;">Upcoming</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TODAY SCREEN ===== -->
+<div class="screen" id="screen-today">
+  <div class="header">
+    <div class="header-logo">Jenn Wright Fitness</div>
+    <h1>Pull & Core</h1>
+    <p>Day 3 · 5 exercises · ~40 min</p>
+  </div>
+
+  <div class="section" style="margin-top:16px;">
+    <div class="jenn-card">
+      <div class="jenn-avatar">J</div>
+      <div>
+        <div class="jenn-msg">"Focus on controlling the movement — quality over speed today. Tap each exercise to see the video demo."</div>
+        <div class="jenn-name">Jenn's Note</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Exercises</div>
+
+    <div class="exercise-card" onclick="openExercise('row')">
+      <div class="exercise-row">
+        <div class="exercise-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M4 12h16M12 5l7 7-7 7"/></svg>
+          <div class="play-overlay">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="exercise-info">
+          <div class="exercise-name">Dumbbell Row</div>
+          <div class="exercise-sets">
+            <span class="exercise-chip">3 sets</span>
+            <span class="exercise-chip">12 reps</span>
+            <span class="exercise-chip">15 lbs</span>
+          </div>
+        </div>
+        <div class="exercise-check" id="check-row-t" onclick="toggleCheck(event,'row-t')"></div>
+      </div>
+    </div>
+
+    <div class="exercise-card" onclick="openExercise('lat')">
+      <div class="exercise-row">
+        <div class="exercise-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2v20M4 6l8 6 8-6"/></svg>
+          <div class="play-overlay">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="exercise-info">
+          <div class="exercise-name">Lat Pulldown</div>
+          <div class="exercise-sets">
+            <span class="exercise-chip">3 sets</span>
+            <span class="exercise-chip">10 reps</span>
+            <span class="exercise-chip">Cable</span>
+          </div>
+        </div>
+        <div class="exercise-check" id="check-lat-t" onclick="toggleCheck(event,'lat-t')"></div>
+      </div>
+    </div>
+
+    <div class="exercise-card" onclick="openExercise('deadbug')">
+      <div class="exercise-row">
+        <div class="exercise-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="5" r="2"/><path d="M5 12h14M12 7v10"/></svg>
+          <div class="play-overlay">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="exercise-info">
+          <div class="exercise-name">Dead Bug</div>
+          <div class="exercise-sets">
+            <span class="exercise-chip">3 sets</span>
+            <span class="exercise-chip">8 each</span>
+            <span class="exercise-chip">Core</span>
+          </div>
+        </div>
+        <div class="exercise-check" id="check-deadbug-t" onclick="toggleCheck(event,'deadbug-t')"></div>
+      </div>
+    </div>
+
+    <div class="exercise-card" onclick="openExercise('bird')">
+      <div class="exercise-row">
+        <div class="exercise-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M3 12h18M12 3l4 4-4 4M12 17l4-4-4-4"/></svg>
+          <div class="play-overlay">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="exercise-info">
+          <div class="exercise-name">Bird Dog</div>
+          <div class="exercise-sets">
+            <span class="exercise-chip">3 sets</span>
+            <span class="exercise-chip">10 each</span>
+            <span class="exercise-chip">Core</span>
+          </div>
+        </div>
+        <div class="exercise-check" id="check-bird-t" onclick="toggleCheck(event,'bird-t')"></div>
+      </div>
+    </div>
+
+    <div class="exercise-card" onclick="openExercise('plank')">
+      <div class="exercise-row">
+        <div class="exercise-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="10" width="18" height="4" rx="2"/></svg>
+          <div class="play-overlay">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="var(--accent)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+        </div>
+        <div class="exercise-info">
+          <div class="exercise-name">Plank Hold</div>
+          <div class="exercise-sets">
+            <span class="exercise-chip">3 sets</span>
+            <span class="exercise-chip">30 sec</span>
+            <span class="exercise-chip">Core</span>
+          </div>
+        </div>
+        <div class="exercise-check" id="check-plank-t" onclick="toggleCheck(event,'plank-t')"></div>
+      </div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:8px;" onclick="finishWorkout()">Mark Workout Complete ✓</button>
+  </div>
+</div>
+
+<!-- ===== PROFILE SCREEN ===== -->
+<div class="screen" id="screen-profile">
+  <div class="profile-header">
+    <div class="avatar">S</div>
+    <div class="profile-name">Sarah Mitchell</div>
+    <div class="profile-sub">Client since Jan 2026 · Summerland, BC</div>
+  </div>
+
+  <div class="section" style="margin-top:16px;">
+    <div class="section-title">My Info</div>
+    <div class="card">
+      <div class="list-item">
+        <div class="list-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="list-label">Goal</div>
+        <div class="list-value">Post-natal strength</div>
+      </div>
+      <div class="list-item">
+        <div class="list-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <div class="list-label">Sessions/week</div>
+        <div class="list-value">4 days</div>
+      </div>
+      <div class="list-item">
+        <div class="list-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div class="list-label">Current program</div>
+        <div class="list-value">Week 3 of 8</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">My Trainer</div>
+    <div class="card">
+      <div class="list-item">
+        <div class="list-icon" style="background:#f5ede5;">
+          <div style="width:18px;height:18px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:700;">J</div>
+        </div>
+        <div class="list-label">Jenn Wright</div>
+        <div class="list-value">Summerland, BC</div>
+      </div>
+      <div class="list-item">
+        <div class="list-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 11.93 19.79 19.79 0 0 1 1.07 3.36 2 2 0 0 1 3.05 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21 16z"/></svg>
+        </div>
+        <div class="list-label">Message Jenn</div>
+        <div class="list-value">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">About Jenn Wright Fitness</div>
+    <div class="card" style="padding:16px;">
+      <div style="font-size:13px;line-height:1.7;color:var(--text-light);">
+        Certified personal trainer & group fitness instructor with 14+ years experience. Specializing in pre/post-natal fitness, kettlebell training, barre, and bootcamp. Based in Summerland, BC.
+      </div>
+      <div style="margin-top:12px;font-size:12px;font-weight:700;color:var(--accent);font-style:italic;">"Don't over complicate it — find joy in movement, stay consistent and celebrate your successes."</div>
+      <div style="font-size:11px;color:var(--text-light);margin-top:4px;">— Jenn Wright</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EXERCISE MODAL ===== -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-video">
+      <div class="modal-video-placeholder">
+        <div class="play-btn">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+        <div style="color:rgba(255,255,255,0.6);font-size:12px;margin-top:4px;" id="modal-video-label">Exercise Demo Video</div>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="modal-title">Exercise</div>
+      <div class="modal-subtitle" id="modal-subtitle">Prescribed by Jenn Wright</div>
+      <div class="modal-chips" id="modal-chips"></div>
+      <div class="modal-notes" id="modal-notes"></div>
+      <button class="btn-primary" onclick="closeModalBtn()">Got it — let's go!</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const exercises = {
+  squat: {
+    name: 'Goblet Squat',
+    sets: 4, reps: '12', weight: '20 lbs',
+    muscle: 'Quads & Glutes',
+    notes: "Hold the weight close to your chest. Sit back and down — knees tracking over toes. Drive through your heels to stand. Pause at the bottom for 1 second.",
+    tip: "Jenn's tip: Keep your chest up and core braced throughout. If your heels lift, try elevating them slightly."
+  },
+  rdl: {
+    name: 'Romanian Deadlift',
+    sets: 3, reps: '10', weight: '30 lbs',
+    muscle: 'Hamstrings & Glutes',
+    notes: "Hinge at the hips, soft bend in the knees. Lower the weights along your legs until you feel a hamstring stretch. Drive hips forward to return.",
+    tip: "Jenn's tip: Think about pushing the floor away rather than pulling up. Keep a neutral spine the whole way."
+  },
+  lunge: {
+    name: 'Reverse Lunge',
+    sets: 3, reps: '10 each', weight: 'Bodyweight',
+    muscle: 'Quads, Glutes & Balance',
+    notes: "Step back, lower your back knee toward the floor without touching. Front shin stays vertical. Push through front heel to return.",
+    tip: "Jenn's tip: Keep your torso upright. Add dumbbells when you're ready to progress!"
+  },
+  row: {
+    name: 'Dumbbell Row',
+    sets: 3, reps: '12', weight: '15 lbs',
+    muscle: 'Back & Biceps',
+    notes: "Support yourself on a bench with one hand and knee. Pull the dumbbell to your hip, elbow close to body. Lower slowly.",
+    tip: "Jenn's tip: Don't rotate your torso — keep hips square. Focus on squeezing your shoulder blade at the top."
+  },
+  lat: {
+    name: 'Lat Pulldown',
+    sets: 3, reps: '10', weight: 'Cable',
+    muscle: 'Lats & Upper Back',
+    notes: "Grip bar slightly wider than shoulder-width. Pull to upper chest, lean back slightly. Control the return — don't let the bar yank you up.",
+    tip: "Jenn's tip: Think elbows to back pockets. The lats do the work, not the arms."
+  },
+  deadbug: {
+    name: 'Dead Bug',
+    sets: 3, reps: '8 each side', weight: 'Core',
+    muscle: 'Deep Core & Stability',
+    notes: "Lie on back, arms up, knees at 90°. Slowly lower opposite arm and leg toward the floor without arching your back. Return and switch.",
+    tip: "Jenn's tip: Press your lower back INTO the floor the entire time. Breathe out as you lower."
+  },
+  bird: {
+    name: 'Bird Dog',
+    sets: 3, reps: '10 each side', weight: 'Core',
+    muscle: 'Core & Glute Stability',
+    notes: "On hands and knees. Extend opposite arm and leg, hold 2 seconds, return. Keep hips level — no sagging or rotating.",
+    tip: "Jenn's tip: Move slowly and with intention. Imagine a cup of water on your lower back — don't spill it!"
+  },
+  plank: {
+    name: 'Plank Hold',
+    sets: 3, reps: '30 sec', weight: 'Core',
+    muscle: 'Full Core',
+    notes: "Forearms on floor, body in a straight line from head to heels. Squeeze glutes and brace core. Breathe steadily.",
+    tip: "Jenn's tip: If 30 sec is too much, start with 15. Quality plank beats a collapsed one every time."
+  }
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+  const navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function openExercise(key) {
+  const ex = exercises[key];
+  if (!ex) return;
+  document.getElementById('modal-title').textContent = ex.name;
+  document.getElementById('modal-subtitle').textContent = `Prescribed by Jenn Wright · ${ex.muscle}`;
+  document.getElementById('modal-video-label').textContent = ex.name + ' — Video Demo';
+  document.getElementById('modal-chips').innerHTML = `
+    <span class="chip chip-accent">${ex.sets} sets</span>
+    <span class="chip chip-accent">${ex.reps} reps</span>
+    <span class="chip chip-gray">${ex.weight}</span>
+    <span class="chip chip-green">${ex.muscle}</span>
+  `;
+  document.getElementById('modal-notes').innerHTML = `
+    <strong>Instructions</strong>${ex.notes}<br><br><strong>Jenn's Tip</strong>${ex.tip.replace("Jenn's tip: ","")}
+  `;
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) {
+    document.getElementById('modal').classList.remove('active');
+  }
+}
+function closeModalBtn() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+function toggleCheck(e, id) {
+  e.stopPropagation();
+  const el = document.getElementById('check-' + id);
+  if (!el) return;
+  el.classList.toggle('done');
+  if (el.classList.contains('done')) {
+    el.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>';
+    showToast('Exercise marked complete! 💪');
+  } else {
+    el.innerHTML = '';
+  }
+}
+
+function finishWorkout() {
+  showToast('Workout complete! Great work today 🎉');
+}
+
+function selectWeek(el, num) {
+  document.querySelectorAll('.week-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
