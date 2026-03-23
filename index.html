@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v266 2026-03-17 -->
+<!-- v267 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3000,7 +3000,7 @@ const storedVersion = localStorage.getItem('steph-app-version');
         item.id = 11; fixed = true;
       }
     });
-    if (fixed) localStorage.setItem('steph-today-items', JSON.stringify(items));
+    if (fixed) saveUserdata('steph-today-items', items);
   }
   // Also fix checked state — if vitamins was checked as id 10, move to 11
   const checked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
@@ -3093,14 +3093,14 @@ if (storedVersion !== APP_VERSION) {
     // Migrate any existing data from old key
     const old = JSON.parse(localStorage.getItem('steph-kids-facts-rush') || '[]');
     const merged = [..._rushFactsDefault, ...old.filter(x => !_rushFactsDefault.find(d => d.id === x.id))];
-    localStorage.setItem(_rushKey, JSON.stringify(merged));
+    saveUserdata(_rushKey, merged);
   }
   if (!localStorage.getItem(_hayesKey)) {
     const old = JSON.parse(localStorage.getItem('steph-kids-facts-hayes') || '[]');
     const merged = [..._hayesFactsDefault, ...old.filter(x => !_hayesFactsDefault.find(d => d.id === x.id))];
-    localStorage.setItem(_hayesKey, JSON.stringify(merged));
+    saveUserdata(_hayesKey, merged);
   }
-  if (!localStorage.getItem('steph-packages')) localStorage.setItem('steph-packages', JSON.stringify(PACKAGES_DEFAULT));
+  if (!localStorage.getItem('steph-packages')) saveUserdata('steph-packages', PACKAGES_DEFAULT);
   // Merge wellness goals — respect deleted IDs, never overwrite user additions
   const _existingWG = JSON.parse(localStorage.getItem('steph-wellness-goals') || 'null');
   const _deletedWG = new Set(JSON.parse(localStorage.getItem('steph-wellness-goals-deleted') || '[]'));
@@ -3128,25 +3128,26 @@ if (storedVersion !== APP_VERSION) {
   if (_existingTodayItems) {
     const _defaultIds = new Set(TODAY_ITEMS_DEFAULT.map(x => x.id));
     const _userAdded = _existingTodayItems.filter(x => x.id > 100);
-    localStorage.setItem('steph-today-items', JSON.stringify([...TODAY_ITEMS_DEFAULT, ..._userAdded]));
+    saveUserdata('steph-today-items', [...TODAY_ITEMS_DEFAULT, ..._userAdded]);
   } else {
-    localStorage.setItem('steph-today-items', JSON.stringify(TODAY_ITEMS_DEFAULT));
+    saveUserdata('steph-today-items', TODAY_ITEMS_DEFAULT);
   }
   if (!localStorage.getItem('steph-mood')) localStorage.setItem('steph-mood', JSON.stringify([]));
   // Explicitly preserve today's check-off state — never wipe on version bump
   // (steph-today-checked and steph-today-checked-date must never be touched here)
-  if (!localStorage.getItem('steph-today-checked')) localStorage.setItem('steph-today-checked', JSON.stringify({}));
-  if (!localStorage.getItem('steph-today-checked-date')) localStorage.setItem('steph-today-checked-date', new Date().toLocaleDateString('en-CA'));
-  if (!localStorage.getItem('steph-today-history')) localStorage.setItem('steph-today-history', JSON.stringify([]));
+  if (!localStorage.getItem('steph-today-checked')) saveUserdata('steph-today-checked', {});
+  if (!localStorage.getItem('steph-today-checked-date')) saveUserdata('steph-today-checked-date', new Date().toLocaleDateString('en-CA'));
+  if (!localStorage.getItem('steph-today-history')) saveUserdata('steph-today-history', []);
   localStorage.setItem('steph-app-version', APP_VERSION);
 }
 
 // Reset today's checks only if it's a new day (never on version bump)
 const _todayDateKey = new Date().toLocaleDateString('en-CA');
-const _savedCheckedDate = localStorage.getItem('steph-today-checked-date');
+const _savedCheckedDateRaw = localStorage.getItem('steph-today-checked-date');
+const _savedCheckedDate = _savedCheckedDateRaw ? (function(v){ try { const p = JSON.parse(v); return typeof p === 'string' ? p : v; } catch(e) { return v; } })(_savedCheckedDateRaw) : null;
 if (!_savedCheckedDate) {
   // First ever load — set the date but keep any existing checks
-  localStorage.setItem('steph-today-checked-date', _todayDateKey);
+  saveUserdata('steph-today-checked-date', _todayDateKey);
 } else if (_savedCheckedDate !== _todayDateKey) {
   // Genuine new day — save snapshot of yesterday before wiping
   const _prevChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
@@ -3156,9 +3157,9 @@ if (!_savedCheckedDate) {
   _snapshots.unshift({ date: _savedCheckedDate, items: _prevItems, checked: _prevChecked, total: _prevItems.length, done: _checkedCount });
   // Keep last 14 days only
   if (_snapshots.length > 14) _snapshots.length = 14;
-  localStorage.setItem('steph-today-history', JSON.stringify(_snapshots));
-  localStorage.removeItem('steph-today-checked');
-  localStorage.setItem('steph-today-checked-date', _todayDateKey);
+  saveUserdata('steph-today-history', _snapshots);
+  saveUserdata('steph-today-checked', {});
+  saveUserdata('steph-today-checked-date', _todayDateKey);
 }
 let todayItems = JSON.parse(localStorage.getItem('steph-today-items') || 'null') || JSON.parse(JSON.stringify(TODAY_ITEMS_DEFAULT));
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
@@ -3214,7 +3215,7 @@ function showScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('screen-' + name).classList.add('active');
   window.scrollTo(0, 0);
-  if (name === 'today') renderToday();
+  if (name === 'today') { loadUserdata().then(() => { todayItems = JSON.parse(localStorage.getItem('steph-today-items') || 'null') || JSON.parse(JSON.stringify(TODAY_ITEMS_DEFAULT)); todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}'); renderToday(); }); renderToday(); }
   if (name === 'todo') renderTodo();
   // todo-cat is always entered via openTodoCat() which calls renderTodoCatList() already — don't double-call
   if (name === 'grocery') renderGrocery();
@@ -3239,11 +3240,11 @@ function showScreen(name) {
   if (name === 'wellness-goals') renderWellness();
   if (name === 'wellness-selfcare') renderWellness();
   if (name === 'wellness-mood') renderMoodLog();
-  if (name === 'kids-rush') { renderKidsFocus(); renderKidFacts('rush'); }
+  if (name === 'kids-rush') { renderKidsFocus(); renderKidFacts('rush'); loadUserdata().then(() => renderKidFacts('rush')); }
   if (name === 'kids-rush-pp') { loadUserdata().then(() => renderPP()); }
   if (name === 'kids-hayes-growth') { loadUserdata().then(() => { renderGrowthTracker(); setTimeout(drawGrowthChart, 50); }); }
   if (name === 'kids-activities') { loadUserdata().then(() => renderKidsActivities()); }
-  if (name === 'kids-hayes') { renderKidsFocus(); renderKidFacts('hayes'); }
+  if (name === 'kids-hayes') { renderKidsFocus(); renderKidFacts('hayes'); loadUserdata().then(() => renderKidFacts('hayes')); }
   if (name === 'kids-rush-memories') { renderMemories(); }
   if (name === 'kids-hayes-memories') { renderMemories(); }
   if (name === 'kids-stories') renderStoriesList();
@@ -3350,7 +3351,7 @@ function addTodayItem() {
   if (!label) return;
   const emoji = (emojiEl && emojiEl.value.trim()) || '✅';
   todayItems.push({ id: Date.now(), emoji, label });
-  localStorage.setItem('steph-today-items', JSON.stringify(todayItems));
+  saveUserdata('steph-today-items', todayItems);
   if (emojiEl) emojiEl.value = '';
   if (labelEl) labelEl.value = '';
   renderToday();
@@ -3359,19 +3360,19 @@ function addTodayItem() {
 function deleteTodayItem(id) {
   todayItems = todayItems.filter(x => x.id !== id);
   delete todayChecked[id];
-  localStorage.setItem('steph-today-items', JSON.stringify(todayItems));
-  localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+  saveUserdata('steph-today-items', todayItems);
+  saveUserdata('steph-today-checked', todayChecked);
   renderToday();
 }
 
 function toggleToday(id) {
   todayChecked[id] = !todayChecked[id];
-  localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+  saveUserdata('steph-today-checked', todayChecked);
   renderToday();
 }
 function checkTodayItems(ids) {
   ids.forEach(id => { todayChecked[id] = true; });
-  localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+  saveUserdata('steph-today-checked', todayChecked);
   renderToday();
 }
 
@@ -3503,7 +3504,7 @@ function showTodayHistory() {
   const checkParam = params.get('check');
   if (checkParam) {
     checkParam.split(',').map(Number).filter(Boolean).forEach(id => { todayChecked[id] = true; });
-    localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+    saveUserdata('steph-today-checked', todayChecked);
     history.replaceState(null, '', window.location.pathname);
   }
 })();
@@ -3929,7 +3930,7 @@ function deleteTodo(id) {
   if (typeof id === 'number' && id < 100000) {
     const deleted = new Set(JSON.parse(localStorage.getItem('steph-todo-deleted') || '[]'));
     deleted.add(id);
-    localStorage.setItem('steph-todo-deleted', JSON.stringify([...deleted]));
+    saveUserdata('steph-todo-deleted', [...deleted]);
   }
   todoItems = todoItems.filter(x=>x.id!==id);
   saveUserdata('steph-todo', todoItems);
@@ -4039,7 +4040,7 @@ function toggleWorkoutDone(dayIndex, e) {
   const key = getWorkoutKey(dayIndex);
   const nowDone = !log[key];
   log[key] = nowDone;
-  localStorage.setItem('steph-workout-log', JSON.stringify(log));
+  saveUserdata('steph-workout-log', log);
 
   // If marking as done and no calorie value has been saved yet, write a default estimate
   // so the weekly tally updates immediately
@@ -4458,7 +4459,7 @@ async function addToLibraryAPI(workout) {
   } catch(e) {
     const lib = JSON.parse(localStorage.getItem('steph-workout-library') || '[]');
     lib.unshift(workout);
-    localStorage.setItem('steph-workout-library', JSON.stringify(lib));
+    saveUserdata('steph-workout-library', lib);
   }
 }
 
@@ -4468,7 +4469,7 @@ async function deleteFromLibraryAPI(id) {
     await fetch(`${WORKOUTS_API}?key=${WORKOUTS_KEY}&id=${id}`, { method: 'DELETE' });
   } catch(e) {
     const lib = JSON.parse(localStorage.getItem('steph-workout-library') || '[]').filter(w => String(w.id) !== String(id));
-    localStorage.setItem('steph-workout-library', JSON.stringify(lib));
+    saveUserdata('steph-workout-library', lib);
   }
 }
 
@@ -4715,21 +4716,21 @@ function deleteMoodEntry(id) {
 
 // ---- MEAL TABS ----
 // ---- MEAL PLAN DATA (replaced by Lumen cron each Sunday) ----
-const MEAL_PLAN_DATA = { week: 'Mar 16–18, 2026', days: [
+const MEAL_PLAN_DATA = { week: 'Mar 23–25, 2026', days: [
   { day: 'Monday', meals: [
-    { type: 'Breakfast', name: 'Greek yogurt parfait — Liberté 11%, sliced strawberries, granola + protein powder stirred in', url: null, recipe: 'Ingredients:\n- ¾ cup Liberté 11% Greek yogurt\n- 1 scoop vanilla protein powder\n- ½ cup sliced fresh strawberries\n- ⅓ cup granola\n- 1 tsp honey (optional)\n\nMethod:\n1. Stir protein powder into yogurt until smooth.\n2. Layer in a bowl: yogurt base, strawberries, granola on top.\n3. Drizzle with honey if using. Eat immediately so granola stays crunchy.', macros: '~420 cal · 38g protein · 32g carbs · 15g fat' },
-    { type: 'Lunch', name: 'Spicy Chicken Meal Prep Bowls with Rice & Beans', url: 'https://pinchofyum.com/spicy-chicken-meal-prep', recipe: null, desc: 'Pinch of Yum — spiced chicken thighs over rice and beans with a bright cilantro sauce. Meal-prep friendly and so satisfying.', macros: '~470 cal · 42g protein · 38g carbs · 14g fat' },
-    { type: 'Dinner', name: 'One Pot Marry Me Chicken Pasta', url: 'https://www.halfbakedharvest.com/marry-me-chicken-pasta/', recipe: null, desc: 'Half Baked Harvest — pan-seared Italian chicken in a creamy sun-dried tomato sauce with pasta and spinach. One pot, done in 30 min.', macros: '~580 cal · 44g protein · 38g carbs · 22g fat' }
+    { type: 'Breakfast', name: 'Greek yogurt parfait — Liberté 11%, raspberries, Carbonaut granola + protein powder stirred in', url: null, recipe: 'Ingredients:\n- ¾ cup Liberté 11% Greek yogurt\n- 1 scoop vanilla protein powder\n- ½ cup fresh raspberries\n- ⅓ cup Carbonaut Strawberry Vanilla Crisp granola\n- 1 tsp honey (optional)\n\nMethod:\n1. Stir protein powder into yogurt until smooth.\n2. Layer in a bowl: yogurt base, raspberries, granola on top.\n3. Drizzle with honey if using. Eat immediately so granola stays crunchy.', macros: '~400 cal · 36g protein · 30g carbs · 14g fat' },
+    { type: 'Lunch', name: 'Thai Peanut Chicken Bowls', url: 'https://pinchofyum.com/thai-peanut-chicken-bowls', recipe: null, desc: 'Pinch of Yum — caramelized chicken over rice noodles with a cucumber salad, fresh herbs, and a rich homemade peanut sauce. Fresh and satisfying.', macros: '~470 cal · 40g protein · 38g carbs · 15g fat' },
+    { type: 'Dinner', name: 'Thai Turkey Meatballs in Coconut Curry Sauce', url: 'https://www.halfbakedharvest.com/thai-turkey-meatballs/', recipe: null, desc: 'Half Baked Harvest — turkey meatballs simmered in a creamy red coconut curry sauce with bell peppers and scallions, served over jasmine rice. Rush-friendly — skip the curry for his portion.', macros: '~560 cal · 44g protein · 38g carbs · 20g fat' }
   ]},
   { day: 'Tuesday', meals: [
-    { type: 'Breakfast', name: 'Protein smoothie — vanilla protein, frozen banana, almond butter, oat milk, spinach', url: null, recipe: 'Ingredients:\n- 1 scoop vanilla protein powder\n- 1 frozen banana\n- 1 tbsp almond butter\n- 1 cup oat milk\n- 1 large handful baby spinach\n- 4–5 ice cubes\n\nMethod:\n1. Add everything to a blender.\n2. Blend until smooth and creamy.\n3. Add extra oat milk if too thick. Drink immediately.', macros: '~420 cal · 32g protein · 42g carbs · 12g fat' },
-    { type: 'Lunch', name: 'Crockpot Chicken Bowls with Yellow Rice & Cilantro Pesto', url: 'https://pinchofyum.com/crockpot-chicken-bowls-with-yellow-rice-and-cilantro-pesto', recipe: null, desc: 'Pinch of Yum — slow cooker shredded chicken over golden turmeric rice with a bright cilantro pesto drizzle.', macros: '~460 cal · 40g protein · 36g carbs · 15g fat' },
-    { type: 'Dinner', name: 'One Pan Baked Pesto Orzo with Chicken Meatballs', url: 'https://www.ambitiouskitchen.com/chicken-meatball-pesto-orzo/', recipe: null, desc: 'Ambitious Kitchen — zucchini-packed chicken meatballs baked over creamy pesto orzo with mushrooms and lemon. A true crowd pleaser.', macros: '~560 cal · 46g protein · 40g carbs · 20g fat' }
+    { type: 'Breakfast', name: 'High-protein overnight oats — almond butter, banana, chia seeds', url: null, recipe: 'Ingredients:\n- ½ cup rolled oats\n- 1 scoop vanilla protein powder\n- 1 tbsp almond butter\n- 1 tbsp chia seeds\n- 1 cup oat milk\n- ½ banana, sliced\n- Pinch of cinnamon\n\nMethod:\n1. The night before: stir oats, protein powder, chia seeds, oat milk, and cinnamon together in a jar.\n2. Cover and refrigerate overnight.\n3. In the morning, top with almond butter and sliced banana.', macros: '~440 cal · 32g protein · 46g carbs · 14g fat' },
+    { type: 'Lunch', name: 'Super Yummy Chicken Salad in Lettuce Wraps', url: 'https://pinchofyum.com/super-yummy-chicken-salad', recipe: null, desc: 'Pinch of Yum — creamy, protein-packed chicken salad with grapes, celery, cashews, and a Greek yogurt-dijon dressing. Serve in butter lettuce cups or on a wrap.', macros: '~450 cal · 42g protein · 22g carbs · 18g fat' },
+    { type: 'Dinner', name: 'One Skillet Greek Lemon Chicken and Rice', url: 'https://www.halfbakedharvest.com/lemon-chicken-and-rice/', recipe: null, desc: 'Half Baked Harvest — pan-seared chicken with oregano and paprika, cooked together with rice pilaf, spinach, and garlicky lemon butter. Top with olives and feta — Rush gets his chicken plain.', macros: '~570 cal · 46g protein · 40g carbs · 18g fat' }
   ]},
   { day: 'Wednesday', meals: [
-    { type: 'Breakfast', name: 'High-protein overnight oats — almond butter, banana, chia seeds', url: null, recipe: 'Ingredients:\n- ½ cup rolled oats\n- 1 scoop vanilla protein powder\n- 1 tbsp almond butter\n- 1 tbsp chia seeds\n- 1 cup oat milk\n- ½ banana, sliced\n- Pinch of cinnamon\n\nMethod:\n1. The night before: stir oats, protein powder, chia seeds, oat milk, and cinnamon together in a jar.\n2. Cover and refrigerate overnight.\n3. In the morning, top with almond butter and sliced banana.', macros: '~420 cal · 32g protein · 46g carbs · 14g fat' },
-    { type: 'Lunch', name: 'Crispy Chicken Tikka Bowls with Mint Sauce', url: 'https://pinchofyum.com/crispy-chicken-tikka-bowls-with-mint-sauce', recipe: null, desc: 'Pinch of Yum — crispy spiced chicken tikka served over rice or quinoa with a cool mint yogurt sauce. Incredible flavour.', macros: '~480 cal · 44g protein · 34g carbs · 16g fat' },
-    { type: 'Dinner', name: 'HBH Crockpot French Onion Chicken and Orzo', url: 'https://www.halfbakedharvest.com/french-onion-chicken-and-orzo/', recipe: null, desc: 'Half Baked Harvest — slow cooker French onion chicken in white wine and herbs, served over creamy parmesan orzo. So cozy.', macros: '~570 cal · 46g protein · 38g carbs · 20g fat' }
+    { type: 'Breakfast', name: 'Protein smoothie — vanilla protein, frozen banana, almond butter, oat milk, spinach', url: null, recipe: 'Ingredients:\n- 1 scoop vanilla protein powder\n- 1 frozen banana\n- 1 tbsp almond butter\n- 1 cup oat milk\n- 1 large handful baby spinach\n- 4–5 ice cubes\n\nMethod:\n1. Add everything to a blender.\n2. Blend until smooth and creamy.\n3. Add extra oat milk if too thick. Drink immediately.', macros: '~420 cal · 32g protein · 40g carbs · 12g fat' },
+    { type: 'Lunch', name: 'High-Protein Fajita Chicken and Rice Skillet', url: 'https://www.ambitiouskitchen.com/fajita-chicken-and-rice/', recipe: null, desc: 'Ambitious Kitchen — one pan fajita chicken and rice with bold Southwest spices, black beans, loads of veggies, and protein from both chicken and beans. Top with salsa and avocado.', macros: '~490 cal · 44g protein · 40g carbs · 14g fat' },
+    { type: 'Dinner', name: 'Sheet Pan Greek Garlic Butter Chicken and Potatoes', url: 'https://www.halfbakedharvest.com/garlic-butter-chicken-and-potatoes/', recipe: null, desc: 'Half Baked Harvest — oregano-seasoned chicken roasted with butter, lemon, garlic, and baby potatoes, topped with a tangy olive dressing. An absolute weeknight classic.', macros: '~560 cal · 44g protein · 36g carbs · 20g fat' }
   ]}
 ]}; // replaced by Lumen each Sunday
 
@@ -4767,10 +4768,9 @@ async function requestMealPlanRefresh() {
           const history = JSON.parse(localStorage.getItem('steph-meal-plan-history') || '[]');
           history.unshift(oldPlan);
           const trimmed = history.slice(0, 5); // keep last 5
-          localStorage.setItem('steph-meal-plan-history', JSON.stringify(trimmed));
           saveUserdata('steph-meal-plan-history', trimmed);
         }
-        localStorage.setItem('steph-meal-plan', JSON.stringify(newPlan));
+        saveUserdata('steph-meal-plan', newPlan);
         _mealPlanHistoryIndex = 0;
         renderMealPlanTab();
         if (btn) { btn.textContent = '✅ Plan updated!'; btn.disabled = false; }
@@ -5062,7 +5062,7 @@ function renderMealLogFromData(meals) {
       if (totals.fibre >= 28 && !todayChecked[5]) { todayChecked[5] = true; changed = true; }
       if (totals.fibre < 28 && todayChecked[5] === true) { delete todayChecked[5]; changed = true; }
       if (changed) {
-        localStorage.setItem('steph-today-checked', JSON.stringify(todayChecked));
+        saveUserdata('steph-today-checked', todayChecked);
         const tc = document.getElementById('today-checklist');
         if (tc) renderToday();
       }
@@ -6189,12 +6189,7 @@ function getThriveNotes() {
   return thriveNotes;
 }
 function saveThriveNotesToStorage() {
-  localStorage.setItem('steph-thrive-notes-v2', JSON.stringify(thriveNotes));
-  fetch(USERDATA_API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-lumen-key': USERDATA_KEY },
-    body: JSON.stringify({ key: 'steph-thrive-notes-v2', data: thriveNotes })
-  }).catch(() => {});
+  saveUserdata('steph-thrive-notes-v2', thriveNotes);
 }
 
 async function loadThriveNotes() {
@@ -7158,14 +7153,14 @@ function togglePosture(id) {
   if (done.length >= POSTURE_ITEMS.length) {
     const checked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
     checked[10] = true; // id 10 = Posture routine
-    localStorage.setItem('steph-today-checked', JSON.stringify(checked));
+    saveUserdata('steph-today-checked', checked);
     todayChecked = checked;
     if (document.getElementById('screen-today') && document.getElementById('screen-today').classList.contains('active')) renderToday();
   } else {
     // If unchecked below full completion, uncheck the Today item too
     const checked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
     delete checked[10];
-    localStorage.setItem('steph-today-checked', JSON.stringify(checked));
+    saveUserdata('steph-today-checked', checked);
     todayChecked = checked;
     if (document.getElementById('screen-today') && document.getElementById('screen-today').classList.contains('active')) renderToday();
   }
@@ -7340,7 +7335,7 @@ function renderKidFacts(kid) {
   let facts = JSON.parse(localStorage.getItem(`steph-kids-facts-${kid}-v2`) || '[]');
   if (!facts.length) {
     facts = defaults;
-    localStorage.setItem(`steph-kids-facts-${kid}-v2`, JSON.stringify(facts));
+    saveUserdata(`steph-kids-facts-${kid}-v2`, facts);
   }
   list.innerHTML = '';
   facts.forEach(f => {
@@ -7379,7 +7374,7 @@ function factConfirmEdit(kid, id) {
   let facts = JSON.parse(localStorage.getItem(`steph-kids-facts-${kid}-v2`) || '[]');
   const item = facts.find(f => f.id === id);
   if (item) item.text = text;
-  localStorage.setItem(`steph-kids-facts-${kid}-v2`, JSON.stringify(facts));
+  saveUserdata(`steph-kids-facts-${kid}-v2`, facts);
   renderKidFacts(kid);
 }
 // ── SOLID STARTS TRACKER ────────────────────────────────────────────
@@ -7601,14 +7596,14 @@ function addKidFact(kid) {
   if (!inp || !inp.value.trim()) return;
   const facts = JSON.parse(localStorage.getItem(`steph-kids-facts-${kid}-v2`) || '[]');
   facts.push({ id: Date.now(), text: inp.value.trim() });
-  localStorage.setItem(`steph-kids-facts-${kid}-v2`, JSON.stringify(facts));
+  saveUserdata(`steph-kids-facts-${kid}-v2`, facts);
   inp.value = '';
   renderKidFacts(kid);
 }
 function deleteKidFact(kid, id) {
   let facts = JSON.parse(localStorage.getItem(`steph-kids-facts-${kid}-v2`) || '[]');
   facts = facts.filter(f => String(f.id) !== String(id));
-  localStorage.setItem(`steph-kids-facts-${kid}-v2`, JSON.stringify(facts));
+  saveUserdata(`steph-kids-facts-${kid}-v2`, facts);
   renderKidFacts(kid);
 }
 function renderKidsTodos() {
@@ -17412,6 +17407,14 @@ const ALL_USERDATA_KEYS = [
   'steph-notes','steph-meal-templates','steph-gifts','steph-custom-recipes',
   'steph-recipe-cat-overrides','steph-meal-plan-history',
   'steph-kids-focus','steph-weight-tracker','steph-pp-progress','steph-hayes-growth','steph-kids-activities',
+  'steph-today-items','steph-today-checked','steph-today-checked-date',
+  'steph-today-history','steph-todo-deleted',
+  'steph-wellness-goals-deleted','steph-wellness-selfcare-deleted',
+  'steph-meal-plan','steph-meal-pending','steph-meal-plan-refresh',
+  'steph-quick-meals','steph-kids-facts-rush','steph-kids-facts-hayes',
+  'steph-kids-facts-rush-v2','steph-kids-facts-hayes-v2',
+  'steph-packages','steph-weekly-workout','steph-workout-log',
+  'steph-workout-library','steph-thrive-notes-v2',
 ];
 
 let _userdataCache = null;
