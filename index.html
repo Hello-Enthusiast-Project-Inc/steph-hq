@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v281 2026-03-23 -->
+<!-- v282 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2098,7 +2098,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v281';
+const APP_VERSION = '2026-03-23-v282';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -2641,7 +2641,7 @@ function categorizeGroceryItem(text) {
   if (/milk|yogurt|cheese|butter|cream|sour cream|cottage|kefir|oat milk|almond milk/.test(t)) return '🥛 Dairy & Fridge';
   if (/chicken|turkey|beef|pork|steak|ground|sausage|hot dog|wiener|bacon|ham|lamb|bison/.test(t)) return '🥩 Meat & Protein';
   if (/salmon|tuna|shrimp|fish|cod|halibut|scallop|seafood/.test(t)) return '🐟 Seafood';
-  if (/apple|banana|berry|berries|lemon|lime|orange|mango|grape|peach|pear|avocado|tomato|strawberry|blueberry|raspberry/.test(t)) return '🍎 Fruit';
+  if (/apple|banana|berry|berries|lemon|lime|orange|mango|grape|peach|pear|avocado|tomato|strawberry|blueberry|raspberry|watermelon|cantaloupe|honeydew|melon|kiwi|pineapple|cherry|plum|apricot/.test(t)) return '🍎 Fruit';
   if (/broccoli|spinach|kale|lettuce|romaine|arugula|carrot|celery|onion|garlic|pepper|zucchini|cucumber|potato|sweet potato|mushroom|asparagus|cabbage|cauliflower|veggie|vegetable|herb|parsley|cilantro|basil/.test(t)) return '🥦 Produce';
   if (/bread|bagel|tortilla|wrap|pita|bun|roll|sourdough/.test(t)) return '🍞 Bread & Bakery';
   if (/pasta|rice|quinoa|oat|granola|cereal|flour|noodle|fettuccine|penne|spaghetti/.test(t)) return '🌾 Grains & Pantry';
@@ -4001,8 +4001,9 @@ async function renderGrocery(skipFetch) {
   // Show meal plan grocery banner if a new plan has a pending grocery list
   // Re-read from localStorage AFTER loadUserdata so server value is fresh
   const _pendingRaw = localStorage.getItem('steph-meal-plan-grocery-pending');
-  // Value may be JSON-encoded string (e.g. "\"2026-03-23\"") or plain string — normalise both
-  const pendingPlanId = _pendingRaw ? (function(v){ try { const p = JSON.parse(v); return typeof p === 'string' ? p : v; } catch(e) { return v; } })(_pendingRaw) : null;
+  // Value may be JSON-encoded string (e.g. "\"2026-03-23\"") or plain string or "null" — normalise all
+  const _pendingParsed = _pendingRaw ? (function(v){ try { const p = JSON.parse(v); return (p && typeof p === 'string') ? p : null; } catch(e) { return v; } })(_pendingRaw) : null;
+  const pendingPlanId = (_pendingParsed && _pendingParsed !== 'null') ? _pendingParsed : null;
   if (pendingPlanId) {
     const plan = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
     if (plan && plan.groceryList && plan.groceryList.length) {
@@ -4037,6 +4038,7 @@ async function renderGrocery(skipFetch) {
       div.innerHTML = `
         <div class="li-check" onclick="toggleGrocery(${item.id})"></div>
         <span class="li-text" contenteditable="true" onblur="saveEdit('grocery-list',${item.id},this.textContent)">${item.text}</span>
+        <button onclick="changeGroceryCat(${item.id})" title="Change category" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-light);padding:0 4px;flex-shrink:0;">⇄</button>
         <span class="li-delete" onclick="deleteGrocery(${item.id})">×</span>`;
       section.appendChild(div);
     });
@@ -4045,6 +4047,16 @@ async function renderGrocery(skipFetch) {
 }
 function toggleGrocery(id) { const i = groceryItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); saveUserdata('steph-grocery',groceryItems); renderGrocery(true); }
 function deleteGrocery(id) { groceryItems = groceryItems.filter(x=>x.id!==id); localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); saveUserdata('steph-grocery',groceryItems); renderGrocery(true); }
+function changeGroceryCat(id) {
+  const item = groceryItems.find(x => x.id === id);
+  if (!item) return;
+  showCatModal(item.text, ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🐟 Seafood','🥛 Dairy & Fridge','🌾 Grains & Pantry','🫘 Beans & Legumes','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'], (chosenCat) => {
+    item.cat = chosenCat;
+    localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+    saveUserdata('steph-grocery', groceryItems);
+    renderGrocery(true);
+  });
+}
 function shareGroceryList() {
   const items = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || groceryItems;
   const catOrder = ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🐟 Seafood','🥛 Dairy & Fridge','🌾 Grains & Pantry','🫘 Beans & Legumes','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'];
@@ -4106,10 +4118,12 @@ function addMealPlanGroceries() {
   localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
   saveUserdata('steph-grocery', groceryItems);
   localStorage.removeItem('steph-meal-plan-grocery-pending');
+  saveUserdata('steph-meal-plan-grocery-pending', null);
   renderGrocery(true);
 }
 function dismissMealPlanGroceryBanner() {
   localStorage.removeItem('steph-meal-plan-grocery-pending');
+  saveUserdata('steph-meal-plan-grocery-pending', null);
   renderGrocery(true);
 }
 
