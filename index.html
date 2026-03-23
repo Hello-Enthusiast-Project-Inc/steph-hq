@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v270 2026-03-22 -->
+<!-- v271 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4026,6 +4026,15 @@ function addGrocery() {
 function getWorkoutLog() {
   return JSON.parse(localStorage.getItem('steph-workout-log') || '{}');
 }
+function toggleWorkoutSummary() {
+  const body = document.getElementById('workout-summary-body');
+  const chevron = document.getElementById('workout-summary-chevron');
+  if (!body) return;
+  const isOpen = body.style.display !== 'none';
+  body.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? 'rotate(-90deg)' : 'rotate(0deg)';
+  localStorage.setItem('steph-workout-summary-open', isOpen ? 'false' : 'true');
+}
 function getWorkoutKey(dayIndex) {
   // Key = ISO week start (Monday) + day index so it resets each week
   const now = new Date();
@@ -4181,9 +4190,13 @@ function renderWorkouts() {
     const summaryEl = document.getElementById('workout-week-summary');
     if (summaryEl && weekSummary && weekSummary.summary) {
       summaryEl.style.display = 'block';
+      const isOpen = localStorage.getItem('steph-workout-summary-open') !== 'false';
       summaryEl.innerHTML = `
-        <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:8px;">📋 THIS WEEK FROM LUMEN ${weekSummary.updatedAt ? '· ' + weekSummary.updatedAt : ''}</div>
-        <div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;white-space:pre-wrap;">${weekSummary.summary}</div>`;
+        <div onclick="toggleWorkoutSummary()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
+          <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;">📋 THIS WEEK FROM LUMEN ${weekSummary.updatedAt ? '· ' + weekSummary.updatedAt : ''}</div>
+          <div id="workout-summary-chevron" style="font-size:13px;color:var(--text-light);transition:transform 0.2s;transform:${isOpen ? 'rotate(0deg)' : 'rotate(-90deg)'};">▼</div>
+        </div>
+        <div id="workout-summary-body" style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;white-space:pre-wrap;margin-top:8px;display:${isOpen ? 'block' : 'none'};">${weekSummary.summary}</div>`;
     }
   } catch(e) {}
   const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun
