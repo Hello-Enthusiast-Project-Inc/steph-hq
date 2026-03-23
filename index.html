@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v272 2026-03-22 -->
+<!-- v273 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2668,14 +2668,14 @@ const WORKOUT_DAYS = [
   },
   {
     day: 'Tuesday',
-    emoji: '🤍',
-    label: 'Light Day',
+    emoji: '💪',
+    label: 'Strength Training Class',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">No structured workout — busy day, no pressure. 🤍</p>
-      <div class="list-item"><span class="li-text">🚶 Stroller walk with the boys (any length)</span></div>
-      <div class="list-item"><span class="li-text">🧘 10–15 min gentle stretching or mobility</span></div>
-      <div class="list-item"><span class="li-text">🏃 Optional: short treadmill walk if energy is there</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">No guilt, no pressure. Rest supports your gains.</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Strength training class day! 💪</p>
+      <div class="list-item"><span class="li-text">Light snack 45 min before if needed</span></div>
+      <div class="list-item"><span class="li-text">Hydrate well before, during, and after</span></div>
+      <div class="list-item"><span class="li-text">Push at your own pace — you know your body</span></div>
+      <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
   },
   {
     day: 'Wednesday',
@@ -2697,51 +2697,33 @@ const WORKOUT_DAYS = [
   {
     day: 'Thursday',
     emoji: '💪',
-    label: '45 Min Full Body',
+    label: 'Strength Training Class',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">45 min full body gym session. 💪</p>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Warm-Up</h3>
-      <div class="list-item"><span class="li-text">5 min easy row</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Block 1 — Lower Body</h3>
-      <p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;">3 rounds · 45s on / 15s rest</p>
-      <div class="list-item"><span class="li-text">Barbell/goblet squat</span></div>
-      <div class="list-item"><span class="li-text">Romanian deadlift (dumbbells)</span></div>
-      <div class="list-item"><span class="li-text">Glute bridge</span></div>
-      <div class="list-item"><span class="li-text">Reverse lunge (alternating)</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Block 2 — Upper Body</h3>
-      <p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;">3 rounds · 45s on / 15s rest</p>
-      <div class="list-item"><span class="li-text">Cable lat pulldown</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell shoulder press</span></div>
-      <div class="list-item"><span class="li-text">Cable seated row</span></div>
-      <div class="list-item"><span class="li-text">Dumbbell bicep curl</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Block 3 — Cardio</h3>
-      <p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;">8 min</p>
-      <div class="list-item"><span class="li-text">8 × 1-min treadmill intervals (30s fast / 30s recover, incline 3–5%)</span></div>
-      <h3 style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 10px;">Cool Down</h3>
-      <div class="list-item"><span class="li-text">5 min full body stretch</span></div>
-      <div class="list-item"><span class="li-text">🥩 Protein within 60–90 min!</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Strength training class day! 💪</p>
+      <div class="list-item"><span class="li-text">Light snack 45 min before if needed</span></div>
+      <div class="list-item"><span class="li-text">Hydrate well before, during, and after</span></div>
+      <div class="list-item"><span class="li-text">Push at your own pace — you know your body</span></div>
+      <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
   },
   {
     day: 'Friday',
     emoji: '🚶',
-    label: 'Optional Treadmill Walk',
+    label: 'Active Recovery',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Optional 20 min incline treadmill walk. Treat it as a bonus — no obligation. 🌿</p>
-      <div class="list-item"><span class="li-text">Incline 3–5%, comfortable pace</span></div>
-      <div class="list-item"><span class="li-text">20 min is enough — don't overthink it</span></div>
-      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">If you skip it, no guilt. Barre tomorrow! 🩰</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Active recovery day — keep it easy after a big week. 🌿</p>
+      <div class="list-item"><span class="li-text">🏃 20–30 min incline treadmill walk (incline 3–5%, easy pace)</span></div>
+      <div class="list-item"><span class="li-text">🧘 10 min full body stretch after</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">No pressure — this is about feeling good, not pushing hard.</span></div>`
   },
   {
     day: 'Saturday',
-    emoji: '🩰',
-    label: 'Barre + Weights Class',
+    emoji: '🌿',
+    label: 'Rest Day',
     detail: `
-      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Barre + Weights class! Small movements, big burn. You love this one. 🩰</p>
-      <div class="list-item"><span class="li-text">Light snack 45–60 min before</span></div>
-      <div class="list-item"><span class="li-text">Hydrate well before and after</span></div>
-      <div class="list-item"><span class="li-text">The pulses are supposed to burn 🔥 — lean in</span></div>
-      <div class="list-item"><span class="li-text">Modify anything that doesn't feel right</span></div>
-      <div class="list-item"><span class="li-text">🥩 30–40g protein within 60–90 min after</span></div>`
+      <p style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text-light);margin-bottom:16px;">Rest day — you've earned it. 🌿</p>
+      <div class="list-item"><span class="li-text">No workout today</span></div>
+      <div class="list-item"><span class="li-text">Eat well, hydrate, enjoy the weekend</span></div>
+      <div class="list-item" style="margin-top:8px;"><span class="li-text" style="color:var(--brown);font-style:italic;">Rest is where the gains actually happen. 💛</span></div>`
   },
   {
     day: 'Sunday',
