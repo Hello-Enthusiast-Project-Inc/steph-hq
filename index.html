@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v267 2026-03-22 -->
+<!-- v268 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3530,6 +3530,7 @@ function showTodayHistory() {
     };
     mealData.unshift(entry);
     localStorage.setItem('steph-meal-log', JSON.stringify(mealData));
+    saveUserdata('steph-meal-log', mealData);
     history.replaceState(null, '', window.location.pathname);
   }
 })();
@@ -17414,7 +17415,7 @@ const ALL_USERDATA_KEYS = [
   'steph-quick-meals','steph-kids-facts-rush','steph-kids-facts-hayes',
   'steph-kids-facts-rush-v2','steph-kids-facts-hayes-v2',
   'steph-packages','steph-weekly-workout','steph-workout-log',
-  'steph-workout-library','steph-thrive-notes-v2',
+  'steph-workout-library','steph-thrive-notes-v2','steph-meal-log',
 ];
 
 let _userdataCache = null;
