@@ -1,5 +1,5 @@
 {
-  "currentDay": 4,
+  "currentDay": 5,
   "foodsTried": [
     "Avocado",
     "Yogurt (Dairy)",
@@ -13,6 +13,11 @@
     "Dairy"
   ],
   "notes": [
+    {
+      "day": 4,
+      "text": "✅ Day completed",
+      "date": "2026-03-22"
+    },
     {
       "day": 5,
       "text": "✅ Day completed",
@@ -34,6 +39,7 @@
   ],
   "completedDays": [
     3,
-    5
+    5,
+    4
   ]
 }
