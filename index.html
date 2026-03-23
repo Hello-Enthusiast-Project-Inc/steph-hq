@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v280 2026-03-23 -->
+<!-- v281 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -894,6 +894,9 @@
   <div style="padding: 0 16px 8px; display:flex; gap:10px;">
     <button class="add-btn" style="background:var(--brown);flex:1;" onclick="clearDoneGrocery()">Clear checked ✓</button>
     <button class="add-btn" style="background:#c0392b;flex:1;" onclick="clearAllGrocery()">Clear all 🗑️</button>
+  </div>
+  <div style="padding: 0 16px 16px;">
+    <button class="add-btn" style="background:var(--green);width:100%;" onclick="shareGroceryList()">📤 Share list</button>
   </div>
 </div>
 
@@ -2095,7 +2098,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v280';
+const APP_VERSION = '2026-03-23-v281';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -4042,6 +4045,29 @@ async function renderGrocery(skipFetch) {
 }
 function toggleGrocery(id) { const i = groceryItems.find(x=>x.id===id); if(i) i.done=!i.done; localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); saveUserdata('steph-grocery',groceryItems); renderGrocery(true); }
 function deleteGrocery(id) { groceryItems = groceryItems.filter(x=>x.id!==id); localStorage.setItem('steph-grocery', JSON.stringify(groceryItems)); saveUserdata('steph-grocery',groceryItems); renderGrocery(true); }
+function shareGroceryList() {
+  const items = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || groceryItems;
+  const catOrder = ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🐟 Seafood','🥛 Dairy & Fridge','🌾 Grains & Pantry','🫘 Beans & Legumes','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'];
+  const cats = {};
+  items.filter(i => !i.done).forEach(i => {
+    const cat = i.cat || '🛒 Other';
+    if (!cats[cat]) cats[cat] = [];
+    cats[cat].push(i.text);
+  });
+  let text = '🛒 Grocery List\n\n';
+  catOrder.forEach(cat => {
+    if (!cats[cat]) return;
+    text += cat + '\n';
+    cats[cat].forEach(t => { text += '• ' + t + '\n'; });
+    text += '\n';
+  });
+  text = text.trim();
+  if (navigator.share) {
+    navigator.share({ title: 'Grocery List', text }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('List copied to clipboard!')).catch(() => alert('Could not share — try copying manually.'));
+  }
+}
 function addGrocery() {
   const inp = document.getElementById('grocery-input');
   if (!inp.value.trim()) return;
