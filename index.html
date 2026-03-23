@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v279 2026-03-23 -->
+<!-- v280 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2095,7 +2095,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v279';
+const APP_VERSION = '2026-03-23-v280';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -3997,10 +3997,12 @@ async function renderGrocery(skipFetch) {
   container.innerHTML = '';
   // Show meal plan grocery banner if a new plan has a pending grocery list
   // Re-read from localStorage AFTER loadUserdata so server value is fresh
-  const pendingPlanId = localStorage.getItem('steph-meal-plan-grocery-pending');
+  const _pendingRaw = localStorage.getItem('steph-meal-plan-grocery-pending');
+  // Value may be JSON-encoded string (e.g. "\"2026-03-23\"") or plain string — normalise both
+  const pendingPlanId = _pendingRaw ? (function(v){ try { const p = JSON.parse(v); return typeof p === 'string' ? p : v; } catch(e) { return v; } })(_pendingRaw) : null;
   if (pendingPlanId) {
     const plan = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
-    if (plan && plan.updatedAt === pendingPlanId && plan.groceryList && plan.groceryList.length) {
+    if (plan && plan.groceryList && plan.groceryList.length) {
       const banner = document.createElement('div');
       banner.id = 'meal-plan-grocery-banner';
       banner.style.cssText = 'background:var(--green);color:#fff;border-radius:16px;padding:14px 16px;margin:0 0 14px;font-family:-apple-system,sans-serif;';
