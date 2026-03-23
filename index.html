@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v268 2026-03-22 -->
+<!-- v269 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -7238,13 +7238,19 @@ async function syncStoriesFromServer(kid) {
   try {
     const data = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`).then(r => r.json());
     const key = 'steph-kids-stories-' + kid;
+    const local = JSON.parse(localStorage.getItem(key) || 'null') || JSON.parse(JSON.stringify(STORIES_DEFAULT[kid] || []));
     if (data[key] && data[key].length) {
       // Merge: server wins for any id that exists there, keep local-only additions
-      const local = JSON.parse(localStorage.getItem(key) || '[]');
       const serverIds = new Set(data[key].map(s => s.id));
       const localOnly = local.filter(s => !serverIds.has(s.id));
       const merged = [...data[key], ...localOnly];
       localStorage.setItem(key, JSON.stringify(merged));
+      // Push any local-only stories up to server
+      if (localOnly.length) saveUserdata(key, merged);
+    } else {
+      // Nothing on server yet — push local (including defaults) up
+      localStorage.setItem(key, JSON.stringify(local));
+      saveUserdata(key, local);
     }
   } catch(e) {}
 }
@@ -17416,6 +17422,7 @@ const ALL_USERDATA_KEYS = [
   'steph-kids-facts-rush-v2','steph-kids-facts-hayes-v2',
   'steph-packages','steph-weekly-workout','steph-workout-log',
   'steph-workout-library','steph-thrive-notes-v2','steph-meal-log',
+  'steph-kids-stories-rush','steph-kids-stories-hayes',
 ];
 
 let _userdataCache = null;
