@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v277 2026-03-22 -->
+<!-- v278 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2095,7 +2095,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-10-v188';
+const APP_VERSION = '2026-03-23-v278';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -3157,6 +3157,8 @@ if (storedVersion !== APP_VERSION) {
 const _todayDateKey = new Date().toLocaleDateString('en-CA');
 const _savedCheckedDateRaw = localStorage.getItem('steph-today-checked-date');
 const _savedCheckedDate = _savedCheckedDateRaw ? (function(v){ try { const p = JSON.parse(v); return typeof p === 'string' ? p : v; } catch(e) { return v; } })(_savedCheckedDateRaw) : null;
+// Keys protected from server overwrite this session (e.g. after a new-day reset)
+const _sessionProtectedKeys = new Set();
 if (!_savedCheckedDate) {
   // First ever load — set the date but keep any existing checks
   saveUserdata('steph-today-checked-date', _todayDateKey);
@@ -3172,6 +3174,9 @@ if (!_savedCheckedDate) {
   saveUserdata('steph-today-history', _snapshots);
   saveUserdata('steph-today-checked', {});
   saveUserdata('steph-today-checked-date', _todayDateKey);
+  // Protect these keys from being overwritten by a stale server fetch this session
+  _sessionProtectedKeys.add('steph-today-checked');
+  _sessionProtectedKeys.add('steph-today-checked-date');
 }
 let todayItems = JSON.parse(localStorage.getItem('steph-today-items') || 'null') || JSON.parse(JSON.stringify(TODAY_ITEMS_DEFAULT));
 let todayChecked = JSON.parse(localStorage.getItem('steph-today-checked') || '{}');
@@ -17525,8 +17530,9 @@ async function loadUserdata() {
       const data = await res.json();
       _userdataCache = data;
       ALL_USERDATA_KEYS.forEach(key => {
-        // Option A: skip overwriting any key that has a save currently in flight
+        // Skip keys with saves in flight or that were reset this session (new-day wipe)
         if (_pendingSaveKeys.has(key)) return;
+        if (_sessionProtectedKeys.has(key)) return;
         if (data[key] !== undefined) localStorage.setItem(key, JSON.stringify(data[key]));
       });
     } catch(e) {}
