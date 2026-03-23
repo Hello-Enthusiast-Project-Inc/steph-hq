@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v271 2026-03-22 -->
+<!-- v272 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4184,21 +4184,29 @@ function renderWorkouts() {
   grid.innerHTML = '';
   const today = new Date().getDay();
 
-  // Show weekly summary from Lumen if available
+  // Hide summary element if it exists
+  try { const summaryEl = document.getElementById('workout-week-summary'); if (summaryEl) summaryEl.style.display = 'none'; } catch(e) {}
+
+  // Parse Lumen weekly plan into per-day labels
+  const lumenDayLabels = {};
   try {
     const weekSummary = JSON.parse(localStorage.getItem('steph-weekly-workout') || 'null');
-    const summaryEl = document.getElementById('workout-week-summary');
-    if (summaryEl && weekSummary && weekSummary.summary) {
-      summaryEl.style.display = 'block';
-      const isOpen = localStorage.getItem('steph-workout-summary-open') !== 'false';
-      summaryEl.innerHTML = `
-        <div onclick="toggleWorkoutSummary()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;">
-          <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;">📋 THIS WEEK FROM LUMEN ${weekSummary.updatedAt ? '· ' + weekSummary.updatedAt : ''}</div>
-          <div id="workout-summary-chevron" style="font-size:13px;color:var(--text-light);transition:transform 0.2s;transform:${isOpen ? 'rotate(0deg)' : 'rotate(-90deg)'};">▼</div>
-        </div>
-        <div id="workout-summary-body" style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;white-space:pre-wrap;margin-top:8px;display:${isOpen ? 'block' : 'none'};">${weekSummary.summary}</div>`;
+    if (weekSummary && weekSummary.summary) {
+      const dayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+      const lines = weekSummary.summary.split('\n').filter(l => l.trim());
+      lines.forEach(line => {
+        dayNames.forEach(d => {
+          if (line.startsWith(d)) {
+            const text = line.replace(d, '').replace(/^[\s\-—–]+/, '').trim();
+            // Shorten to first sentence or ~40 chars for tile display
+            const short = text.split('.')[0].split(',')[0].trim();
+            lumenDayLabels[d] = short.length > 38 ? short.substring(0, 36) + '…' : short;
+          }
+        });
+      });
     }
   } catch(e) {}
+
   const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun
   const log = getWorkoutLog();
   const weekKey = getWorkoutWeekKey();
@@ -4255,10 +4263,11 @@ function renderWorkouts() {
     tile.style.position = 'relative';
     if (isToday) tile.style.outline = '2px solid var(--green)';
     if (isDone) tile.style.opacity = '0.7';
+    const daySubtitle = lumenDayLabels[w.day] || w.label;
     tile.innerHTML = `
       <span class="tile-emoji">${isDone ? '✅' : w.emoji}</span>
       <span class="tile-label">${w.day}</span>
-      <span style="display:block;font-size:11px;color:#4a3728;font-family:-apple-system,sans-serif;margin-top:4px;opacity:0.7;">${dayCals > 0 ? '🔥 ' + dayCals + ' cal' : isToday ? '⬤ Today' : w.label.split(' ').slice(0,2).join(' ')}</span>`;
+      <span style="display:block;font-size:11px;color:#4a3728;font-family:-apple-system,sans-serif;margin-top:4px;opacity:0.7;">${dayCals > 0 ? '🔥 ' + dayCals + ' cal' : isToday ? '⬤ Today' : daySubtitle}</span>`;
     tile.onclick = () => openWorkoutDay(i);
     grid.appendChild(tile);
   });
