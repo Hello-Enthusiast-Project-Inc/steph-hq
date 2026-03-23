@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v276 2026-03-22 -->
+<!-- v277 2026-03-22 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3986,6 +3986,24 @@ async function renderGrocery(skipFetch) {
   groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
   const container = document.getElementById('grocery-list');
   container.innerHTML = '';
+  // Show meal plan grocery banner if a new plan has a pending grocery list
+  const pendingPlanId = localStorage.getItem('steph-meal-plan-grocery-pending');
+  if (pendingPlanId) {
+    const plan = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
+    if (plan && plan.updatedAt === pendingPlanId && plan.groceryList && plan.groceryList.length) {
+      const banner = document.createElement('div');
+      banner.id = 'meal-plan-grocery-banner';
+      banner.style.cssText = 'background:var(--green);color:#fff;border-radius:16px;padding:14px 16px;margin:0 0 14px;font-family:-apple-system,sans-serif;';
+      banner.innerHTML = `
+        <div style="font-size:14px;font-weight:700;margin-bottom:6px;">🛒 New meal plan grocery list</div>
+        <div style="font-size:13px;margin-bottom:12px;opacity:0.95;">${plan.week ? plan.week + ' — ' : ''}${plan.groceryList.length} item${plan.groceryList.length !== 1 ? 's' : ''} ready to add</div>
+        <div style="display:flex;gap:8px;">
+          <button onclick="addMealPlanGroceries()" style="flex:1;background:#fff;color:var(--green);border:none;border-radius:10px;padding:8px 0;font-size:13px;font-weight:700;cursor:pointer;">Add to my list ✓</button>
+          <button onclick="dismissMealPlanGroceryBanner()" style="background:rgba(255,255,255,0.25);color:#fff;border:none;border-radius:10px;padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;">Not now</button>
+        </div>`;
+      container.appendChild(banner);
+    }
+  }
   const cats = {};
   const catOrder = ['🥦 Produce','🍎 Fruit','🥩 Meat & Protein','🐟 Seafood','🥛 Dairy & Fridge','🌾 Grains & Pantry','🫘 Beans & Legumes','🥜 Nuts & Seeds','🫙 Condiments & Oils','🍞 Bread & Bakery','🍫 Snacks','🥤 Drinks','🧊 Frozen','🧴 Household & Personal','🛒 Other'];
   groceryItems.forEach(item => {
@@ -4030,6 +4048,31 @@ function addGrocery() {
     inp.value = '';
     renderGrocery();
   }
+}
+
+function addMealPlanGroceries() {
+  const plan = JSON.parse(localStorage.getItem('steph-meal-plan') || 'null');
+  if (!plan || !plan.groceryList || !plan.groceryList.length) return;
+  groceryItems = JSON.parse(localStorage.getItem('steph-grocery') || 'null') || GROCERY_ITEMS;
+  const existingTexts = groceryItems.map(i => i.text.toLowerCase());
+  let added = 0;
+  plan.groceryList.forEach(item => {
+    const text = typeof item === 'string' ? item : item.name || item.text || '';
+    if (!text) return;
+    const cat = (typeof item === 'object' && item.cat) ? item.cat : categorizeGroceryItem(text);
+    if (!existingTexts.includes(text.toLowerCase())) {
+      groceryItems.push({ id: Date.now() + added, text, done: false, cat });
+      added++;
+    }
+  });
+  localStorage.setItem('steph-grocery', JSON.stringify(groceryItems));
+  saveUserdata('steph-grocery', groceryItems);
+  localStorage.removeItem('steph-meal-plan-grocery-pending');
+  renderGrocery(true);
+}
+function dismissMealPlanGroceryBanner() {
+  localStorage.removeItem('steph-meal-plan-grocery-pending');
+  renderGrocery(true);
 }
 
 // ---- HOUSE ----
@@ -4808,6 +4851,10 @@ async function requestMealPlanRefresh() {
         saveUserdata('steph-meal-plan', newPlan);
         _mealPlanHistoryIndex = 0;
         renderMealPlanTab();
+        // If new plan has a grocery list, flag it so grocery screen can prompt Steph
+        if (newPlan.groceryList && newPlan.groceryList.length) {
+          localStorage.setItem('steph-meal-plan-grocery-pending', newPlan.updatedAt);
+        }
         if (btn) { btn.textContent = '✅ Plan updated!'; btn.disabled = false; }
         setTimeout(() => { if (btn) btn.textContent = '↻ New Plan'; }, 3000);
         return;
@@ -17457,7 +17504,7 @@ const ALL_USERDATA_KEYS = [
   'steph-today-items','steph-today-checked','steph-today-checked-date',
   'steph-today-history','steph-todo-deleted',
   'steph-wellness-goals-deleted','steph-wellness-selfcare-deleted',
-  'steph-meal-plan','steph-meal-pending','steph-meal-plan-refresh',
+  'steph-meal-plan','steph-meal-pending','steph-meal-plan-refresh','steph-meal-plan-grocery-pending',
   'steph-quick-meals','steph-kids-facts-rush','steph-kids-facts-hayes',
   'steph-kids-facts-rush-v2','steph-kids-facts-hayes-v2',
   'steph-packages','steph-weekly-workout','steph-workout-log',
