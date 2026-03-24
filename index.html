@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v284 2026-03-23 -->
+<!-- v285 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -615,10 +615,6 @@
     <div class="tile" onclick="showScreen('workouts')">
       <span class="tile-emoji">💪</span>
       <span class="tile-label">Workouts</span>
-    </div>
-    <div class="tile" onclick="showScreen('my-program')">
-      <span class="tile-emoji">🏋️</span>
-      <span class="tile-label">My Program</span>
     </div>
     <div class="tile" onclick="showScreen('grocery')">
       <span class="tile-emoji">🛒</span>
@@ -1726,7 +1722,8 @@
   <div id="workout-weekly-cals" style="margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div id="workout-week-summary" style="display:none;margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div class="grid" id="workout-day-grid"></div>
-  <div style="padding:0 16px 8px;">
+  <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:10px;">
+    <button onclick="showScreen('my-program')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--green);font-size:15px;font-weight:700;color:#fff;font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">💪 My Training Program</button>
     <button onclick="showScreen('workout-library')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--card);font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">📚 My Workout Library</button>
   </div>
   <div id="weight-tracker-card" style="margin:0 16px 24px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
@@ -1735,7 +1732,7 @@
 <!-- MY TRAINING PROGRAM SCREEN -->
 <div class="screen" id="screen-my-program">
   <div class="header">
-    <span class="back" onclick="showScreen('home')">← HQ</span>
+    <span class="back" onclick="showScreen('workouts')">← Workouts</span>
     <h1>My Program 💪</h1>
   </div>
   <div style="padding:0 16px 80px;">
@@ -2113,7 +2110,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v284';
+const APP_VERSION = '2026-03-23-v285';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
