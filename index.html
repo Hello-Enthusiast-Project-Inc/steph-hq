@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v285 2026-03-23 -->
+<!-- v286 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -2110,7 +2110,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v285';
+const APP_VERSION = '2026-03-23-v286';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -3348,6 +3348,21 @@ function renderToday() {
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   document.getElementById('today-date').textContent = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+
+  // Auto-check protein + fibre goals based on today's logged meals
+  try {
+    const todayKey = new Date().toLocaleDateString('en-CA');
+    const allMeals = JSON.parse(localStorage.getItem('steph-meal-log') || '[]');
+    const todayMeals = allMeals.filter(m => m.date === todayKey);
+    const protein = todayMeals.reduce((s, m) => s + (m.protein || 0), 0);
+    const fibre = todayMeals.reduce((s, m) => s + (m.fibre || 0), 0);
+    let changed = false;
+    if (protein >= 120 && !todayChecked[2]) { todayChecked[2] = true; changed = true; }
+    if (protein < 120 && todayChecked[2] === true) { delete todayChecked[2]; changed = true; }
+    if (fibre >= 28 && !todayChecked[5]) { todayChecked[5] = true; changed = true; }
+    if (fibre < 28 && todayChecked[5] === true) { delete todayChecked[5]; changed = true; }
+    if (changed) saveUserdata('steph-today-checked', todayChecked);
+  } catch(e) {}
 
   // Update weekly tally button
   try {
