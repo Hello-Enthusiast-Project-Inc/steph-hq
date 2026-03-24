@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v282 2026-03-23 -->
+<!-- v283 2026-03-23 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1722,10 +1722,22 @@
   <div id="workout-weekly-cals" style="margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div id="workout-week-summary" style="display:none;margin:0 16px 16px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
   <div class="grid" id="workout-day-grid"></div>
-  <div style="padding:0 16px 8px;">
+  <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:10px;">
+    <button onclick="showScreen('my-program')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--green);font-size:15px;font-weight:700;color:#fff;font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">💪 My Training Program</button>
     <button onclick="showScreen('workout-library')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--card);font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">📚 My Workout Library</button>
   </div>
   <div id="weight-tracker-card" style="margin:0 16px 24px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
+</div>
+
+<!-- MY TRAINING PROGRAM SCREEN -->
+<div class="screen" id="screen-my-program">
+  <div class="header">
+    <span class="back" onclick="showScreen('workouts')">← Workouts</span>
+    <h1>My Program 💪</h1>
+  </div>
+  <div style="padding:0 16px 80px;">
+    <div id="my-program-content"></div>
+  </div>
 </div>
 
 <!-- WORKOUT LIBRARY SCREEN -->
@@ -2098,7 +2110,7 @@
 
 <script>
 // ---- VERSION (bump this when Lumen updates lists) ----
-const APP_VERSION = '2026-03-23-v282';
+const APP_VERSION = '2026-03-23-v283';
 
 // ---- DATA ----
 const TODAY_ITEMS_DEFAULT = [
@@ -3274,6 +3286,7 @@ function showScreen(name) {
   if (name === 'workouts') { loadUserdata().then(() => { renderWorkouts(); getWorkoutLibrary(); }); fetchWeightAndRender(); }
   if (name === 'posture') renderPosture();
   if (name === 'workout-library') renderWorkoutLibrary();
+  if (name === 'my-program') renderMyProgram();
 }
 
 // ---- HOME WIDGET ----
@@ -4283,6 +4296,127 @@ function deleteWeightEntry(id) {
   data.entries = data.entries.filter(e => String(e.id) !== String(id));
   saveWeightData(data);
   renderWeightTracker();
+}
+
+// ---- MY TRAINING PROGRAM ----
+const MY_PROGRAM = {
+  week: 1,
+  updatedAt: '2026-03-23',
+  sessions: [
+    {
+      day: 'Tuesday',
+      title: 'Lower Body + Glutes',
+      duration: '~45 min',
+      warmup: '5 min rowing machine · Theraband clamshells 2×15 each side · Band pull-aparts 2×20',
+      exercises: [
+        { name: 'Barbell back squat', detail: '4 × 10', weight: '45lb bar', note: 'Feet shoulder-width, depth to parallel' },
+        { name: 'Romanian deadlift (RDL)', detail: '4 × 10', weight: '65lb total', note: 'Hinge at hips, feel it in hamstrings' },
+        { name: 'Barbell hip thrust', detail: '4 × 12', weight: '65lb total', note: 'Upper back on bench, squeeze glutes at top' },
+        { name: 'Kettlebell swings', detail: '3 × 15', weight: '15lb KB', note: 'Hip hinge power — snap hips forward' },
+        { name: 'Goblet squat', detail: '3 × 12', weight: '15–20lb KB', note: 'Hold KB at chest, elbows inside knees' },
+        { name: 'Cable kickback', detail: '3 × 15 each', weight: '10–15lb', note: 'Slow and controlled' },
+        { name: 'Walking lunges w/ dumbbells', detail: '3 × 12 each', weight: '10–15lb DBs', note: 'Big step, back knee almost to floor' },
+        { name: 'Plank', detail: '3 × 30 sec', weight: '', note: 'Forearms, squeeze everything' }
+      ],
+      restNote: 'Rest 60–90 sec between sets · Sauna 15–20 min after · Drink electrolytes'
+    },
+    {
+      day: 'Thursday',
+      title: 'Upper Body + Core',
+      duration: '~45 min',
+      warmup: '500m rowing machine · Pull-aparts 2×20 · Clamshells 2×15 each side',
+      exercises: [
+        { name: 'Lat pulldown', detail: '4 × 10', weight: '30–40lb', note: 'Pull to upper chest, squeeze shoulder blades' },
+        { name: 'Seated cable row', detail: '4 × 10', weight: '30–40lb', note: 'Elbows close, squeeze at peak' },
+        { name: 'Flat dumbbell chest press', detail: '3 × 10', weight: '15–20lb DBs', note: 'FLAT ONLY — no incline. Protect left shoulder' },
+        { name: 'Single arm KB row', detail: '3 × 12 each', weight: '20lb KB', note: 'Knee on bench, row to hip' },
+        { name: 'Face pulls', detail: '3 × 15', weight: 'Light', note: 'Cable or Theraband. Great for AC joint' },
+        { name: 'DB lateral raise — RIGHT ARM ONLY', detail: '3 × 12', weight: '5–8lb', note: 'Left shoulder needs rest' },
+        { name: 'Dead bug', detail: '3 × 10 each side', weight: '', note: 'Slow. Lower back stays flat on floor' },
+        { name: 'Battle rope waves', detail: '3 × 30 sec', weight: '', note: 'Full arms, stay low, push through it' }
+      ],
+      restNote: 'Rest 60 sec between sets · Sauna 15–20 min after · Drink electrolytes'
+    },
+    {
+      day: 'Friday',
+      title: 'Incline Treadmill Walk',
+      duration: '30 min',
+      warmup: '',
+      exercises: [
+        { name: 'Incline treadmill walk', detail: '30 min', weight: '3.5–4 mph · 8–12% incline', note: "Don't skip this. Burns well and easy on your body." }
+      ],
+      restNote: ''
+    }
+  ],
+  progression: 'Every 2 weeks: add 5lb to lower body lifts, 2.5lb to upper body. Finish all reps easily → go up. Struggling → stay one more week.',
+  notes: 'Left AC joint: no overhead press, no upright rows, no incline press. Right arm lateral raises only for now.'
+};
+
+function renderMyProgram() {
+  const el = document.getElementById('my-program-content');
+  if (!el) return;
+
+  // Try to load from server first
+  const serverProgram = JSON.parse(localStorage.getItem('steph-my-program') || 'null') || MY_PROGRAM;
+  const prog = serverProgram;
+
+  let html = `
+    <div style="background:var(--card);border-radius:18px;padding:16px 20px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;margin-bottom:4px;">Week ${prog.week} · Starting March 25, 2026</div>
+      <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.6;">${prog.progression}</div>
+    </div>
+    <div style="background:rgba(192,98,42,0.1);border-radius:14px;padding:12px 16px;margin-bottom:16px;">
+      <div style="font-size:12px;color:var(--brown);font-family:-apple-system,sans-serif;font-weight:700;margin-bottom:2px;">⚠️ Left Shoulder (AC Joint)</div>
+      <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${prog.notes}</div>
+    </div>`;
+
+  prog.sessions.forEach((session, si) => {
+    const checkKey = 'prog-checks-w' + prog.week + '-s' + si;
+    const checked = JSON.parse(localStorage.getItem(checkKey) || '{}');
+
+    html += `<div style="background:var(--card);border-radius:18px;padding:18px 20px;margin-bottom:14px;">
+      <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.07);padding-bottom:10px;">
+        <div style="font-size:10px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-family:-apple-system,sans-serif;">${session.day}</div>
+        <div style="font-size:17px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${session.title}</div>
+        <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-left:auto;">${session.duration}</div>
+      </div>`;
+
+    if (session.warmup) {
+      html += `<div style="font-size:12px;color:var(--brown);font-style:italic;margin-bottom:12px;padding:8px 12px;background:var(--bg);border-radius:10px;font-family:-apple-system,sans-serif;">🔥 ${session.warmup}</div>`;
+    }
+
+    session.exercises.forEach((ex, ei) => {
+      const isChecked = !!checked[ei];
+      html += `<div onclick="toggleProgramCheck('${checkKey}',${ei},this)" style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);cursor:pointer;opacity:${isChecked?'0.45':'1'};">
+        <div style="width:20px;height:20px;border:2px solid var(--green);border-radius:5px;flex-shrink:0;margin-top:2px;background:${isChecked?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;">
+          ${isChecked?'<span style="color:#fff;font-size:13px;font-weight:900;">✓</span>':''}
+        </div>
+        <div style="flex:1;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${ex.name}</div>
+          ${ex.note ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:1px;">${ex.note}</div>` : ''}
+        </div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:13px;font-weight:700;color:var(--green);font-family:-apple-system,sans-serif;">${ex.detail}</div>
+          ${ex.weight ? `<div style="font-size:12px;color:var(--brown);font-family:-apple-system,sans-serif;">${ex.weight}</div>` : ''}
+        </div>
+      </div>`;
+    });
+
+    if (session.restNote) {
+      html += `<div style="font-size:12px;color:var(--text-light);font-style:italic;margin-top:8px;text-align:right;font-family:-apple-system,sans-serif;">${session.restNote}</div>`;
+    }
+
+    html += `</div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+function toggleProgramCheck(checkKey, idx, el) {
+  const checked = JSON.parse(localStorage.getItem(checkKey) || '{}');
+  checked[idx] = !checked[idx];
+  localStorage.setItem(checkKey, JSON.stringify(checked));
+  renderMyProgram();
 }
 
 function renderWorkouts() {
