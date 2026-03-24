@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v286 2026-03-23 -->
+<!-- v287 2026-03-24 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4544,33 +4544,64 @@ function renderWorkouts() {
   grid.appendChild(postureTile);
 }
 
-// Calorie burn estimator — 150lbs (68kg), moderate intensity
+// Calorie burn estimator — 155lbs (70kg), accounts for combined/compound workouts
 // MET values × weight(kg) × duration(hrs) = kcal
-const WEIGHT_KG = 68;
+const WEIGHT_KG = 70;
 function estimateCalsBurned(text) {
   const t = text.toLowerCase();
   // Duration extraction — look for "30 min", "45min", "1 hour", "1hr" etc.
   let mins = 45; // default
   // Use the LARGEST minute value found (avoids picking up "5 min warm-up" instead of "45 min total")
-  const allMinMatches = [...t.matchAll(/(\d+)[\s\-]*min/g)].filter(m => parseInt(m[1]) >= 5); // ignore tiny values like "3 min warm-up"
+  const allMinMatches = [...t.matchAll(/(\d+)[\s\-]*min/g)].filter(m => parseInt(m[1]) >= 5);
   const minMatch = allMinMatches.length ? allMinMatches.reduce((a, b) => parseInt(a[1]) >= parseInt(b[1]) ? a : b) : null;
   const hrMatch = t.match(/(\d+\.?\d*)\s*h(ou)?r/);
   if (hrMatch) mins = Math.round(parseFloat(hrMatch[1]) * 60);
   else if (minMatch) mins = parseInt(minMatch[1]);
   const hrs = mins / 60;
 
-  // MET values (moderate intensity assumed)
-  let met = 4.0; // default moderate activity
-  if (/hiit|circuit|interval|high intensity/.test(t)) met = 8.0;
-  else if (/strength|weights|lifting|dumbbell|squat|lunge|deadlift|bench|resistance/.test(t)) met = 5.0;
-  else if (/barre|pilates|reformer/.test(t)) met = 4.5;
-  else if (/run|jog|running|jogging/.test(t)) met = 9.0;
-  else if (/walk|stroll/.test(t)) met = 3.5;
-  else if (/yoga|stretch|mobility|flexibility|restorative/.test(t)) met = 2.5;
-  else if (/swim|swimming/.test(t)) met = 7.0;
-  else if (/bike|cycling|spin/.test(t)) met = 6.5;
-  else if (/dance/.test(t)) met = 5.0;
-  else if (/rest/.test(t)) met = 1.5;
+  // Detect activity types — can be combined
+  const isHIIT = /hiit|circuit|interval|high intensity/.test(t);
+  const isStrength = /strength|weights|lifting|dumbbell|squat|lunge|deadlift|bench|resistance|barbell|kettlebell|heavy/.test(t);
+  const isPilates = /barre|pilates|reformer/.test(t);
+  const isRun = /run|jog|running|jogging/.test(t);
+  const isWalk = /walk|stroll/.test(t);
+  const isYoga = /yoga|stretch|mobility|flexibility|restorative/.test(t);
+  const isSwim = /swim|swimming/.test(t);
+  const isBike = /bike|cycling|spin/.test(t);
+  const isDance = /dance/.test(t);
+  const isRest = /rest/.test(t);
+
+  let met;
+
+  // Combined workouts — blend MET values for more accurate estimates
+  if (isHIIT && isStrength) {
+    // Heavy lifting + HIIT component: weighted blend (60% strength MET, 40% HIIT MET) + intensity bump
+    met = (5.5 * 0.6) + (8.5 * 0.4); // ~6.7 — but bump for "heavy" descriptor
+    if (/heavy/.test(t)) met += 0.5; // heavy lifting burns more
+    met = Math.round(met * 10) / 10;
+  } else if (isHIIT) {
+    met = 8.5;
+  } else if (isStrength) {
+    met = /heavy/.test(t) ? 6.0 : 5.0; // heavy lifting = higher MET
+  } else if (isRun) {
+    met = 9.0;
+  } else if (isBike) {
+    met = 6.5;
+  } else if (isSwim) {
+    met = 7.0;
+  } else if (isDance) {
+    met = 5.0;
+  } else if (isPilates) {
+    met = 4.5;
+  } else if (isWalk) {
+    met = 3.5;
+  } else if (isYoga) {
+    met = 2.5;
+  } else if (isRest) {
+    met = 1.5;
+  } else {
+    met = 4.0; // default moderate activity
+  }
 
   const cals = Math.max(10, Math.round(met * WEIGHT_KG * hrs));
   return { cals, mins, met };
