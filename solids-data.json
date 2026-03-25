@@ -51,6 +51,9 @@
   "allergenTracker": {
     "dairy": {
       "status": "introduced"
+    },
+    "egg": {
+      "status": "in-progress"
     }
   }
 }
