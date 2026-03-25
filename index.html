@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v288 2026-03-24 -->
+<!-- v289 2026-03-25 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1375,14 +1375,11 @@
     </div>
   </div>
 
-  <!-- Allergens introduced -->
+  <!-- Allergen Tracker (Solid Starts) -->
   <div class="list-section">
-    <h2>⚠️ Allergens Introduced</h2>
-    <div id="solids-allergens" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
-    <div class="add-row" style="margin-top:12px;">
-      <input class="add-input" id="solids-allergen-input" placeholder="e.g. Egg, Peanut, Dairy..." style="flex:1;" onkeydown="if(event.key==='Enter')solidAddAllergen()">
-      <button class="add-btn" onclick="solidAddAllergen()">Add</button>
-    </div>
+    <h2>⚠️ Allergen Tracker</h2>
+    <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:12px;">Tap an allergen to mark it introduced & see how to serve it.</div>
+    <div id="solids-allergen-tracker"></div>
   </div>
 
   <!-- Notes -->
@@ -1406,6 +1403,32 @@
       <button onclick="solidsDoneDayConfirm()" style="flex:1;background:var(--green);color:#fff;border:none;border-radius:12px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;">Mark Done & Next Day →</button>
       <button onclick="document.getElementById('solids-done-modal').style.display='none'" style="background:var(--card);color:var(--text);border:none;border-radius:12px;padding:13px 16px;font-size:15px;cursor:pointer;">Cancel</button>
     </div>
+  </div>
+</div>
+
+<!-- Allergen Detail Modal -->
+<div id="allergen-detail-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;align-items:flex-start;justify-content:center;padding:16px;overflow-y:auto;">
+  <div style="background:var(--white);border-radius:20px;padding:24px;width:100%;max-width:400px;font-family:-apple-system,sans-serif;margin-top:40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:800;color:var(--text);" id="adm-title">Allergen</div>
+      <button onclick="document.getElementById('allergen-detail-modal').style.display='none'" style="background:var(--card);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;color:var(--text);">×</button>
+    </div>
+    <!-- Status toggle -->
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button id="adm-btn-not" onclick="allergenSetStatus('not-started')" style="flex:1;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">Not started</button>
+      <button id="adm-btn-in" onclick="allergenSetStatus('in-progress')" style="flex:1;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">In progress</button>
+      <button id="adm-btn-done" onclick="allergenSetStatus('introduced')" style="flex:1;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;">Introduced ✓</button>
+    </div>
+    <!-- Notes -->
+    <div style="margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Notes (optional)</div>
+      <input id="adm-notes" class="add-input" placeholder="e.g. Tried in oatmeal, no reaction..." style="width:100%;">
+      <button onclick="allergenSaveNotes()" style="width:100%;margin-top:8px;background:var(--brown);color:#fff;border:none;border-radius:10px;padding:10px;font-size:14px;font-weight:700;cursor:pointer;">Save Note</button>
+    </div>
+    <hr style="border:none;border-top:1px solid var(--card2);margin-bottom:16px;">
+    <!-- How to serve -->
+    <div style="font-size:15px;font-weight:800;color:var(--text);margin-bottom:10px;">📋 How to Introduce</div>
+    <div id="adm-guide" style="font-size:14px;color:var(--text);line-height:1.7;"></div>
   </div>
 </div>
 
@@ -7775,7 +7798,6 @@ async function renderSolidsScreen() {
   const label = document.getElementById('solids-progress-label');
   const newFoodsEl = document.getElementById('solids-new-foods');
   const foodsEl = document.getElementById('solids-foods-tried');
-  const allergensEl = document.getElementById('solids-allergens');
   const notesEl = document.getElementById('solids-notes-list');
 
   if(dayEl) dayEl.textContent = 'Day ' + day;
@@ -7802,12 +7824,8 @@ async function renderSolidsScreen() {
     </span>`).join('') : '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
   }
 
-  const allergens = data.allergens || [];
-  if(allergensEl) {
-    allergensEl.innerHTML = allergens.length ? allergens.map((a,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:#fde8e8;color:#c0392b;border-radius:20px;padding:4px 10px;font-size:13px;font-weight:600;">
-      ${a}<button onclick="solidRemoveAllergen(${i})" style="background:none;border:none;color:#c0392b;cursor:pointer;font-size:14px;padding:0;line-height:1;">×</button>
-    </span>`).join('') : '<span style="color:var(--text-light);font-size:13px;">None yet</span>';
-  }
+  // Render new allergen tracker
+  renderAllergenTracker(data);
 
   const notes = data.notes || [];
   if(notesEl) {
@@ -7884,23 +7902,205 @@ async function solidRemoveFood(i) {
   renderSolidsScreen();
 }
 
-async function solidAddAllergen() {
-  const inp = document.getElementById('solids-allergen-input');
-  if(!inp || !inp.value.trim()) return;
+// ---- ALLERGEN TRACKER (Solid Starts) ----
+
+const ALLERGEN_LIST = [
+  {
+    key: 'dairy', name: 'Cow\'s Milk / Dairy', emoji: '🥛',
+    guide: `<b>Start with plain yogurt (honey-free).</b><br><br>
+<b>Option 1 – Get Right To It:</b> Dip fingertip in 1 tbsp plain yogurt. Let baby taste. Watch 10 min. If no reaction, slowly offer the rest.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp yogurt in porridge<br>
+Day 2: ½ tsp yogurt mashed with fruit or veg<br>
+Day 3: 1 tsp yogurt on a teething rusk<br>
+Day 4: 1 tsp yogurt mixed into mashed beans<br>
+Day 5: 2 tsp yogurt mashed with rice<br><br>
+<b>Once introduced:</b> Keep dairy in rotation 2x/week. Yogurt, cheese, or milk in cooking all count.`
+  },
+  {
+    key: 'egg', name: 'Egg', emoji: '🥚',
+    guide: `<b>Use well-cooked egg</b> (fully scrambled, hard boiled and mashed — not runny).<br><br>
+<b>Option 1 – Get Right To It:</b> Scramble 1 egg fully. Mash into tiny pieces. Place ⅛ tsp on fingertip, let baby taste. Watch 10 min. If no reaction, slowly offer more.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp mashed scrambled egg<br>
+Day 2: ½ tsp mashed scrambled egg<br>
+Day 3: 1 tsp mashed scrambled egg with beans<br>
+Day 4: 1 tsp mashed scrambled egg<br>
+Day 5: 2 tsp mashed scrambled egg<br><br>
+<b>Once introduced:</b> Keep egg in rotation 2x/week. Works in oatmeal, veggie mash, egg strips, frittata.`
+  },
+  {
+    key: 'peanut', name: 'Peanut', emoji: '🥜',
+    guide: `<b>Always thin peanut butter with water — never serve thick.</b><br><br>
+<b>Option 1 – Get Right To It:</b> Mix 2 tsp smooth PB (honey-free) + 1 tbsp warm water. Dip fingertip, let baby taste. Watch 10 min. If no reaction, slowly offer the rest.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp PB thinned with 1 tsp warm water<br>
+Day 2: ½ tsp PB in applesauce or mashed beans<br>
+Day 3: 1 tsp PB mixed into porridge<br>
+Day 4: 1 tsp PB thinned, spread on fruit spear<br>
+Day 5: 2 tsp PB in mashed veg or porridge<br><br>
+<b>Once introduced:</b> 2x/week. Mix into yogurt, mashed banana, oatmeal, or spread thin on soft food.`
+  },
+  {
+    key: 'tree-nuts', name: 'Tree Nuts', emoji: '🌰',
+    guide: `<b>Introduce one tree nut at a time.</b> Use smooth nut butter (honey-free), thinned with water. Focus on common ones: almond, cashew, walnut, hazelnut.<br><br>
+<b>Option 1 – Get Right To It:</b> Mix 2 tsp smooth nut butter + 1 tbsp warm water. Dip fingertip, let taste. Watch 10 min. If fine, slowly offer rest.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp nut butter thinned with warm water<br>
+Day 2: ½ tsp in applesauce or porridge<br>
+Day 3: 1 tsp mixed into mashed veg<br>
+Day 4: 1 tsp spread thin on fruit spear<br>
+Day 5: 2 tsp in mashed veg or porridge<br><br>
+<b>Once introduced:</b> Roll banana spears in ground nuts, mix into yogurt, use nut flour in muffins.`
+  },
+  {
+    key: 'wheat', name: 'Wheat', emoji: '🌾',
+    guide: `<b>Use wheat farina porridge (e.g. Cream of Wheat) or thin pasta/bread.</b><br><br>
+<b>Option 1 – Get Right To It:</b> Prepare 1 tbsp wheat farina porridge. Dip fingertip, let taste. Watch 10 min. If fine, slowly offer rest.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp wheat farina in oatmeal<br>
+Day 2: ½ tsp wheat farina on teething rusk<br>
+Day 3: 1 tsp wheat farina in mashed beans<br>
+Day 4: 1 tsp wheat farina mashed with fruit<br>
+Day 5: 2 tsp wheat farina on veg spears<br><br>
+<b>Once introduced:</b> Pasta, pita strips, bread, wheat farina all count. Keep in rotation 2x/week.`
+  },
+  {
+    key: 'soy', name: 'Soy', emoji: '🫘',
+    guide: `<b>Use edamame paste or silken tofu.</b><br><br>
+<b>Option 1 – Get Right To It:</b> Blend boiled edamame with water to a paste. Place ⅛ tsp on fingertip, let taste. Watch 10 min. If fine, slowly offer rest.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp edamame paste on teething rusk<br>
+Day 2: ½ tsp paste with mashed beans<br>
+Day 3: 1 tsp paste in porridge<br>
+Day 4: 1 tsp paste on veg spear<br>
+Day 5: 2 tsp paste with mashed veg<br><br>
+<b>Once introduced:</b> Tofu in mashed veg, edamame mash, soy in cooking. Soy sauce doesn't count (too little protein).`
+  },
+  {
+    key: 'sesame', name: 'Sesame', emoji: '🌿',
+    guide: `<b>Use tahini (sesame paste) thinned with water. Always buy hulled tahini — higher protein exposure.</b><br><br>
+<b>Option 1 – Get Right To It:</b> Mix 2 tsp tahini + 1 tbsp warm water. Dip fingertip, let taste. Watch 10 min. If fine, offer rest slowly.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp tahini thinned with warm water<br>
+Day 2: ½ tsp tahini in yogurt or applesauce<br>
+Day 3: 1 tsp tahini in porridge<br>
+Day 4: 1 tsp tahini spread on fruit spear<br>
+Day 5: 2 tsp tahini in blended chickpeas<br><br>
+<b>Once introduced:</b> Roll avocado/melon in ground sesame, use tahini in dips and stews. Ground seeds > whole seeds.`
+  },
+  {
+    key: 'fish', name: 'Finned Fish', emoji: '🐟',
+    guide: `<b>Choose low-mercury fish: salmon, sole, tilapia, trout.</b> Cook fully — no raw fish.<br><br>
+<b>Option 1 – Get Right To It:</b> Flake 1 tbsp fully cooked fish (remove all bones/skin). Place ⅛ tsp on fingertip, let taste. Watch 10 min. Offer rest slowly.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp flaked fish with veg spear<br>
+Day 2: ½ tsp flaked fish in porridge<br>
+Day 3: 1 tsp flaked fish mashed with potato<br>
+Day 4: 1 tsp flaked fish mixed with rice<br>
+Day 5: 2 tsp flaked fish mixed with rice<br><br>
+<b>Once introduced:</b> Aim 1–2x/week. Fish cakes (batch and freeze), fish flakes in pasta, mashed with yogurt + cucumber.`
+  },
+  {
+    key: 'shellfish', name: 'Shellfish', emoji: '🦐',
+    guide: `<b>OK to wait until after 1st birthday if not part of your food culture.</b> When ready: shrimp is a good first choice.<br><br>
+<b>Option 1 – Get Right To It:</b> Finely chop 1 tbsp fully cooked shellfish (remove all shell). Place ⅛ tsp on fingertip, let taste. Watch 10 min. Offer rest slowly.<br><br>
+<b>Option 2 – Slow & Steady (5 days):</b><br>
+Day 1: ⅛ tsp finely chopped shellfish on its own<br>
+Day 2: ½ tsp mixed into porridge<br>
+Day 3: 1 tsp mashed with potato<br>
+Day 4: 1 tsp mixed with rice<br>
+Day 5: 2 tsp mixed with rice<br><br>
+<b>Once introduced:</b> Swap into salmon cake recipes, mix with noodles, mash with yogurt + cucumber.`
+  }
+];
+
+let allergenModalKey = null;
+
+function renderAllergenTracker(data) {
+  const tracker = data.allergenTracker || {};
+  const el = document.getElementById('solids-allergen-tracker');
+  if (!el) return;
+  el.innerHTML = ALLERGEN_LIST.map(a => {
+    const status = (tracker[a.key] && tracker[a.key].status) || 'not-started';
+    const statusColors = {
+      'not-started': { bg: 'var(--card)', color: 'var(--text-light)', label: 'Not started' },
+      'in-progress': { bg: '#fff3cd', color: '#856404', label: 'In progress' },
+      'introduced': { bg: '#d4edda', color: '#155724', label: 'Introduced ✓' }
+    };
+    const sc = statusColors[status] || statusColors['not-started'];
+    const note = tracker[a.key] && tracker[a.key].note ? tracker[a.key].note : '';
+    return `<div onclick="openAllergenModal('${a.key}')" style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;">
+      <span style="font-size:24px;">${a.emoji}</span>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${a.name}</div>
+        ${note ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${note}</div>` : ''}
+      </div>
+      <span style="background:${sc.bg};color:${sc.color};border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;font-family:-apple-system,sans-serif;white-space:nowrap;">${sc.label}</span>
+    </div>`;
+  }).join('');
+}
+
+async function openAllergenModal(key) {
+  allergenModalKey = key;
+  const allergen = ALLERGEN_LIST.find(a => a.key === key);
+  if (!allergen) return;
   const data = await solidsGet();
-  const allergens = [...(data.allergens || [])];
-  allergens.push(inp.value.trim());
-  await solidsPut({ allergens });
-  inp.value = '';
+  const tracker = data.allergenTracker || {};
+  const entry = tracker[key] || { status: 'not-started', note: '' };
+
+  document.getElementById('adm-title').textContent = allergen.emoji + ' ' + allergen.name;
+  document.getElementById('adm-guide').innerHTML = allergen.guide;
+  document.getElementById('adm-notes').value = entry.note || '';
+
+  // Highlight active status button
+  ['not-started','in-progress','introduced'].forEach(s => {
+    const btn = document.getElementById('adm-btn-' + (s === 'not-started' ? 'not' : s === 'in-progress' ? 'in' : 'done'));
+    if (!btn) return;
+    btn.style.background = s === entry.status ? 'var(--brown)' : 'var(--card)';
+    btn.style.color = s === entry.status ? '#fff' : 'var(--text)';
+  });
+
+  const modal = document.getElementById('allergen-detail-modal');
+  modal.style.display = 'flex';
+  modal.scrollTop = 0;
+}
+
+async function allergenSetStatus(status) {
+  if (!allergenModalKey) return;
+  const data = await solidsGet();
+  const tracker = { ...(data.allergenTracker || {}) };
+  tracker[allergenModalKey] = { ...(tracker[allergenModalKey] || {}), status };
+  await solidsPut({ allergenTracker: tracker });
+
+  // Update button styles immediately
+  ['not-started','in-progress','introduced'].forEach(s => {
+    const btn = document.getElementById('adm-btn-' + (s === 'not-started' ? 'not' : s === 'in-progress' ? 'in' : 'done'));
+    if (!btn) return;
+    btn.style.background = s === status ? 'var(--brown)' : 'var(--card)';
+    btn.style.color = s === status ? '#fff' : 'var(--text)';
+  });
+
   renderSolidsScreen();
 }
 
-async function solidRemoveAllergen(i) {
+async function allergenSaveNotes() {
+  if (!allergenModalKey) return;
+  const note = document.getElementById('adm-notes').value.trim();
   const data = await solidsGet();
-  const allergens = [...(data.allergens || [])];
-  allergens.splice(i, 1);
-  await solidsPut({ allergens });
+  const tracker = { ...(data.allergenTracker || {}) };
+  tracker[allergenModalKey] = { ...(tracker[allergenModalKey] || {}), note };
+  await solidsPut({ allergenTracker: tracker });
+  document.getElementById('allergen-detail-modal').style.display = 'none';
   renderSolidsScreen();
+}
+
+async function solidAddAllergen() {
+  // Legacy — no longer used in UI but kept for compatibility
+}
+
+async function solidRemoveAllergen(i) {
+  // Legacy — no longer used in UI but kept for compatibility
 }
 
 async function solidAddNote() {
