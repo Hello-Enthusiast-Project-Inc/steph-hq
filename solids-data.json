@@ -47,5 +47,10 @@
     5,
     4,
     6
-  ]
+  ],
+  "allergenTracker": {
+    "dairy": {
+      "status": "introduced"
+    }
+  }
 }
