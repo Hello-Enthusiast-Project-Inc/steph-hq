@@ -5304,7 +5304,7 @@ async function loadMealPlan() {
   const el = document.getElementById('meal-plan-content');
   if (!el) return;
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-meal-plan']) {
       localStorage.setItem('steph-meal-plan', JSON.stringify(data['steph-meal-plan']));
