@@ -5117,7 +5117,7 @@ async function requestMealPlanRefresh() {
   const poll = setInterval(async () => {
     attempts++;
     try {
-      const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+      const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
       const data = await res.json();
       const newPlan = data['steph-meal-plan'];
       if (newPlan && newPlan.updatedAt && newPlan.updatedAt !== existingUpdatedAt) {
@@ -5244,7 +5244,7 @@ function switchMealTab(tab) {
     planView.style.display = 'block';
     if (planBtn) { planBtn.style.background = 'var(--brown)'; planBtn.style.color = '#fff'; }
     // Fetch latest plan from API first, then render
-    fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`)
+    fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } })
       .then(r => r.json())
       .then(d => { if (d['steph-meal-plan']) localStorage.setItem('steph-meal-plan', JSON.stringify(d['steph-meal-plan'])); })
       .catch(() => {})
@@ -5266,7 +5266,7 @@ let mealTemplates = [];
 
 async function renderMealTemplates() {
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-meal-templates']) { mealTemplates = data['steph-meal-templates']; localStorage.setItem('steph-meal-templates', JSON.stringify(mealTemplates)); }
   } catch(e) {}
