@@ -4285,7 +4285,7 @@ function getWorkoutWeekKey() {
 // ---- WEIGHT TRACKER ----
 async function fetchWeightAndRender() {
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-weight-tracker']) {
       localStorage.setItem('steph-weight-tracker', JSON.stringify(data['steph-weight-tracker']));
@@ -6560,7 +6560,7 @@ async function loadThriveNotes() {
   getThriveNotes();
   // Fetch from API in case Lumen added notes
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-thrive-notes-v2'] && Array.isArray(data['steph-thrive-notes-v2'])) {
       thriveNotes = data['steph-thrive-notes-v2'];
@@ -7617,7 +7617,7 @@ function getStories(kid) {
 
 async function syncStoriesFromServer(kid) {
   try {
-    const data = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`).then(r => r.json());
+    const data = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } }).then(r => r.json());
     const key = 'steph-kids-stories-' + kid;
     const local = JSON.parse(localStorage.getItem(key) || 'null') || JSON.parse(JSON.stringify(STORIES_DEFAULT[kid] || []));
     if (data[key] && data[key].length) {
@@ -8230,7 +8230,7 @@ function ktodoConfirmEdit(id) {
 }
 async function renderMemories() {
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-memories']) { memoriesData = data['steph-memories']; localStorage.setItem('steph-memories', JSON.stringify(memoriesData)); }
     if (data['steph-playdates']) { playdates = data['steph-playdates']; localStorage.setItem('steph-playdates', JSON.stringify(playdates)); }
@@ -17865,7 +17865,7 @@ function deleteKidFocus(kid, id) {
 
 async function renderPlaydates() {
   try {
-    const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+    const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
     const data = await res.json();
     if (data['steph-playdates']) { playdates = data['steph-playdates']; localStorage.setItem('steph-playdates', JSON.stringify(playdates)); }
   } catch(e) {}
@@ -17992,7 +17992,7 @@ async function loadUserdata() {
   _userdataFetching = true;
   _userdataFetchPromise = (async () => {
     try {
-      const res = await fetch(`${USERDATA_API}?key=${USERDATA_KEY}&t=${Date.now()}`);
+      const res = await fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } });
       const data = await res.json();
       _userdataCache = data;
       ALL_USERDATA_KEYS.forEach(key => {
