@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v295 2026-04-01 -->
+<!-- v296 2026-04-01 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4960,6 +4960,7 @@ async function renderWorkoutLibrary() {
   const container = document.getElementById('workout-library-list');
   if (!container) return;
   container.innerHTML = '<div style="text-align:center;color:var(--text-light);font-size:14px;font-family:-apple-system,sans-serif;padding:24px 0;">Loading…</div>';
+  _workoutLibCache = null; // always force fresh fetch
   const lib = await getWorkoutLibrary();
   container.innerHTML = '';
   if (!lib.length) {
