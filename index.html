@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v297 2026-04-01 -->
+<!-- v298 2026-04-01 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -4987,7 +4987,7 @@ async function renderWorkoutLibrary() {
   });
 
   // Preferred category order
-  const catOrder = ['🏋️ Gym', '🧘 Reformer', '🧘 Mat Pilates', '🚶 Cardio', '💆 Recovery', '📋 Other'];
+  const catOrder = ['💪 Hans Strength Program', '🏋️ Gym', '🧘 Reformer', '🧘 Mat Pilates', '🚶 Cardio', '💆 Recovery', '📋 Other'];
   const sortedCats = [...new Set([...catOrder.filter(c => grouped[c]), ...Object.keys(grouped).filter(c => !catOrder.includes(c))])];
 
   sortedCats.forEach(cat => {
