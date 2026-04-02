@@ -4841,15 +4841,10 @@ let _workoutLibCache = null;
 
 async function getWorkoutLibrary() {
   if (_workoutLibCache) return _workoutLibCache;
-  try {
-    const res = await fetch(`${WORKOUTS_API}?key=${WORKOUTS_KEY}&t=${Date.now()}`);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const data = await res.json();
-    _workoutLibCache = data.workouts || (Array.isArray(data) ? data : []);
-  } catch(e) {
-    console.error('Workout library fetch failed:', e);
-    _workoutLibCache = JSON.parse(localStorage.getItem('steph-workout-library') || '[]');
-  }
+  const res = await fetch(`${WORKOUTS_API}?key=${WORKOUTS_KEY}&t=${Date.now()}`);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  _workoutLibCache = data.workouts || (Array.isArray(data) ? data : []);
   return _workoutLibCache;
 }
 
