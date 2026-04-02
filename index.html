@@ -17784,8 +17784,11 @@ function ppOpenDay(di) {
   // Topic
   if (lesson.topic) html += section('💬', di % 5 === 0 ? 'Introduce the Topic' : 'Review the Topic', lesson.topic, 'var(--green)');
   
-  // Read Aloud
-  html += section('📖', 'Read Aloud', lesson.readAloud || `Read: ${d.book}`, 'var(--brown)');
+  // Read Aloud — prepend book title prominently
+  const bookLabel = d.book && !d.book.toLowerCase().startsWith('reread') ? `📚 "${d.book}"` : (d.book ? `📚 ${d.book}` : '');
+  const readAloudContent = lesson.readAloud || `Read: ${d.book}`;
+  const readAloudHtml = (bookLabel ? `<div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;"><div style="font-size:12px;font-weight:700;color:var(--brown);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:8px;">📖 READ ALOUD</div><div style="font-size:16px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.07);padding-bottom:8px;">${bookLabel}</div>${readAloudContent.trim().split('\n').filter(l=>l.trim()).map(l=>`<p style="margin:0 0 6px;font-size:14px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.5;">${l.replace(/^[-•]\s*/, '')}</p>`).join('')}</div>` : section('📖', 'Read Aloud', readAloudContent, 'var(--brown)'));
+  html += readAloudHtml;
   
   // Things to Talk About
   if (lesson.talkAbout) html += section('🗣️', 'Things to Talk About', lesson.talkAbout, '#7b68ee');
