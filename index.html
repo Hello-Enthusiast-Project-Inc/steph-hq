@@ -1172,12 +1172,15 @@
       <button class="add-btn" onclick="addKidFocus('hayes')">Add</button>
     </div>
   </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px 12px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:0 16px 12px;">
     <button onclick="showScreen('kids-hayes-memories')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
       <span style="font-size:26px;">📖</span>Memories
     </button>
     <button onclick="showKidStories('hayes')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
       <span style="font-size:26px;">📚</span>Stories
+    </button>
+    <button onclick="showScreen('kids-hayes-lp')" style="aspect-ratio:1;background:var(--card);color:var(--brown);border:none;border-radius:20px;font-size:13px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+      <span style="font-size:26px;">🌱</span>Learn & Play
     </button>
   </div>
   <div style="padding:0 16px 24px;display:flex;flex-direction:column;gap:10px;">
@@ -1247,6 +1250,39 @@
     <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">HISTORY</div>
     <div id="hayes-growth-history"></div>
   </div>
+</div>
+
+<!-- HAYES: LEARN & PLAY MAIN -->
+<div class="screen" id="screen-kids-hayes-lp">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids-hayes')">← Hayes</span>
+    <h1>🌱 Learn & Play</h1>
+  </div>
+  <div style="padding:0 16px 24px;">
+    <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:14px;text-align:center;">Hayes Baby Curriculum · Ages 6–18 months · Started 2 Apr 2026</div>
+    <!-- Current Unit Card -->
+    <div id="lp-current-unit" style="margin-bottom:18px;"></div>
+    <!-- Unit List -->
+    <div id="lp-unit-list"></div>
+  </div>
+</div>
+
+<!-- HAYES: LEARN & PLAY UNIT DETAIL -->
+<div class="screen" id="screen-kids-hayes-lp-unit">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids-hayes-lp')">← Units</span>
+    <h1 id="lp-unit-title">Unit</h1>
+  </div>
+  <div id="lp-unit-detail" style="padding:0 16px 80px;"></div>
+</div>
+
+<!-- HAYES: LEARN & PLAY DAY DETAIL -->
+<div class="screen" id="screen-kids-hayes-lp-day">
+  <div class="header">
+    <span class="back" id="lp-day-back" onclick="showScreen('kids-hayes-lp-unit')">← Unit</span>
+    <h1 id="lp-day-title">Day</h1>
+  </div>
+  <div id="lp-day-detail" style="padding:0 16px 80px;"></div>
 </div>
 
 <!-- KIDS: HAYES MEMORIES -->
@@ -3357,6 +3393,7 @@ function showScreen(name) {
   if (name === 'kids-rush') { renderKidsFocus(); renderKidFacts('rush'); loadUserdata().then(() => renderKidFacts('rush')); }
   if (name === 'kids-rush-pp') { loadUserdata().then(() => renderPP()); }
   if (name === 'kids-hayes-growth') { loadUserdata().then(() => { renderGrowthTracker(); setTimeout(drawGrowthChart, 50); }); }
+  if (name === 'kids-hayes-lp') { loadUserdata().then(() => renderLP()); }
   if (name === 'kids-activities') { loadUserdata().then(() => renderKidsActivities()); }
   if (name === 'kids-hayes') { renderKidsFocus(); renderKidFacts('hayes'); loadUserdata().then(() => renderKidFacts('hayes')); }
   if (name === 'kids-rush-memories') { renderMemories(); }
@@ -17802,6 +17839,438 @@ function ppOpenDay(di) {
 function renderPP() {
   renderPPCurrentUnit();
   renderPPUnitList();
+}
+
+// ---- HAYES LEARN & PLAY CURRICULUM ----
+const LP_DATA = [
+  { unit:1, theme:'Hello World', ages:'6–8 months', emoji:'👋', color:'#7b68ee',
+    overview:'Senses & face-to-face connection. This first unit is all about helping Hayes explore the world through gentle sensory experiences and loving interactions.',
+    books:[
+      {t:'Black & White',a:'Tana Hoban'},
+      {t:'Global Babies',a:'The Global Fund for Children'},
+      {t:'Baby Faces',a:'DK'},
+      {t:'Pat the Bunny',a:'Dorothy Kunhardt'},
+      {t:'Peek-a-Boo!',a:'Roberta Grobel Intrater'}
+    ],
+    song:'Twinkle Twinkle Little Star',
+    poem:'Round and Round the Garden (finger play)',
+    milestones:'Tummy time, head control, reaching for objects, social smiling, babbling',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — faces & connection',
+        readAloud:'Black & White by Tana Hoban — Hold the book 20–30cm from Hayes. Slowly turn pages. Pause on each image and describe what you see in a warm voice.',
+        motorActivity:'Tummy Time Faces: Place Hayes on tummy on a soft mat. Lie down face-to-face. Smile, make gentle sounds, and let him reach toward your face. 3–5 minutes.',
+        song:'🎵 Twinkle Twinkle Little Star — Sing slowly while making eye contact. Gently sway Hayes or tap his hands to the rhythm.',
+        wovenIdeas:'During nappy changes, narrate what you see: "I see your toes! I see your nose!" Use high-contrast items near his play area today.'
+      },
+      { day:'Tuesday', focus:'Revisit book — reaching & grasping',
+        readAloud:'Black & White by Tana Hoban — Reread. This time, hold the book where Hayes can reach and touch the pages. Describe each image slowly.',
+        motorActivity:'Grasp & Reach: Offer a soft rattle or crinkle toy while Hayes is on his back. Hold it just within reach so he practises stretching and grasping. Alternate sides.',
+        song:'🎵 Round and Round the Garden — Trace circles on Hayes\' palm, then "walk" your fingers up his arm. "Round and round the garden, like a teddy bear. One step, two step, tickle you under there!"',
+        wovenIdeas:'At feed times, pause and smile — let Hayes look at your face. Name body parts as you dress him: "Here goes your arm!"'
+      },
+      { day:'Wednesday', focus:'New book — social smiling & sounds',
+        readAloud:'Global Babies by The Global Fund for Children — Point to each baby\'s face. Say "Baby!" with a smile. Pause and wait for Hayes to coo or smile back.',
+        motorActivity:'Mirror Play: Hold Hayes in front of a mirror. Point to his reflection. Smile, wave, make silly faces. Say "Who\'s that? It\'s Hayes!" Let him reach toward the mirror.',
+        song:'🎵 Twinkle Twinkle Little Star — Sing while gently bouncing Hayes on your knee.',
+        wovenIdeas:'Play peek-a-boo with a muslin during the day. Even brief moments count — behind your hands at the changing table, or with a blanket during floor time.'
+      },
+      { day:'Thursday', focus:'Song & movement — babbling & sounds',
+        readAloud:'Baby Faces by DK — Point to each expression. Name the emotions: "Happy baby! Surprised baby!" Use an animated voice. Let Hayes touch the photos.',
+        motorActivity:'Babble Back: During floor time, get face-to-face with Hayes. When he makes a sound, repeat it back. Take turns. Try new sounds — "ba ba", "ma ma", "da da". Celebrate his sounds with smiles.',
+        song:'🎵 Round and Round the Garden — Do on both palms and on his feet too. Vary the speed — slow then fast for the tickle.',
+        wovenIdeas:'Narrate your day to Hayes: "Now we\'re going to the kitchen. Can you hear the water?" Talk, talk, talk — he\'s absorbing everything.'
+      },
+      { day:'Friday', focus:'Recap & gentle exploration',
+        readAloud:'Pat the Bunny by Dorothy Kunhardt — Guide Hayes\' hands to feel the bunny fur, look in the mirror, and touch the textures. Name each sensation.',
+        motorActivity:'Texture Exploration: Gather 3–4 safe textures (soft blanket, crinkle paper, wooden spoon, silicone teether). Let Hayes hold and mouth each one while on his tummy or in your lap. Name the textures: "smooth", "crinkly", "hard".',
+        song:'🎵 Twinkle Twinkle Little Star — Sing outside if weather allows. Let Hayes feel the breeze and look at leaves or sky while you sing.',
+        wovenIdeas:'Take a gentle walk outside. Describe what you see and hear. Let Hayes feel grass, a leaf, or a flower (supervised). Weekend idea: re-read any favourite book from this week.'
+      }
+    ]
+  },
+  { unit:2, theme:'The Senses', ages:'7–9 months', emoji:'🖐️', color:'#e07b6a',
+    overview:'Sensory exploration. Hayes is becoming more curious and mobile — this unit helps him explore textures, sounds, and cause-and-effect through safe sensory play.',
+    books:[
+      {t:'Touch and Feel: Farm',a:'DK'},
+      {t:'See, Touch, Feel',a:'Roger Priddy'},
+      {t:'Tails',a:'Matthew Van Fleet'},
+      {t:'Baby Loves Science: Gravity!',a:'Ruth Spiro'},
+      {t:'Crinkle Crinkle Little Star',a:'(sensory book)'}
+    ],
+    song:'If You\'re Happy and You Know It',
+    poem:'This Little Piggy (toe play)',
+    milestones:'Sitting with/without support, object permanence, pincer grasp emerging, transferring objects hand to hand, cause and effect',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — touch & texture',
+        readAloud:'Touch and Feel: Farm by DK — Guide Hayes\' hands to each texture. Name the animal and the feel: "Fuzzy sheep! Bumpy pig!" Pause and let him explore each page.',
+        motorActivity:'Texture Basket: Fill a small basket with 4–5 safe items of different textures — silk scarf, rubber ball, wooden block, sponge, crinkle paper. Sit Hayes up (supported if needed) and let him pick items out one by one. Name each texture.',
+        song:'🎵 If You\'re Happy and You Know It — Clap Hayes\' hands gently for "clap your hands", tap his feet for "stomp your feet". Big smiles for "shout hooray!"',
+        wovenIdeas:'At bath time, splash gently and say "Splash! Wet!" Let Hayes feel warm water vs. a cool washcloth. Name the sensations throughout the day.'
+      },
+      { day:'Tuesday', focus:'Revisit book — hand-to-hand transfer',
+        readAloud:'Touch and Feel: Farm by DK — Reread. Let Hayes hold the book and turn pages with help. Point to animals and make their sounds: "The cow says moo!"',
+        motorActivity:'Pass the Toy: Sit facing Hayes. Offer a toy to one hand, then encourage him to pass it to the other hand. Cheer when he does! Try with different shaped objects — a block, a ring, a soft ball.',
+        song:'🎵 This Little Piggy — Wiggle each toe as you say each piggy. "This little piggy went to market, this little piggy stayed home..." Big tickle on "wee wee wee!"',
+        wovenIdeas:'During meals, let Hayes hold a spoon or piece of food. Transferring from hand to hand is great practice. Name foods as he touches them.'
+      },
+      { day:'Wednesday', focus:'New book — sounds & listening',
+        readAloud:'See, Touch, Feel by Roger Priddy — This book has lots of interactive elements. Let Hayes pull tabs and touch textures. Name the colours and shapes as you go.',
+        motorActivity:'Sound Shakers: Put rice in a sealed container, bells in another, and scrunch up paper in a third. Let Hayes shake each one. Say "Loud! Quiet! Crinkly!" Hide one behind your back — does he look for it? (Object permanence!)',
+        song:'🎵 If You\'re Happy and You Know It — Add a new verse: "If you\'re happy and you know it, bang the drum!" (use a pot and wooden spoon).',
+        wovenIdeas:'Make sounds throughout the day and pause — "Did you hear that? A bird!" Let Hayes play with safe kitchen items that make noise (wooden spoons, plastic containers).'
+      },
+      { day:'Thursday', focus:'Fine motor — pincer grasp',
+        readAloud:'Tails by Matthew Van Fleet — Let Hayes pull the tails and feel different textures. Name each animal. Make the animal sounds together.',
+        motorActivity:'Puffs Pick-Up: Place a few baby puffs or O-shaped cereal on Hayes\' highchair tray. Encourage him to pick them up with fingers (pincer grasp practice). Celebrate each grab! If he rakes them, that\'s great too.',
+        song:'🎵 This Little Piggy — Do on fingers this time instead of toes. Vary your voice — whisper for the quiet piggy, loud for the market piggy.',
+        wovenIdeas:'Offer finger foods at meals and let Hayes practise self-feeding. During play, offer small-ish safe objects to grasp (large wooden beads, chunky crayons).'
+      },
+      { day:'Friday', focus:'Recap — cause & effect exploration',
+        readAloud:'Crinkle Crinkle Little Star (sensory book) — Let Hayes scrunch and crinkle the pages freely. Describe what he\'s doing: "You\'re crinkling! So noisy!"',
+        motorActivity:'Cause & Effect Play: Fill a container with soft balls. Show Hayes how to dump them out — "Ready? Dump!" Let him try pushing them out or tipping the container. Stack 2 blocks and let him knock them down. Cheer every time!',
+        song:'🎵 If You\'re Happy and You Know It — Full version with clapping, stomping, and shouting. Do it outside if you can!',
+        wovenIdeas:'Play peek-a-boo with a scarf — hide a toy under it and see if Hayes pulls it off (object permanence). Weekend: sensory play with water, ice cubes, or cooked pasta in a tray.'
+      }
+    ]
+  },
+  { unit:3, theme:'Animals', ages:'9–11 months', emoji:'🐻', color:'#4caf50',
+    overview:'Animals & sounds. Hayes is becoming more communicative — waving, pointing, copying sounds. This unit uses animals to build vocabulary and encourage physical milestones.',
+    books:[
+      {t:'Dear Zoo',a:'Rod Campbell'},
+      {t:'Brown Bear, Brown Bear, What Do You See?',a:'Bill Martin Jr.'},
+      {t:'From Head to Toe',a:'Eric Carle'},
+      {t:'Moo Baa La La La',a:'Sandra Boynton'},
+      {t:'Where\'s Spot?',a:'Eric Hill'}
+    ],
+    song:'Old MacDonald Had a Farm',
+    poem:'Two Little Blackbirds (finger play)',
+    milestones:'Crawling/pulling to stand, waving bye-bye, pointing, first words emerging, copying sounds and gestures, searching for hidden objects',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — animal names & sounds',
+        readAloud:'Dear Zoo by Rod Campbell — Lift each flap together. Before you lift, ask "What could it be?" Make the animal sound after each reveal. Let Hayes try to lift the flaps.',
+        motorActivity:'Animal Sound Game: Gather 3–4 stuffed animals or animal pictures. Hold up each one, name it, and make the sound. Pause and see if Hayes copies. "The dog says... woof!" Encourage him to point to the one he wants.',
+        song:'🎵 Old MacDonald Had a Farm — Use stuffed animals as props. Hold up each animal when you sing its verse. Pause before the sound and see if Hayes fills it in.',
+        wovenIdeas:'Point to animals you see during the day — in books, out the window, on a walk. "Look, a dog! Woof woof!" Wave at people and animals to encourage waving.'
+      },
+      { day:'Tuesday', focus:'Revisit book — copying gestures',
+        readAloud:'Dear Zoo by Rod Campbell — Reread. This time, wave bye-bye to each animal that gets sent back. Model "too tall!", "too scary!" with gestures.',
+        motorActivity:'Copy Cat: Sit facing Hayes. Clap — does he clap? Wave — does he wave? Pat the floor — does he copy? Bang two blocks together — can he do it? Celebrate every attempt. Try animal actions: flap arms like a bird, stomp feet like an elephant.',
+        song:'🎵 Two Little Blackbirds — "Two little blackbirds sitting on a hill, one named Jack, one named Jill. Fly away Jack, fly away Jill. Come back Jack, come back Jill." Hide fingers behind back and bring them back.',
+        wovenIdeas:'Wave bye-bye when leaving rooms, when Daddy leaves, when putting toys away. Practise clapping at meal times: "Yay, you ate your banana!"'
+      },
+      { day:'Wednesday', focus:'New book — movement & animals',
+        readAloud:'Brown Bear, Brown Bear, What Do You See? by Bill Martin Jr. — Read with a rhythmic voice. Point to each animal. Pause before the colour and see if Hayes looks at the page expectantly.',
+        motorActivity:'Crawl Chase: Place a favourite toy just out of reach to encourage crawling. If Hayes is pulling to stand, place toys on the couch edge so he cruises to get them. Make animal sounds as he moves: "You\'re crawling like a bear!"',
+        song:'🎵 Old MacDonald Had a Farm — March or crawl around the room while singing. Pause for Hayes to add sounds.',
+        wovenIdeas:'Name colours as you see them today, linking to the book: "A red cup — like the red bird!" Encourage reaching and crawling by placing toys at different spots.'
+      },
+      { day:'Thursday', focus:'Song & fine motor — pointing practice',
+        readAloud:'Moo Baa La La La by Sandra Boynton — Read with silly voices. The "La La La" pig is perfect for making Hayes laugh. Encourage him to point to each animal.',
+        motorActivity:'Point & Find: Hide 3 stuffed animals around the room (partially visible). Say "Where\'s the bear?" and help Hayes point or crawl to find them. Celebrate each discovery! This builds searching and object permanence.',
+        song:'🎵 Two Little Blackbirds — Vary the names: "One named Hayes, one named Rush!" Use finger puppets if you have them.',
+        wovenIdeas:'Point to things during the day and name them. Model pointing with your finger. When Hayes reaches for something, say "You\'re pointing to the ball! You want the ball!"'
+      },
+      { day:'Friday', focus:'Recap — hide & seek with animals',
+        readAloud:'Where\'s Spot? by Eric Hill — Lift flaps together to find Spot. Say "Not here!" and "There he is!" Let Hayes help lift flaps. Great for object permanence.',
+        motorActivity:'Animal Hide & Seek: Hide a stuffed animal under a blanket while Hayes watches. "Where did the bear go?" Let him pull the blanket off. Try hiding it in a box or behind a cushion. Cheer: "You found it!"',
+        song:'🎵 Old MacDonald — Sing outside! Point to any real animals (birds, dogs, cats) you see and add them to the song.',
+        wovenIdeas:'Throughout the day, play quick peek-a-boo games with objects disappearing and reappearing. Weekend: visit a park and look for birds and dogs. Name every animal you see.'
+      }
+    ]
+  },
+  { unit:4, theme:'Colours', ages:'11–13 months', emoji:'🌈', color:'#ff9800',
+    overview:'Colours & early sorting. Hayes may be cruising or taking first steps. This unit introduces colour names through play, art, and sorting — keeping it fun and pressure-free.',
+    books:[
+      {t:'Mouse Paint',a:'Ellen Stoll Walsh'},
+      {t:'Little Blue and Little Yellow',a:'Leo Lionni'},
+      {t:'My Very First Book of Colors',a:'Eric Carle'},
+      {t:'Pete the Cat: I Love My White Shoes',a:'Eric Litwin'},
+      {t:'Freight Train',a:'Donald Crews'}
+    ],
+    song:'I Can Sing a Rainbow',
+    poem:'Red, red, red, I see red — on the flowers, in my bed. Blue, blue, blue, I see blue — in the sky and on my shoe!',
+    milestones:'Walking (cruising to first steps), saying 1–3 words, pointing to show interest, simple sorting, drinking from cup, stacking 2 blocks',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — naming colours',
+        readAloud:'Mouse Paint by Ellen Stoll Walsh — Point to each colour as the mice step in it. Name the colours clearly: "Red paint! Yellow paint!" Let Hayes point to the mice.',
+        motorActivity:'Colour Sorting: Get 3 bowls and coloured objects (red, blue, yellow blocks or balls). Put one in each bowl to start. Say "Red goes with red!" and help Hayes drop them in. Celebrate: "You did it!"',
+        song:'🎵 I Can Sing a Rainbow — "Red and yellow and pink and green, purple and orange and blue. I can sing a rainbow, sing a rainbow, sing a rainbow too." Point to coloured objects as you sing each colour.',
+        wovenIdeas:'Name colours all day: "Your red shirt!", "A yellow banana!", "Blue sky!" Point and pause — let Hayes look. No pressure to say the words, just bathing him in colour language.'
+      },
+      { day:'Tuesday', focus:'Revisit book — stacking & stepping',
+        readAloud:'Mouse Paint by Ellen Stoll Walsh — Reread. Ask "Where\'s the red mouse?" and let Hayes point. Name the mixed colours: "Red + yellow = orange!"',
+        motorActivity:'Stack & Topple: Give Hayes 2–3 soft blocks or stacking cups. Show him how to stack two. Let him knock them down. Say "Up, up, up... CRASH!" Repeat. If he\'s cruising, place the blocks on a low table so he stands to stack.',
+        song:'🎵 I Can Sing a Rainbow — Sing while Hayes walks holding your hands or cruises along furniture. Name colours of things he touches.',
+        wovenIdeas:'At meals, name the colours of food: "Green peas! Orange carrot!" Let Hayes practise drinking from an open cup (with just a little water).'
+      },
+      { day:'Wednesday', focus:'New book — colour mixing & art',
+        readAloud:'Little Blue and Little Yellow by Leo Lionni — A beautiful story about colours mixing. Point: "Blue and yellow make green!" Use a warm, animated voice.',
+        motorActivity:'Mess-Free Colour Mixing: Put blobs of washable paint (2 primary colours) in a sealed ziplock bag. Tape it to the highchair tray or floor. Let Hayes squish and push the colours around to see them mix. Name the new colour!',
+        song:'🎵 I Can Sing a Rainbow — Add actions: touch something red, jump on blue, clap for yellow.',
+        wovenIdeas:'On a walk, point out colours: "The red car! The green tree!" Ask Hayes "Can you see the blue?" and let him point. Celebrate any pointing.'
+      },
+      { day:'Thursday', focus:'Song & movement — first steps support',
+        readAloud:'My Very First Book of Colors by Eric Carle — This split-page book lets you match colours. Help Hayes flip the pages and point to matches.',
+        motorActivity:'Colour Walk: If Hayes is cruising or stepping, set up a colour "course." Place a red cushion, then a blue towel, then a yellow toy in a line. Walk him along (holding hands) and name each colour as you step on it.',
+        song:'🎵 I Can Sing a Rainbow — Sing while dancing with Hayes. Spin slowly, sway, hold his hands and step together.',
+        wovenIdeas:'Let Hayes "help" sort laundry by colour: "Can you put the red sock in?" Offer choices: "The red cup or the blue cup?" Let him point or reach.'
+      },
+      { day:'Friday', focus:'Recap — free colour exploration',
+        readAloud:'Freight Train by Donald Crews — Point to each coloured car. "Red car, orange car, yellow car..." Let Hayes name or point to any he knows.',
+        motorActivity:'Colour Free Play: Set out crayons (chunky ones) and a big piece of paper. Let Hayes scribble freely. Name the colours he picks up. No need for a "picture" — scribbling IS the milestone! Also offer stacking cups in colours to sort.',
+        song:'🎵 I Can Sing a Rainbow — Sing together, then finish with "If You\'re Happy and You Know It" from Unit 2 as a throwback.',
+        wovenIdeas:'Weekend colour hunt: walk around the neighbourhood and see how many colours you can spot together. Point and name everything. Re-read any favourite book from this week.'
+      }
+    ]
+  },
+  { unit:5, theme:'My Body', ages:'13–15 months', emoji:'🦶', color:'#e91e63',
+    overview:'Body awareness & movement. Hayes is likely walking and has a growing vocabulary. This unit helps him learn body part names through songs, books, and active play.',
+    books:[
+      {t:'From Head to Toe',a:'Eric Carle'},
+      {t:'Eyes, Nose, Fingers and Toes',a:'Judy Hindley'},
+      {t:'Clap Hands',a:'Helen Oxenbury'},
+      {t:'Here Are My Hands',a:'Bill Martin Jr.'},
+      {t:'Head, Shoulders, Knees and Toes',a:'(board book)'}
+    ],
+    song:'Head, Shoulders, Knees and Toes',
+    poem:'Wiggle your fingers, wiggle your toes. Wiggle your shoulders, wiggle your nose. Clap your hands, stomp your feet — wiggle your whole self to the beat!',
+    milestones:'Walking independently, climbing stairs with help, 3–10 words, following simple instructions, pointing to body parts, scribbling',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — naming body parts',
+        readAloud:'From Head to Toe by Eric Carle — Read each page and do the action together! "I am a penguin and I turn my head. Can you do it?" Help Hayes copy each animal movement.',
+        motorActivity:'Body Part Touch: Sit facing Hayes. Touch your nose and say "Nose!" Touch your head: "Head!" Then touch Hayes\' nose: "Hayes\' nose!" See if he can point to his own nose, eyes, tummy when you name them.',
+        song:'🎵 Head, Shoulders, Knees and Toes — Sing slowly and touch each body part. Guide Hayes\' hands to touch his own head, shoulders, knees, toes. Repeat 2–3 times, getting a little faster.',
+        wovenIdeas:'At nappy changes and getting dressed, name every body part: "Here\'s your foot! Where\'s your belly button?" Ask "Where\'s your nose?" throughout the day.'
+      },
+      { day:'Tuesday', focus:'Revisit book — following instructions',
+        readAloud:'From Head to Toe by Eric Carle — Reread. This time, pause longer before the action and see if Hayes does it on his own. Cheer every attempt!',
+        motorActivity:'Simon Says (Simple): "Touch your head!" "Clap your hands!" "Stamp your feet!" Keep instructions simple — one body part at a time. Model the action as you say it. 5–6 rounds is plenty.',
+        song:'🎵 Wiggle your fingers, wiggle your toes... — Do the action poem together. Exaggerate the movements. Let Hayes copy what he can.',
+        wovenIdeas:'During meals, say "Open your mouth!" and "Clap your hands!" to practise following instructions. Point to things and wait for Hayes to follow your finger.'
+      },
+      { day:'Wednesday', focus:'New book — hands & feet focus',
+        readAloud:'Eyes, Nose, Fingers and Toes by Judy Hindley — A wonderful rhyming book about body parts. Point to each body part on Hayes as you read. Let him turn the pages.',
+        motorActivity:'Hand & Foot Prints: Use washable paint to make hand prints and foot prints on a big piece of paper. Name each: "Your hand! Your foot!" Let Hayes walk across the paper with painted feet (on a wipeable surface). Messy fun!',
+        song:'🎵 Head, Shoulders, Knees and Toes — Try it standing up. Hold Hayes\' hands and bend down together for knees and toes.',
+        wovenIdeas:'Play "Where\'s your ___ ?" throughout the day. Start with easy ones (nose, eyes) and add new ones (elbow, chin, ear). Celebrate every correct point!'
+      },
+      { day:'Thursday', focus:'Song & movement — climbing & walking',
+        readAloud:'Clap Hands by Helen Oxenbury — Read and do each action: clap, spin, stamp, jump. Simple and joyful. Let Hayes lead the actions.',
+        motorActivity:'Obstacle Course: Make a simple course — crawl under a chair, walk along cushions, climb over a pillow, sit on a small box. Guide Hayes through. Name body parts as you go: "Climb with your legs! Reach with your arms!"',
+        song:'🎵 Wiggle your fingers, wiggle your toes... — Add new verses: "Wiggle your elbows, wiggle your chin!"',
+        wovenIdeas:'Let Hayes climb stairs with you (holding hands, one step at a time). Narrate: "Up, up, up! One step, two steps!" Give simple instructions: "Bring me the ball" or "Put it in the box."'
+      },
+      { day:'Friday', focus:'Recap — scribbling & body awareness',
+        readAloud:'Here Are My Hands by Bill Martin Jr. — Beautiful simple text about what our body parts do. "Here are my hands for catching and throwing." Let Hayes act out each action.',
+        motorActivity:'Scribble Self-Portrait: Tape a big piece of paper to the wall or floor. Give Hayes chunky crayons. Scribble together! You draw a simple circle face and point: "Eyes! Nose! Mouth!" Let Hayes scribble freely — all marks are wonderful.',
+        song:'🎵 Head, Shoulders, Knees and Toes — Grand finale version: sing it fast, then slow, then fast! End with a big "Yayyy!"',
+        wovenIdeas:'Weekend: dance party! Put on music and let Hayes move freely. Name the body parts he uses: "You\'re stamping your feet! You\'re waving your arms!" Re-read favourites from this week.'
+      }
+    ]
+  },
+  { unit:6, theme:'Shapes & Sizes', ages:'15–18 months', emoji:'🔷', color:'#00bcd4',
+    overview:'Early shapes, big/small, in/out. Hayes is becoming a toddler! This unit supports his growing vocabulary, pretend play, and cognitive skills through shapes, sizes, and spatial concepts.',
+    books:[
+      {t:'Shapes, Shapes, Shapes',a:'Tana Hoban'},
+      {t:'The Shape of Things',a:'Dayle Ann Dodds'},
+      {t:'Big Red Barn',a:'Margaret Wise Brown'},
+      {t:'Goodnight Moon',a:'Margaret Wise Brown'},
+      {t:'Chicka Chicka Boom Boom',a:'Bill Martin Jr.'}
+    ],
+    song:'The Wheels on the Bus',
+    poem:'Big and small, big and small — I can find them, one and all. Round like a ball, square like a box — shapes are hiding, even in socks!',
+    milestones:'Stacking 4+ blocks, simple shape sorting, 10–20+ words, two-word combinations emerging, pretend play beginning, scribbling and mark-making',
+    days:[
+      { day:'Monday', focus:'Introduce the theme — naming shapes',
+        readAloud:'Shapes, Shapes, Shapes by Tana Hoban — Photo book of real-world shapes. Point to shapes: "Circle! Square! Triangle!" Trace them with your finger. Let Hayes point to shapes he sees.',
+        motorActivity:'Shape Hunt: Walk around a room together. Find circles (clock, plate), squares (window, book), triangles (roof shape, pizza slice). Point and name: "A circle! The clock is a circle!" Collect 3 objects of each shape.',
+        song:'🎵 The Wheels on the Bus — "The wheels on the bus go round and round" — trace a circle in the air. Do all the actions: wipers, doors, babies, etc.',
+        wovenIdeas:'Name shapes all day: "Your plate is a circle!", "The door is a rectangle!" Use the words big and small: "Big spoon, small spoon." Let Hayes choose between two sizes.'
+      },
+      { day:'Tuesday', focus:'Revisit book — stacking & sorting',
+        readAloud:'Shapes, Shapes, Shapes by Tana Hoban — Reread. This time, ask "Can you find a circle?" and let Hayes point. Trace shapes on his palm.',
+        motorActivity:'Block Tower Challenge: Give Hayes blocks and cups. Can he stack 4? Count as you go: "One, two, three, four!" Let him knock them down. Try sorting: big blocks here, small blocks there. Celebrate!',
+        song:'🎵 The Wheels on the Bus — Add shape actions: "The circles on the bus go round and round", trace squares in the air for windows.',
+        wovenIdeas:'At meals, compare sizes: "Big piece, small piece. Which one?" Offer shape sorting toys. Ask "Where does the circle go?" and let Hayes try.'
+      },
+      { day:'Wednesday', focus:'New book — big & small concepts',
+        readAloud:'Big Red Barn by Margaret Wise Brown — Read in a warm, rhythmic voice. Point out big and small animals: "Big horse! Small mouse!" Let Hayes point to animals and make sounds.',
+        motorActivity:'Big & Small Sort: Gather pairs of big/small items (big ball/small ball, big cup/small cup, big teddy/small teddy). Name them: "BIG ball! small ball." Let Hayes put big things in a big box and small things in a small box.',
+        song:'🎵 Big and small, big and small — Read the poem together, stretching arms wide for BIG and crouching down for small.',
+        wovenIdeas:'Use "big" and "small" throughout the day. "Big bite! Small bite!" "Big step! Small step!" Start introducing "in" and "out" — "Put the block IN the cup. Take it OUT!"'
+      },
+      { day:'Thursday', focus:'Song & pretend play — in/out, spatial concepts',
+        readAloud:'Goodnight Moon by Margaret Wise Brown — A beautiful calming read. Point to objects in the room. Play "Can you find the red balloon?" Let Hayes point to things on each page.',
+        motorActivity:'In & Out Box Play: Get a big cardboard box. Let Hayes climb in and out (help as needed). Put toys in, take them out. "In! Out! In! Out!" Add a blanket to make a den. Pretend it\'s a bus and sing Wheels on the Bus inside it!',
+        song:'🎵 The Wheels on the Bus — Sing while sitting in the cardboard box "bus." Act out all the parts. Pretend play!',
+        wovenIdeas:'Encourage pretend play: feed a teddy with a spoon, put dolly to bed, make a phone call with a block. Use spatial language: "On top, under, behind, next to."'
+      },
+      { day:'Friday', focus:'Recap — mark-making & free exploration',
+        readAloud:'Chicka Chicka Boom Boom by Bill Martin Jr. — Read with rhythm and energy! Clap along. "Chicka chicka boom boom, will there be enough room?" Point to letters if Hayes is interested.',
+        motorActivity:'Shape Scribble Art: Draw large shapes on paper (circle, square, triangle). Give Hayes crayons and let him scribble inside or around them. Name the shapes. Also try: press cookie cutters into playdough to make shapes. Stack, sort, and build freely.',
+        song:'🎵 The Wheels on the Bus — Grand finale! Stand up and do all the actions big. Then sing Twinkle Twinkle (Unit 1) and Old MacDonald (Unit 3) as a curriculum celebration!',
+        wovenIdeas:'Celebrate completing the curriculum! Look at how far Hayes has come since Unit 1. Weekend: free play with all his favourite books, songs, and activities from all 6 units. You did it! 🎉'
+      }
+    ]
+  }
+];
+
+let _lpUnitIdx = null;
+
+function lpGetProgress() {
+  return JSON.parse(localStorage.getItem('steph-lp-progress') || '{}');
+}
+function lpSaveProgress(p) {
+  saveUserdata('steph-lp-progress', p);
+}
+function renderLPUnitList() {
+  const list = document.getElementById('lp-unit-list');
+  if (!list) return;
+  const prog = lpGetProgress();
+  list.innerHTML = LP_DATA.map((u, i) => {
+    const key = `lp_u${u.unit}`;
+    const done = !!prog[key];
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid rgba(0,0,0,0.06);cursor:pointer;" onclick="lpOpenUnit(${i})">
+      <span style="font-size:22px;">${u.emoji}</span>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:700;color:${done?'var(--text-light)':'var(--text)'};font-family:-apple-system,sans-serif;${done?'text-decoration:line-through;':''}">${u.unit}. ${u.theme}</div>
+        <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${u.ages} · ${u.days.length} days</div>
+      </div>
+      <button onclick="event.stopPropagation();lpToggleDone(${u.unit})" style="background:${done?'var(--green)':'var(--card2)'};border:none;border-radius:50%;width:32px;height:32px;font-size:16px;cursor:pointer;flex-shrink:0;">${done?'✅':'○'}</button>
+    </div>`;
+  }).join('');
+}
+function lpToggleDone(unitNum) {
+  const prog = lpGetProgress();
+  const key = `lp_u${unitNum}`;
+  if (prog[key]) delete prog[key]; else prog[key] = true;
+  lpSaveProgress(prog);
+  renderLPUnitList();
+  renderLPCurrentUnit();
+}
+function renderLPCurrentUnit() {
+  const el = document.getElementById('lp-current-unit');
+  if (!el) return;
+  const prog = lpGetProgress();
+  let found = null;
+  for (const u of LP_DATA) {
+    if (!prog[`lp_u${u.unit}`]) { found = u; break; }
+  }
+  if (!found) {
+    el.innerHTML = `<div style="background:var(--green);border-radius:18px;padding:16px 20px;text-align:center;"><div style="font-size:28px;">🎉</div><div style="font-size:16px;font-weight:700;color:white;font-family:-apple-system,sans-serif;margin-top:6px;">All units complete!</div><div style="font-size:13px;color:rgba(255,255,255,0.85);font-family:-apple-system,sans-serif;margin-top:4px;">Hayes has finished Learn & Play! 🌱</div></div>`;
+    return;
+  }
+  const done = Object.keys(prog).filter(k=>k.startsWith('lp_')).length;
+  const total = LP_DATA.length;
+  const pct = Math.round((done/total)*100);
+  el.innerHTML = `<div style="background:${found.color};border-radius:18px;padding:16px 20px;cursor:pointer;" onclick="lpOpenUnit(${found.unit-1})">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <div style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.7);letter-spacing:0.5px;font-family:-apple-system,sans-serif;">▶ CURRENT UNIT</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">${done}/${total} done</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+      <span style="font-size:28px;">${found.emoji}</span>
+      <div>
+        <div style="font-size:17px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">Unit ${found.unit}: ${found.theme}</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;">${found.ages} · Tap to open →</div>
+      </div>
+    </div>
+    <div style="background:rgba(255,255,255,0.2);border-radius:6px;height:6px;overflow:hidden;">
+      <div style="height:100%;background:white;width:${pct}%;border-radius:6px;"></div>
+    </div>
+    <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;margin-top:4px;">${pct}% complete overall</div>
+  </div>`;
+}
+function lpOpenUnit(idx) {
+  const u = LP_DATA[idx];
+  _lpUnitIdx = idx;
+  document.getElementById('lp-unit-title').textContent = `${u.emoji} Unit ${u.unit}: ${u.theme}`;
+  const prog = lpGetProgress();
+  const done = !!prog[`lp_u${u.unit}`];
+  const amzBase = 'https://www.amazon.ca/s?k=';
+  const bookHtml = u.books.map(b=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05);">
+    <div style="flex:1;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">${b.t}</div>
+      ${b.a?`<div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">${b.a}</div>`:''}
+    </div>
+    <a href="${amzBase}${encodeURIComponent(b.t+' '+b.a)}" onclick="event.preventDefault();window.open('${amzBase}${encodeURIComponent(b.t+' '+b.a)}')" style="font-size:11px;color:var(--brown);font-family:-apple-system,sans-serif;text-decoration:none;padding:4px 8px;background:var(--card);border-radius:8px;flex-shrink:0;margin-left:8px;">Amazon →</a>
+  </div>`).join('');
+
+  const daysHtml = u.days.map((d,di)=>`<div style="background:var(--card);border-radius:14px;padding:14px 16px;margin-bottom:10px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="lpOpenDay(${di})">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:${u.color};letter-spacing:0.5px;font-family:-apple-system,sans-serif;">${d.day.toUpperCase()}</div>
+      <div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;margin-top:2px;">${d.focus}</div>
+    </div>
+    <div style="font-size:16px;color:${u.color};">▸</div>
+  </div>`).join('');
+
+  document.getElementById('lp-unit-detail').innerHTML = `
+    <div style="background:${u.color};border-radius:18px;padding:16px 20px;margin-bottom:16px;">
+      <div style="font-size:14px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;margin-bottom:4px;">${u.ages} · ${u.milestones.split(',').length} milestones</div>
+      <div style="font-size:14px;color:rgba(255,255,255,0.9);font-family:-apple-system,sans-serif;">${u.overview}</div>
+    </div>
+    <button onclick="lpToggleDone(${u.unit})" style="width:100%;padding:14px;border-radius:14px;border:none;background:${done?'var(--green)':'var(--card2)'};color:${done?'white':'var(--brown)'};font-size:15px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;margin-bottom:16px;">${done?'✅ Unit Complete! Tap to undo':'○ Mark Unit Complete'}</button>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🎯 MILESTONES TO WATCH</div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;">${u.milestones.split(',').map(m=>'• '+m.trim()).join('<br>')}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📚 BOOKS</div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;">${bookHtml}</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🎵 SONG & POEM</div>
+    <div style="background:var(--card);border-radius:14px;padding:14px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:6px;">🎶 ${u.song}</div>
+      <div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;white-space:pre-wrap;line-height:1.6;">📝 ${u.poem}</div>
+    </div>
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">📅 DAILY LESSONS</div>
+    ${daysHtml}`;
+  showScreen('kids-hayes-lp-unit');
+}
+function lpOpenDay(di) {
+  const u = LP_DATA[_lpUnitIdx];
+  const d = u.days[di];
+
+  document.getElementById('lp-day-title').textContent = d.day;
+
+  function section(emoji, title, content, color) {
+    if (!content || !content.trim()) return '';
+    const lines = content.trim().split('\n').filter(l => l.trim());
+    const html = lines.map(l => `<p style="margin:0 0 6px;font-size:14px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.5;">${l.replace(/^[-•]\s*/,'')}</p>`).join('');
+    return `<div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;">
+      <div style="font-size:12px;font-weight:700;color:${color||u.color};letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:8px;">${emoji} ${title.toUpperCase()}</div>
+      ${html}
+    </div>`;
+  }
+
+  let html = '';
+
+  // Focus header
+  html += `<div style="background:${u.color};border-radius:18px;padding:14px 18px;margin-bottom:14px;">
+    <div style="font-size:13px;color:rgba(255,255,255,0.75);font-family:-apple-system,sans-serif;margin-bottom:2px;">Focus</div>
+    <div style="font-size:16px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${d.focus}</div>
+  </div>`;
+
+  // Read Aloud
+  const bookName = d.readAloud.split('—')[0].trim();
+  const readInstructions = d.readAloud.includes('—') ? d.readAloud.split('—').slice(1).join('—').trim() : d.readAloud;
+  html += `<div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:12px;">
+    <div style="font-size:12px;font-weight:700;color:var(--brown);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:8px;">📖 READ ALOUD</div>
+    <div style="font-size:16px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;margin-bottom:10px;border-bottom:1px solid rgba(0,0,0,0.07);padding-bottom:8px;">📚 ${bookName}</div>
+    <p style="margin:0;font-size:14px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.5;">${readInstructions}</p>
+  </div>`;
+
+  // Motor/Sensory Activity
+  html += section('🤸', 'Sensory / Motor Activity', d.motorActivity, u.color);
+
+  // Song
+  html += section('🎵', 'Song / Poem', d.song, '#7b68ee');
+
+  // Woven Ideas
+  html += section('🌿', 'Woven Ideas (Throughout the Day)', d.wovenIdeas, 'var(--green)');
+
+  document.getElementById('lp-day-detail').innerHTML = html;
+  showScreen('kids-hayes-lp-day');
+}
+function renderLP() {
+  renderLPCurrentUnit();
+  renderLPUnitList();
 }
 
 // ---- KIDS ACTIVITIES ----
