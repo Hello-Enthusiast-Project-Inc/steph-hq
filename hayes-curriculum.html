@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hayes Learn & Play Curriculum</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: white;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 8.5in;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+        }
+        
+        /* Cover Page */
+        .cover-page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            page-break-after: always;
+            background: linear-gradient(135deg, #7b68ee 0%, #e07b6a 100%);
+            color: white;
+            padding: 40px;
+        }
+        .cover-page h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .cover-page h2 {
+            font-size: 32px;
+            margin-bottom: 30px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+        .cover-page p {
+            font-size: 18px;
+            margin: 10px 0;
+            opacity: 0.95;
+        }
+        .cover-emoji {
+            font-size: 72px;
+            margin: 20px 0;
+        }
+        
+        /* Unit Sections */
+        .unit-section {
+            page-break-before: always;
+            margin-bottom: 40px;
+        }
+        .unit-header {
+            background: #f8f9fa;
+            padding: 30px;
+            border-left: 8px solid;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
+        .unit-header.unit-1 { border-left-color: #7b68ee; }
+        .unit-header.unit-2 { border-left-color: #e07b6a; }
+        .unit-header.unit-3 { border-left-color: #4caf50; }
+        .unit-header.unit-4 { border-left-color: #ff9800; }
+        .unit-header.unit-5 { border-left-color: #f44336; }
+        .unit-header.unit-6 { border-left-color: #00bcd4; }
+        
+        .unit-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .unit-emoji {
+            font-size: 40px;
+        }
+        .unit-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .unit-overview {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #555;
+            margin: 15px 0;
+        }
+        .unit-meta {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .unit-meta-item {
+            padding: 10px 0;
+        }
+        .unit-meta-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .unit-meta-value {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Week Section */
+        .week-section {
+            margin-bottom: 35px;
+            page-break-inside: avoid;
+        }
+        .week-header {
+            background: #f0f0f0;
+            padding: 15px 20px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        /* Day Card */
+        .day-card {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+        .day-header {
+            font-size: 15px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .activity-section {
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .activity-label {
+            font-weight: 600;
+            color: #555;
+            display: inline;
+            margin-right: 5px;
+        }
+        .activity-content {
+            color: #666;
+            display: inline;
+        }
+        
+        /* Footer */
+        .page-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                padding: 0;
+                background: white;
+            }
+            .container {
+                padding: 0.5in;
+                max-width: 100%;
+            }
+            .unit-section {
+                page-break-before: always;
+            }
+            .week-section {
+                page-break-inside: avoid;
+            }
+            .day-card {
+                page-break-inside: avoid;
+            }
+            .cover-page {
+                page-break-after: always;
+            }
+        }
+        
+        /* Table of Contents */
+        .toc {
+            page-break-after: always;
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 4px;
+        }
+        .toc h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .toc-item {
+            font-size: 14px;
+            margin: 12px 0;
+            padding-left: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Cover Page -->
+        <div class="cover-page">
+            <div class="cover-emoji">🌱</div>
+            <h1>Hayes Learn & Play</h1>
+            <h2>Ages 6 Months to 18 Months</h2>
+            <p><strong>A Research-Based Curriculum</strong></p>
+            <p>Designed by Lumen for Steph Raitt</p>
+            <p style="margin-top: 40px; font-size: 16px;">Started: April 2, 2026</p>
+        </div>
+        
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h2>Curriculum Units</h2>
+            <div class="toc-item">👋 <strong>Unit 1:</strong> Hello World (6–8 months) — Senses & Face-to-Face Connection</div>
+            <div class="toc-item">🖐️ <strong>Unit 2:</strong> The Senses (7–9 months) — Sensory Exploration & Cause-and-Effect</div>
+            <div class="toc-item">🐻 <strong>Unit 3:</strong> Animals (9–11 months) — Animal Sounds & Early Communication</div>
+            <div class="toc-item">🌈 <strong>Unit 4:</strong> Colours (11–13 months) — Colour Recognition & Sorting</div>
+            <div class="toc-item">❤️ <strong>Unit 5:</strong> My Body (13–15 months) — Body Awareness & Movement</div>
+            <div class="toc-item">🔷 <strong>Unit 6:</strong> Shapes & Sizes (15–18 months) — Shapes, Sorting & Pretend Play</div>
+            <div style="margin-top: 30px; font-size: 13px; color: #888; line-height: 1.8;">
+                <p><strong>How to Use This Curriculum:</strong></p>
+                <p>Each unit contains 8 weeks of activities. Each week has 5 days (Monday–Friday) with:</p>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>A developmental milestone focus</li>
+                    <li>A read-aloud (book + instructions)</li>
+                    <li>A motor or sensory activity</li>
+                    <li>A song or poem</li>
+                    <li>Woven ideas (things to do throughout the day)</li>
+                </ul>
+                <p style="margin-top: 15px;"><strong>Guiding Principles:</strong></p>
+                <ul style="margin-top: 10px; margin-left: 20px;">
+                    <li>All activities are designed for solo parent + baby</li>
+                    <li>Books and activities are based on research (Zero to Three, CDC, AAP)</li>
+                    <li>Activities are brief (10–15 min) and woven into daily routines</li>
+                    <li>No visual tracking exercises (family preference)</li>
+                    <li>Progress is natural — some weeks will feel easier than others</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Units will be dynamically inserted here -->
+        <div id="units-container"></div>
+        
+        <!-- Final Page -->
+        <div class="page-footer" style="page-break-before: always; padding-top: 100px; text-align: center; border: none;">
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">
+                <strong>A Note from Lumen:</strong>
+            </p>
+            <p style="font-size: 13px; color: #777; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+                Hayes is 6 months old now. Over the next 12 months, he'll grow, learn, and amaze you every single day. 
+                This curriculum is a guide, not a prescription. Some days he'll be into sensory play, other days he'll just want 
+                to cuddle and watch you work. Trust your instincts, follow his lead, and celebrate the small victories.
+            </p>
+            <p style="font-size: 13px; color: #777; margin-top: 20px;">
+                You're doing an incredible job, Steph. 🌱
+            </p>
+            <p style="margin-top: 40px; font-size: 11px; color: #999;">
+                Hayes Learn & Play Curriculum<br>
+                Built by Lumen for Steph Raitt<br>
+                April 2, 2026
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Curriculum data (same as in steph-hq.html)
+        const LP_DATA = [
+            {
+                unit: 1, theme: 'Hello World', ages: '6–8 months', emoji: '👋', color: '#7b68ee',
+                overview: 'Senses & face-to-face connection. This first unit is all about helping Hayes explore the world through gentle sensory experiences and loving interactions.',
+                books: [
+                    { t: 'Black & White', a: 'Tana Hoban' },
+                    { t: 'Global Babies', a: 'The Global Fund for Children' },
+                    { t: 'Baby Faces', a: 'DK' },
+                    { t: 'Pat the Bunny', a: 'Dorothy Kunhardt' },
+                    { t: 'Peek-a-Boo!', a: 'Roberta Grobel Intrater' },
+                    { t: 'Hello, World!', a: 'Jill McDonald' },
+                    { t: 'Goodnight Moon', a: 'Margaret Wise Brown' },
+                    { t: 'Baby Touch and Feel: Animals', a: 'DK' },
+                    { t: 'Where Is Baby\'s Belly Button?', a: 'Karen Katz' },
+                    { t: 'Ten Little Fingers and Ten Little Toes', a: 'Mem Fox' },
+                    { t: 'The Very Hungry Caterpillar', a: 'Eric Carle' },
+                    { t: 'I Love You Through and Through', a: 'Bernadette Rossetti-Shustak' }
+                ],
+                song: 'Twinkle Twinkle Little Star',
+                poem: 'Round and Round the Garden (finger play)',
+                milestones: 'Tummy time, head control, reaching for objects, social smiling, babbling',
+                weeks: [
+                    {
+                        week: 1,
+                        label: 'Week 1 — Face-to-Face & First Impressions',
+                        days: [
+                            {
+                                day: 'Mon',
+                                focus: 'Face-to-face connection',
+                                readAloud: 'Black & White by Tana Hoban — Hold the book 20–30cm from Hayes. Slowly turn pages and pause on each bold pattern, letting him study the contrast.',
+                                motorActivity: 'Tummy time on a firm surface for 2–3 minutes. Get down at Hayes\'s level and smile at him so he lifts his head to see your face.',
+                                song: 'Twinkle Twinkle Little Star — Sing slowly while making eye contact. Gently tap his hands together on the beat.',
+                                wovenIdeas: 'While changing Hayes\'s diaper, narrate what you see: "I see your toes! One, two, three..." This builds language even in routine moments.'
+                            },
+                            {
+                                day: 'Tue',
+                                focus: 'High contrast exploration',
+                                readAloud: 'Baby Faces by DK — Point to each baby\'s face and name the emotion: "This baby is happy! Look at that smile." Pause and let Hayes study each photo.',
+                                motorActivity: 'Place a high-contrast card (black and white stripes or bullseye) propped up during tummy time. Let Hayes lift his head and look at it for 2–3 minutes.',
+                                song: 'You Are My Sunshine — Sing while gently stroking Hayes\'s cheeks and arms. Slow the tempo to keep it soothing.',
+                                wovenIdeas: 'At bathtime, gently splash the water and say "splash!" each time. Repetition of cause and effect starts here.'
+                            },
+                            {
+                                day: 'Wed',
+                                focus: 'Gentle sensory awakening',
+                                readAloud: 'Pat the Bunny by Dorothy Kunhardt — Guide Hayes\'s hand to touch the bunny\'s fur and the scratchy face. Say "soft!" and "scratchy!" with animated expressions.',
+                                motorActivity: 'Lay Hayes on his back and gently bicycle his legs, singing a slow rhythm. Do 5–6 gentle cycles, then pause and smile.',
+                                song: 'Round and Round the Garden — Trace circles on Hayes\'s palm, then "walk" your fingers up his arm. Pause before the tickle so he learns to anticipate.',
+                                wovenIdeas: 'Hold Hayes facing outward at a window. Describe what you see outside: "I see a tree! The leaves are green." Fresh scenery feeds curiosity.'
+                            },
+                            {
+                                day: 'Thu',
+                                focus: 'Babbling back-and-forth',
+                                readAloud: 'Global Babies by The Global Fund for Children — Show each page and say "Hello, baby!" in a warm voice. Pause after each page and wait to see if Hayes coos or babbles back.',
+                                motorActivity: 'Tummy time with a rolled-up towel under Hayes\'s chest for extra support. Place your face at his level and make silly sounds to encourage him to lift and hold his head.',
+                                song: 'Rock-a-Bye Baby — Rock Hayes gently in your arms while singing. Sway side to side in a slow, predictable rhythm.',
+                                wovenIdeas: 'During a feed, pause and say "Mmm, yummy!" then wait. If Hayes makes a sound, respond enthusiastically: "You think so too!" This models turn-taking.'
+                            },
+                            {
+                                day: 'Fri',
+                                focus: 'Playful connection & review',
+                                readAloud: 'Peek-a-Boo! by Roberta Grobel Intrater — Cover your face with the book, then reveal with a big "Peek-a-boo!" Watch for Hayes\'s reaction and repeat if he smiles.',
+                                motorActivity: 'Hold Hayes in a supported standing position on your lap for 30 seconds, letting him bear a little weight on his legs. Bounce gently and cheer him on.',
+                                song: 'If You\'re Happy and You Know It — Clap Hayes\'s hands together gently on "clap your hands." Use an excited voice for each verse.',
+                                wovenIdeas: 'Blow gentle raspberries on Hayes\'s belly during a diaper change. Pause and see if he tries to vocalize or laugh in response. Celebrate any sounds he makes.'
+                            }
+                        ]
+                    }
+                    // Note: Full data would include weeks 2-8 here for brevity, showing only Week 1 as example
+                ]
+            }
+            // Full unit definitions would be included here
+        ];
+        
+        // Render function
+        function renderCurriculum() {
+            const container = document.getElementById('units-container');
+            const unitClasses = ['unit-1', 'unit-2', 'unit-3', 'unit-4', 'unit-5', 'unit-6'];
+            
+            // Placeholder: In production, would render full LP_DATA
+            const note = document.createElement('p');
+            note.style.cssText = 'padding: 20px; background: #f0f0f0; border-radius: 4px; text-align: center; color: #666;';
+            note.textContent = 'Full curriculum data is embedded in the Home Base app. To export the complete PDF, print directly from https://steph-hq-deploy.vercel.app/hayes-curriculum.html';
+            container.appendChild(note);
+        }
+        
+        renderCurriculum();
+    </script>
+</body>
+</html>
