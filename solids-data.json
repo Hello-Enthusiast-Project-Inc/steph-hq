@@ -54,6 +54,9 @@
     },
     "egg": {
       "status": "introduced"
+    },
+    "peanut": {
+      "status": "introduced"
     }
   }
 }
