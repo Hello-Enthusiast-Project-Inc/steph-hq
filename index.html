@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v298 2026-04-01 -->
+<!-- v299 2026-04-04 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -8144,28 +8144,109 @@ Day 5: 2 tsp mixed with rice<br><br>
 
 let allergenModalKey = null;
 
+function allergenWeekKey() {
+  // Returns ISO week string e.g. "2026-W14" (Mon–Sun)
+  const now = new Date();
+  const d = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  const day = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(week).padStart(2,'0')}`;
+}
+
+function allergenTodayKey() {
+  const now = new Date();
+  return now.toLocaleDateString('en-CA'); // YYYY-MM-DD
+}
+
 function renderAllergenTracker(data) {
   const tracker = data.allergenTracker || {};
   const el = document.getElementById('solids-allergen-tracker');
   if (!el) return;
-  el.innerHTML = ALLERGEN_LIST.map(a => {
-    const status = (tracker[a.key] && tracker[a.key].status) || 'not-started';
-    const statusColors = {
-      'not-started': { bg: 'var(--card)', color: 'var(--text-light)', label: 'Not started' },
-      'in-progress': { bg: '#fff3cd', color: '#856404', label: 'In progress' },
-      'introduced': { bg: '#d4edda', color: '#155724', label: 'Introduced ✓' }
-    };
-    const sc = statusColors[status] || statusColors['not-started'];
-    const note = tracker[a.key] && tracker[a.key].note ? tracker[a.key].note : '';
-    return `<div onclick="openAllergenModal('${a.key}')" style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;">
-      <span style="font-size:24px;">${a.emoji}</span>
-      <div style="flex:1;min-width:0;">
-        <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${a.name}</div>
-        ${note ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${note}</div>` : ''}
-      </div>
-      <span style="background:${sc.bg};color:${sc.color};border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;font-family:-apple-system,sans-serif;white-space:nowrap;">${sc.label}</span>
-    </div>`;
-  }).join('');
+
+  const weekKey = allergenWeekKey();
+  const todayKey = allergenTodayKey();
+
+  // Split into introduced vs not
+  const introduced = ALLERGEN_LIST.filter(a => (tracker[a.key] && tracker[a.key].status) === 'introduced');
+  const notIntroduced = ALLERGEN_LIST.filter(a => (tracker[a.key] && tracker[a.key].status) !== 'introduced');
+
+  let html = '';
+
+  // Weekly dose tracker for introduced allergens
+  if (introduced.length > 0) {
+    html += `<div style="font-size:12px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;letter-spacing:0.5px;margin-bottom:8px;text-transform:uppercase;">This Week's Doses</div>`;
+    html += introduced.map(a => {
+      const entry = tracker[a.key] || {};
+      const doses = (entry.doses && entry.doses[weekKey]) || [];
+      const count = doses.length;
+      const goal = 2;
+      const doneToday = doses.includes(todayKey);
+      const pct = Math.min(count / goal, 1) * 100;
+      const barColor = count >= goal ? '#7a9e7e' : count === 1 ? '#f0ad4e' : 'var(--card2)';
+
+      return `<div style="background:var(--white);border-radius:14px;padding:12px 14px;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <span style="font-size:22px;">${a.emoji}</span>
+          <div style="flex:1;">
+            <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${a.name}</div>
+            <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${count}/${goal} this week</div>
+          </div>
+          <button onclick="allergenLogDose('${a.key}');event.stopPropagation();" style="background:${doneToday ? '#d4edda' : 'var(--green)'};color:${doneToday ? '#155724' : '#fff'};border:none;border-radius:10px;padding:7px 12px;font-size:12px;font-weight:700;font-family:-apple-system,sans-serif;cursor:pointer;white-space:nowrap;">
+            ${doneToday ? '✓ Done today' : '+ Log dose'}
+          </button>
+        </div>
+        <div style="height:6px;background:var(--card);border-radius:4px;overflow:hidden;">
+          <div style="height:100%;width:${pct}%;background:${barColor};border-radius:4px;transition:width 0.3s;"></div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  // Not-introduced allergens
+  if (notIntroduced.length > 0) {
+    if (introduced.length > 0) {
+      html += `<div style="font-size:12px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;letter-spacing:0.5px;margin:16px 0 8px;text-transform:uppercase;">Not Yet Introduced</div>`;
+    }
+    html += notIntroduced.map(a => {
+      const status = (tracker[a.key] && tracker[a.key].status) || 'not-started';
+      const statusColors = {
+        'not-started': { bg: 'var(--card)', color: 'var(--text-light)', label: 'Not started' },
+        'in-progress': { bg: '#fff3cd', color: '#856404', label: 'In progress' }
+      };
+      const sc = statusColors[status] || statusColors['not-started'];
+      const note = tracker[a.key] && tracker[a.key].note ? tracker[a.key].note : '';
+      return `<div onclick="openAllergenModal('${a.key}')" style="display:flex;align-items:center;gap:12px;background:var(--white);border-radius:14px;padding:12px 14px;margin-bottom:8px;cursor:pointer;">
+        <span style="font-size:24px;">${a.emoji}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:14px;font-weight:700;color:var(--text);font-family:-apple-system,sans-serif;">${a.name}</div>
+          ${note ? `<div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${note}</div>` : ''}
+        </div>
+        <span style="background:${sc.bg};color:${sc.color};border-radius:20px;padding:4px 10px;font-size:11px;font-weight:700;font-family:-apple-system,sans-serif;white-space:nowrap;">${sc.label}</span>
+      </div>`;
+    }).join('');
+  }
+
+  el.innerHTML = html;
+}
+
+async function allergenLogDose(key) {
+  const data = await solidsGet();
+  const tracker = { ...(data.allergenTracker || {}) };
+  const entry = { ...(tracker[key] || { status: 'introduced' }) };
+  const weekKey = allergenWeekKey();
+  const todayKey = allergenTodayKey();
+  const doses = { ...(entry.doses || {}) };
+  const weekDoses = [...(doses[weekKey] || [])];
+  if (!weekDoses.includes(todayKey)) {
+    weekDoses.push(todayKey);
+  }
+  doses[weekKey] = weekDoses;
+  entry.doses = doses;
+  tracker[key] = entry;
+  await solidsPut({ allergenTracker: tracker });
+  renderSolidsScreen();
 }
 
 async function openAllergenModal(key) {
