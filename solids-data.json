@@ -50,7 +50,12 @@
   ],
   "allergenTracker": {
     "dairy": {
-      "status": "introduced"
+      "status": "introduced",
+      "doses": {
+        "2026-W14": [
+          "2026-04-04"
+        ]
+      }
     },
     "egg": {
       "status": "introduced"
