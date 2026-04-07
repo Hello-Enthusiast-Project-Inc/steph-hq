@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v304 2026-04-07 -->
+<!-- v305 2026-04-07 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -3380,7 +3380,7 @@ function showScreen(name) {
   if (name === 'household-warranty') renderHouseholdWarranty();
   if (name === 'household-maintenance') renderHouseholdMaintenance();
   if (name === 'packages') renderPackages();
-  if (name === 'nutrition') { mealLogDate = new Date().toLocaleDateString('en-CA'); switchMealTab('log'); renderMealLog(); }
+  if (name === 'nutrition') { mealLogDate = new Date().toLocaleDateString('en-CA'); switchMealTab('log'); renderMealLog(); loadUserdata().then(() => { const todayMeals2 = (mealData || []).filter(m => m.date === new Date().toLocaleDateString('en-CA') && m.action !== 'delete'); const calsEaten2 = todayMeals2.reduce((s, m) => s + (m.cal || 0), 0); renderCalBalance(calsEaten2); }); }
   if (name === 'events') { renderEvents(); renderCalendarEvents(); renderAppointments(); }
   if (name === 'kids-hayes-solids') renderSolidsScreen();
   if (name === 'wellness-goals') renderWellness();
