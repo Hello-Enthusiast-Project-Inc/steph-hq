@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v302 2026-04-07 -->
+<!-- v303 2026-04-07 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -5333,64 +5333,55 @@ function switchMealTab(tab) {
   }
 }
 
-// ---- CALORIES IN VS OUT ----
-// Base TDEE: 2275 cal (includes breastfeeding ~450 cal bonus)
-// Workout burns by day index (Mon=0 … Sun=6)
-const TDEE_BASE = 2275;
+// ---- CALORIES REMAINING ----
+// Cal goal: 1,900 (midpoint of 1,800–1,950 target)
+// Workout bonus by day index (Mon=0 … Sun=6)
+const CAL_GOAL_BASE = 1900;
 const WORKOUT_BURN_BY_DAY = [300, 250, 200, 250, 150, 0, 0]; // Mon HIIT, Tue Strength, Wed Pilates, Thu Strength, Fri Walk, Sat Rest, Sun Rest
 
-function getTodayCalsBurned() {
+function getTodayCalGoal() {
   const todayDayOfWeek = new Date().getDay(); // 0=Sun
-  const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun index
+  const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun index in WORKOUT_DAYS
   const todayIdx = dayOrder.indexOf(todayDayOfWeek);
-  // Check if today's workout is marked done
   const log = getWorkoutLog();
-  const key = getWorkoutKey(todayIdx);
-  const workoutDone = !!log[key];
-  const workoutBurn = workoutDone ? (WORKOUT_BURN_BY_DAY[todayIdx] || 0) : 0;
-  return TDEE_BASE + workoutBurn;
+  const workoutDone = !!log[getWorkoutKey(todayIdx)];
+  const workoutBonus = workoutDone ? (WORKOUT_BURN_BY_DAY[todayIdx] || 0) : 0;
+  return { base: CAL_GOAL_BASE, bonus: workoutBonus, total: CAL_GOAL_BASE + workoutBonus, workoutDone, todayIdx };
 }
 
 function renderCalBalance(calsIn) {
   const card = document.getElementById('cal-balance-card');
   if (!card) return;
-  const totalBurn = getTodayCalsBurned();
-  const deficit = totalBurn - calsIn;
-  const isDeficit = deficit >= 0;
-  const pctFilled = Math.min(100, Math.round((calsIn / totalBurn) * 100));
+  const { base, bonus, total, workoutDone, todayIdx } = getTodayCalGoal();
+  const remaining = total - calsIn;
+  const pctEaten = Math.min(100, Math.round((calsIn / total) * 100));
+  const isOver = remaining < 0;
 
-  // Determine today workout name for display
-  const todayDayOfWeek = new Date().getDay();
-  const dayOrder = [1,2,3,4,5,6,0];
-  const todayIdx = dayOrder.indexOf(todayDayOfWeek);
-  const log = getWorkoutLog();
-  const workoutDone = !!log[getWorkoutKey(todayIdx)];
+  const barColor = isOver ? '#d9534f' : pctEaten >= 85 ? '#c8a882' : 'var(--green)';
+  const remainingColor = isOver ? '#d9534f' : 'var(--text)';
+
   const workoutBurn = WORKOUT_BURN_BY_DAY[todayIdx] || 0;
-  const workoutNote = workoutDone && workoutBurn > 0
-    ? `<span style="font-size:11px;color:var(--green);font-family:-apple-system,sans-serif;"> +${workoutBurn} workout ✅</span>`
-    : workoutBurn > 0
-    ? `<span style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;"> (+${workoutBurn} if you log workout)</span>`
+  const workoutLine = workoutBurn > 0
+    ? workoutDone
+      ? `<span style="font-size:11px;color:var(--green);font-family:-apple-system,sans-serif;">+${workoutBonus} workout bonus ✅</span>`
+      : `<span style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">+${workoutBurn} available if you log today's workout</span>`
     : '';
 
-  const barColor = pctFilled >= 100 ? '#d9534f' : pctFilled >= 85 ? '#c8a882' : 'var(--green)';
-  const deficitColor = isDeficit ? 'var(--green)' : '#d9534f';
-  const deficitLabel = isDeficit
-    ? `📉 ${deficit} cal deficit`
-    : `📈 ${Math.abs(deficit)} cal surplus`;
-
+  card.style.display = 'block';
   card.innerHTML = `
-    <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🔥 CALORIES IN VS OUT</div>
-    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
-      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);">${calsIn} eaten</span>
-      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text-light);">${totalBurn} burned${workoutNote ? '' : ''}</span>
+    <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🔥 CALORIES</div>
+    <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;">Remaining = Goal − Food${workoutBurn > 0 ? ' + Exercise' : ''}</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);">🎯 Goal: ${total}</span>
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text-light);">🍽️ Eaten: ${calsIn}</span>
     </div>
-    ${workoutNote ? `<div style="margin-bottom:6px;">${workoutNote}</div>` : ''}
-    <div style="background:rgba(0,0,0,0.07);border-radius:10px;height:12px;overflow:hidden;margin-bottom:8px;">
-      <div style="height:100%;border-radius:10px;background:${barColor};width:${pctFilled}%;transition:width 0.4s ease;"></div>
+    ${workoutLine ? `<div style="margin-bottom:8px;">${workoutLine}</div>` : ''}
+    <div style="background:rgba(0,0,0,0.07);border-radius:10px;height:12px;overflow:hidden;margin-bottom:10px;">
+      <div style="height:100%;border-radius:10px;background:${barColor};width:${pctEaten}%;transition:width 0.4s ease;"></div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:14px;font-weight:700;color:${deficitColor};font-family:-apple-system,sans-serif;">${deficitLabel}</span>
-      <span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${pctFilled}% of burn</span>
+      <span style="font-size:20px;font-weight:700;color:${remainingColor};font-family:-apple-system,sans-serif;">${isOver ? '+'+Math.abs(remaining)+' over' : remaining+' remaining'}</span>
+      <span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${pctEaten}% eaten</span>
     </div>`;
 }
 
