@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v303 2026-04-07 -->
+<!-- v304 2026-04-07 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -5334,53 +5334,81 @@ function switchMealTab(tab) {
 }
 
 // ---- CALORIES REMAINING ----
-// Cal goal: 1,900 (midpoint of 1,800–1,950 target)
-// Workout bonus by day index (Mon=0 … Sun=6)
+// Cal goal base: 1,900 (midpoint of 1,800–1,950 target)
+// Workout bonus by day index (Mon=0 … Sun=6) — used if Apple Health not connected
 const CAL_GOAL_BASE = 1900;
-const WORKOUT_BURN_BY_DAY = [300, 250, 200, 250, 150, 0, 0]; // Mon HIIT, Tue Strength, Wed Pilates, Thu Strength, Fri Walk, Sat Rest, Sun Rest
+const WORKOUT_BURN_BY_DAY = [300, 250, 200, 250, 150, 0, 0];
+
+let _todayHealthData = null; // cached Apple Health data for today
+
+async function fetchTodayHealthData() {
+  const today = new Date().toLocaleDateString('en-CA');
+  try {
+    const res = await fetch(`/api/health?key=lumen-steph-2026&date=${today}&t=${Date.now()}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data && data.activeCalories) { _todayHealthData = data; return data; }
+  } catch(e) {}
+  return null;
+}
 
 function getTodayCalGoal() {
-  const todayDayOfWeek = new Date().getDay(); // 0=Sun
-  const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun index in WORKOUT_DAYS
+  const todayDayOfWeek = new Date().getDay();
+  const dayOrder = [1,2,3,4,5,6,0];
   const todayIdx = dayOrder.indexOf(todayDayOfWeek);
   const log = getWorkoutLog();
   const workoutDone = !!log[getWorkoutKey(todayIdx)];
+
+  // If Apple Health data available, use active calories from watch/phone
+  if (_todayHealthData && _todayHealthData.activeCalories > 0) {
+    const activeCal = Math.round(_todayHealthData.activeCalories);
+    return { base: CAL_GOAL_BASE, bonus: activeCal, total: CAL_GOAL_BASE + activeCal, source: 'apple', steps: _todayHealthData.steps || 0, workoutDone, todayIdx };
+  }
+
+  // Fallback: use workout schedule bonus if marked done
   const workoutBonus = workoutDone ? (WORKOUT_BURN_BY_DAY[todayIdx] || 0) : 0;
-  return { base: CAL_GOAL_BASE, bonus: workoutBonus, total: CAL_GOAL_BASE + workoutBonus, workoutDone, todayIdx };
+  return { base: CAL_GOAL_BASE, bonus: workoutBonus, total: CAL_GOAL_BASE + workoutBonus, source: 'schedule', steps: 0, workoutDone, todayIdx };
 }
 
 function renderCalBalance(calsIn) {
   const card = document.getElementById('cal-balance-card');
   if (!card) return;
-  const { base, bonus, total, workoutDone, todayIdx } = getTodayCalGoal();
+  const { base, bonus, total, source, steps, workoutDone, todayIdx } = getTodayCalGoal();
   const remaining = total - calsIn;
   const pctEaten = Math.min(100, Math.round((calsIn / total) * 100));
   const isOver = remaining < 0;
 
-  const barColor = isOver ? '#d9534f' : pctEaten >= 85 ? '#c8a882' : 'var(--green)';
+  const barColor = isOver ? '#d9534f' : pctEaten >= 90 ? '#c8a882' : 'var(--green)';
   const remainingColor = isOver ? '#d9534f' : 'var(--text)';
 
-  const workoutBurn = WORKOUT_BURN_BY_DAY[todayIdx] || 0;
-  const workoutLine = workoutBurn > 0
-    ? workoutDone
-      ? `<span style="font-size:11px;color:var(--green);font-family:-apple-system,sans-serif;">+${workoutBonus} workout bonus ✅</span>`
-      : `<span style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">+${workoutBurn} available if you log today's workout</span>`
-    : '';
+  let bonusLine = '';
+  if (source === 'apple' && bonus > 0) {
+    bonusLine = `<div style="margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+      <span style="font-size:12px;">🍎</span>
+      <span style="font-size:12px;color:var(--green);font-family:-apple-system,sans-serif;font-weight:600;">+${bonus} active cal${steps > 0 ? ' · ' + steps.toLocaleString() + ' steps' : ''}</span>
+    </div>`;
+  } else if (source === 'schedule') {
+    const workoutBurn = WORKOUT_BURN_BY_DAY[todayIdx] || 0;
+    if (workoutBurn > 0) {
+      bonusLine = workoutDone
+        ? `<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--green);font-family:-apple-system,sans-serif;">+${bonus} workout bonus ✅</span></div>`
+        : `<div style="margin-bottom:8px;"><span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">+${workoutBurn} available when you mark workout done</span></div>`;
+    }
+  }
 
   card.style.display = 'block';
   card.innerHTML = `
     <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🔥 CALORIES</div>
-    <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;">Remaining = Goal − Food${workoutBurn > 0 ? ' + Exercise' : ''}</div>
     <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
-      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);">🎯 Goal: ${total}</span>
-      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text-light);">🍽️ Eaten: ${calsIn}</span>
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);">🎯 Goal: ${total.toLocaleString()}</span>
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text-light);">🍽️ Eaten: ${calsIn.toLocaleString()}</span>
     </div>
-    ${workoutLine ? `<div style="margin-bottom:8px;">${workoutLine}</div>` : ''}
+    ${bonusLine}
     <div style="background:rgba(0,0,0,0.07);border-radius:10px;height:12px;overflow:hidden;margin-bottom:10px;">
       <div style="height:100%;border-radius:10px;background:${barColor};width:${pctEaten}%;transition:width 0.4s ease;"></div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;">
-      <span style="font-size:20px;font-weight:700;color:${remainingColor};font-family:-apple-system,sans-serif;">${isOver ? '+'+Math.abs(remaining)+' over' : remaining+' remaining'}</span>
+      <span style="font-size:20px;font-weight:700;color:${remainingColor};font-family:-apple-system,sans-serif;">${isOver ? '+'+Math.abs(remaining).toLocaleString()+' over' : remaining.toLocaleString()+' remaining'}</span>
       <span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${pctEaten}% eaten</span>
     </div>`;
 }
@@ -5604,16 +5632,24 @@ function renderMealLogFromData(meals) {
 }
 
 async function renderMealLog() {
-  // Show loading state
   const list = document.getElementById('meal-entries-list');
   if (list) list.innerHTML = `<div class="meal-entry"><p style="color:var(--text-light)">Loading... 🍽️</p></div>`;
+  // Fetch Apple Health data in parallel
+  fetchTodayHealthData().then(() => {
+    // Re-render cal balance with fresh health data if already shown
+    const card = document.getElementById('cal-balance-card');
+    if (card && card.style.display !== 'none') {
+      const todayMeals = (mealData || []).filter(m => m.date === new Date().toLocaleDateString('en-CA') && m.action !== 'delete');
+      const calsEaten = todayMeals.reduce((s, m) => s + (m.cal || 0), 0);
+      renderCalBalance(calsEaten);
+    }
+  });
   try {
     const res = await fetch(`${MEALS_API}?key=${MEALS_KEY}&t=${Date.now()}`);
     if (!res.ok) throw new Error('API error');
     const data = await res.json();
     renderMealLogFromData(data.meals || []);
   } catch(e) {
-    // Fallback to localStorage if API fails
     const fallback = JSON.parse(localStorage.getItem('steph-meal-log') || '[]');
     renderMealLogFromData(fallback);
   }
