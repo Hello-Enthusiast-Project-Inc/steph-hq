@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v299 2026-04-04 -->
+<!-- v300 2026-04-07 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1541,7 +1541,6 @@
   <div style="display:flex;gap:8px;padding:0 16px 4px;position:sticky;top:88px;z-index:9;background:var(--bg);">
     <button id="meallog-tab-log" onclick="switchMealTab('log')" style="flex:1;padding:9px 4px;border-radius:12px;border:none;font-size:14px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--brown);color:#fff;transition:all 0.15s;">📋 Log</button>
     <button id="meallog-tab-plan" onclick="switchMealTab('plan')" style="flex:1;padding:9px 4px;border-radius:12px;border:none;font-size:14px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--card);color:var(--text);transition:all 0.15s;">🗓 Plan</button>
-    <button id="meallog-tab-templates" onclick="switchMealTab('templates')" style="flex:1;padding:9px 4px;border-radius:12px;border:none;font-size:14px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;background:var(--card);color:var(--text);transition:all 0.15s;">⭐ Templates</button>
   </div>
   <div id="meallog-log-view" class="meal-log">
     <!-- Date navigation -->
@@ -1560,10 +1559,18 @@
       <div class="macro-row"><span class="macro-label">🍬 Sugar</span><span class="macro-val">&lt;35g</span></div>
     </div>
     <div class="macro-card" id="meal-totals-card"></div>
+    <!-- CALORIES IN VS OUT BAR -->
+    <div id="cal-balance-card" style="margin:0 16px 12px;background:var(--card);border-radius:18px;padding:16px 18px;"></div>
     <div id="meal-entries-list"></div>
-    <div style="padding:8px 16px 24px;display:flex;gap:10px;">
+    <div style="padding:8px 16px 16px;display:flex;gap:10px;">
       <button onclick="showAddMealSheet()" style="flex:1;background:var(--brown);color:#fff;border:none;border-radius:14px;padding:12px;font-size:15px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">+ Add Meal</button>
       <button onclick="clearTodayMeals()" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:14px;padding:12px 16px;font-size:13px;cursor:pointer;font-family:-apple-system,sans-serif;">Clear 🗑️</button>
+    </div>
+    <!-- SAVED TEMPLATES -->
+    <div style="padding:0 16px 8px;">
+      <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">⭐ SAVED TEMPLATES</div>
+      <div id="meal-templates-list"></div>
+      <button onclick="showAddTemplateSheet()" style="width:100%;background:var(--card);color:var(--brown);border:1px solid var(--brown);border-radius:14px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;margin-top:4px;">+ Save Today as Template</button>
     </div>
   </div>
 
@@ -1665,13 +1672,7 @@
     <p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;text-align:center;padding-bottom:8px;">Repeat the rotation · swap dinners as you like 🌿</p>
   </div>
 
-  <!-- TEMPLATES VIEW -->
-  <div id="meallog-templates-view" style="display:none;padding:0 16px 80px;">
 
-    <p style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:12px 0 16px;line-height:1.5;">Save a full day as a template — pull it up anytime for inspiration 🌿</p>
-    <div id="meal-templates-list"></div>
-    <button onclick="showAddTemplateSheet()" style="width:100%;background:var(--brown);color:#fff;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;margin-top:8px;">+ Save New Template</button>
-  </div>
 </div>
 
 <!-- TURKEY BOWL MODAL -->
@@ -4339,6 +4340,15 @@ function toggleWorkoutDone(dayIndex, e) {
   }
 
   renderWorkouts();
+  // If meal log is currently visible, refresh the cal balance bar
+  const mealScreen = document.getElementById('screen-nutrition');
+  if (mealScreen && mealScreen.classList.contains('active')) {
+    const mealData2 = JSON.parse(localStorage.getItem('steph-meal-log') || '[]');
+    const today3 = new Date().toLocaleDateString('en-CA');
+    const todayMeals = mealData2.filter(m => m.date === today3 && m.action !== 'delete');
+    const calsEaten = todayMeals.reduce((sum, m) => sum + (m.cal || 0), 0);
+    renderCalBalance(calsEaten);
+  }
 }
 
 function getWorkoutWeekKey() {
@@ -5308,32 +5318,86 @@ function showInlineRecipe(nameEnc, recipeEnc) {
 function switchMealTab(tab) {
   const logView = document.getElementById('meallog-log-view');
   const planView = document.getElementById('meallog-plan-view');
-  const templatesView = document.getElementById('meallog-templates-view');
   const logBtn = document.getElementById('meallog-tab-log');
   const planBtn = document.getElementById('meallog-tab-plan');
-  const tplBtn = document.getElementById('meallog-tab-templates');
   if (!logView || !planView) return;
-  [logView, planView, templatesView].forEach(v => { if(v) v.style.display = 'none'; });
-  [logBtn, planBtn, tplBtn].forEach(b => { if(b) { b.style.background = 'var(--card)'; b.style.color = 'var(--text)'; }});
+  [logView, planView].forEach(v => { if(v) v.style.display = 'none'; });
+  [logBtn, planBtn].forEach(b => { if(b) { b.style.background = 'var(--card)'; b.style.color = 'var(--text)'; }});
   if (tab === 'plan') {
     planView.style.display = 'block';
     if (planBtn) { planBtn.style.background = 'var(--brown)'; planBtn.style.color = '#fff'; }
-    // Fetch latest plan from API first, then render
     fetch(`${USERDATA_API}?t=${Date.now()}`, { headers: { 'x-lumen-key': USERDATA_KEY } })
       .then(r => r.json())
       .then(d => { if (d['steph-meal-plan']) localStorage.setItem('steph-meal-plan', JSON.stringify(d['steph-meal-plan'])); })
       .catch(() => {})
       .finally(() => renderMealPlanTab());
-    renderMealPlanTab(); // render immediately from cache too
-  } else if (tab === 'templates') {
-    if (templatesView) templatesView.style.display = 'block';
-    if (tplBtn) { tplBtn.style.background = 'var(--brown)'; tplBtn.style.color = '#fff'; }
-    renderMealTemplates();
-    loadMealPlan();
+    renderMealPlanTab();
   } else {
     logView.style.display = 'block';
     if (logBtn) { logBtn.style.background = 'var(--brown)'; logBtn.style.color = '#fff'; }
+    renderMealTemplates();
   }
+}
+
+// ---- CALORIES IN VS OUT ----
+// Base TDEE: 2275 cal (includes breastfeeding ~450 cal bonus)
+// Workout burns by day index (Mon=0 … Sun=6)
+const TDEE_BASE = 2275;
+const WORKOUT_BURN_BY_DAY = [300, 250, 200, 250, 150, 0, 0]; // Mon HIIT, Tue Strength, Wed Pilates, Thu Strength, Fri Walk, Sat Rest, Sun Rest
+
+function getTodayCalsBurned() {
+  const todayDayOfWeek = new Date().getDay(); // 0=Sun
+  const dayOrder = [1,2,3,4,5,6,0]; // Mon-Sun index
+  const todayIdx = dayOrder.indexOf(todayDayOfWeek);
+  // Check if today's workout is marked done
+  const log = getWorkoutLog();
+  const key = getWorkoutKey(todayIdx);
+  const workoutDone = !!log[key];
+  const workoutBurn = workoutDone ? (WORKOUT_BURN_BY_DAY[todayIdx] || 0) : 0;
+  return TDEE_BASE + workoutBurn;
+}
+
+function renderCalBalance(calsIn) {
+  const card = document.getElementById('cal-balance-card');
+  if (!card) return;
+  const totalBurn = getTodayCalsBurned();
+  const deficit = totalBurn - calsIn;
+  const isDeficit = deficit >= 0;
+  const pctFilled = Math.min(100, Math.round((calsIn / totalBurn) * 100));
+
+  // Determine today workout name for display
+  const todayDayOfWeek = new Date().getDay();
+  const dayOrder = [1,2,3,4,5,6,0];
+  const todayIdx = dayOrder.indexOf(todayDayOfWeek);
+  const log = getWorkoutLog();
+  const workoutDone = !!log[getWorkoutKey(todayIdx)];
+  const workoutBurn = WORKOUT_BURN_BY_DAY[todayIdx] || 0;
+  const workoutNote = workoutDone && workoutBurn > 0
+    ? `<span style="font-size:11px;color:var(--green);font-family:-apple-system,sans-serif;"> +${workoutBurn} workout ✅</span>`
+    : workoutBurn > 0
+    ? `<span style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;"> (+${workoutBurn} if you log workout)</span>`
+    : '';
+
+  const barColor = pctFilled >= 100 ? '#d9534f' : pctFilled >= 85 ? '#c8a882' : 'var(--green)';
+  const deficitColor = isDeficit ? 'var(--green)' : '#d9534f';
+  const deficitLabel = isDeficit
+    ? `📉 ${deficit} cal deficit`
+    : `📈 ${Math.abs(deficit)} cal surplus`;
+
+  card.innerHTML = `
+    <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:10px;">🔥 CALORIES IN VS OUT</div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;">
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);">${calsIn} eaten</span>
+      <span style="font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text-light);">${totalBurn} burned${workoutNote ? '' : ''}</span>
+    </div>
+    ${workoutNote ? `<div style="margin-bottom:6px;">${workoutNote}</div>` : ''}
+    <div style="background:rgba(0,0,0,0.07);border-radius:10px;height:12px;overflow:hidden;margin-bottom:8px;">
+      <div style="height:100%;border-radius:10px;background:${barColor};width:${pctFilled}%;transition:width 0.4s ease;"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:14px;font-weight:700;color:${deficitColor};font-family:-apple-system,sans-serif;">${deficitLabel}</span>
+      <span style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">${pctFilled}% of burn</span>
+    </div>`;
 }
 
 // ---- MEAL TEMPLATES ----
@@ -5475,6 +5539,19 @@ function renderMealLogFromData(meals) {
     acc.cal += (m.cal||0); acc.protein += (m.protein||0); acc.carbs += (m.carbs||0);
     acc.fibre += (m.fibre||0); acc.sugar += (m.sugar||0); acc.fat += (m.fat||0); return acc;
   }, { cal:0, protein:0, carbs:0, fibre:0, sugar:0, fat:0 });
+
+  // Render cal balance bar (today only — shows base+workout burn vs eaten)
+  const viewKey2 = mealLogDate;
+  const today2 = new Date().toLocaleDateString('en-CA');
+  const balCard = document.getElementById('cal-balance-card');
+  if (balCard) {
+    if (viewKey2 === today2) {
+      renderCalBalance(totals.cal);
+      balCard.style.display = 'block';
+    } else {
+      balCard.style.display = 'none';
+    }
+  }
 
   const card = document.getElementById('meal-totals-card');
   if (card) {
