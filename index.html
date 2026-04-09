@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v310 2026-04-08 -->
+<!-- v311 2026-04-08 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19715,9 +19715,10 @@ function addWellness(type) {
 const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍎 Snacks & Treats','🧂 Sides & Condiments','🌮 Tacos & Wraps'];
 
 function getAllRecipes() {
-  const custom = JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
-  const catOverrides = JSON.parse(localStorage.getItem('steph-recipe-cat-overrides') || '{}');
-  const hidden = JSON.parse(localStorage.getItem('steph-hidden-recipes') || '[]');
+  // Always read from _userdataCache (API) first, fall back to localStorage only if cache is empty
+  const custom = (_userdataCache && _userdataCache['steph-custom-recipes']) || JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
+  const catOverrides = (_userdataCache && _userdataCache['steph-recipe-cat-overrides']) || JSON.parse(localStorage.getItem('steph-recipe-cat-overrides') || '{}');
+  const hidden = (_userdataCache && _userdataCache['steph-hidden-recipes']) || JSON.parse(localStorage.getItem('steph-hidden-recipes') || '[]');
   // Apply any category overrides to built-in recipes, filter hidden
   const builtIn = RECIPES
     .filter(r => !hidden.includes(String(r.id)))
