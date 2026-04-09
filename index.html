@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v309 2026-04-08 -->
+<!-- v310 2026-04-08 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19731,6 +19731,8 @@ function getAllRecipes() {
 let _dragRecipeId = null;
 
 async function renderRecipes() {
+  // Always force a fresh fetch for recipes so category changes from cloud apply immediately
+  _userdataFetching = false;
   await loadUserdata();
   const grid = document.getElementById('recipe-grid');
   grid.innerHTML = '';
