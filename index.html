@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v305 2026-04-07 -->
+<!-- v306 2026-04-08 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -935,8 +935,7 @@
         <option>🍳 Breakfast & Brunch</option>
         <option>🍰 Desserts</option>
         <option>🥐 Baking</option>
-        <option>🍢 Appetizers</option>
-        <option>🍎 Snacks</option>
+        <option>🍎 Snacks & Treats</option>
         <option>🌮 Tacos & Wraps</option>
         <option>🍽️ Other</option>
       </select>
@@ -979,8 +978,7 @@
         <option>🍳 Breakfast & Brunch</option>
         <option>🍰 Desserts</option>
         <option>🥐 Baking</option>
-        <option>🍢 Appetizers</option>
-        <option>🍎 Snacks</option>
+        <option>🍎 Snacks & Treats</option>
         <option>🌮 Tacos & Wraps</option>
         <option>🍽️ Other</option>
       </select>
@@ -2603,7 +2601,7 @@ const RECIPES = [
     id: 12,
     name: 'PB Banana Bark',
     desc: '@toddlerdietitiantiff · 4 ingredients · 5 min + freeze · Snack / Dessert',
-    cat: '🍎 Snacks',
+    cat: '🍎 Snacks & Treats',
     source: 'https://www.instagram.com/toddlerdietitiantiff',
     macros: '~180 cal · 4g protein · 18g carbs · 11g fat per piece (makes ~12)',
     body: `
@@ -2662,7 +2660,7 @@ const RECIPES = [
     id: 14,
     name: 'Dark Chocolate Raspberry Bites',
     desc: 'Spoonful of Si · Healthy freezer treat · ~20 bites',
-    cat: '🍫 Snacks & Treats',
+    cat: '🍎 Snacks & Treats',
     source: null,
     body: `
       <h3>Ingredients</h3>
@@ -19712,7 +19710,7 @@ function addWellness(type) {
 }
 
 // ---- RECIPES ----
-const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍢 Appetizers','🍎 Snacks','🌮 Tacos & Wraps'];
+const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍎 Snacks & Treats','🌮 Tacos & Wraps'];
 
 function getAllRecipes() {
   const custom = JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
