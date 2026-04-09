@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v308 2026-04-08 -->
+<!-- v309 2026-04-08 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -937,6 +937,7 @@
         <option>🥐 Baking</option>
         <option>🍎 Snacks & Treats</option>
         <option>🌮 Tacos & Wraps</option>
+        <option>🧂 Sides & Condiments</option>
         <option>🍽️ Other</option>
       </select>
       <input class="add-input" id="new-recipe-source" placeholder="URL (optional)..." style="width:100%;">
@@ -980,6 +981,7 @@
         <option>🥐 Baking</option>
         <option>🍎 Snacks & Treats</option>
         <option>🌮 Tacos & Wraps</option>
+        <option>🧂 Sides & Condiments</option>
         <option>🍽️ Other</option>
       </select>
       <div style="display:flex;gap:8px;margin-top:4px;">
@@ -19710,7 +19712,7 @@ function addWellness(type) {
 }
 
 // ---- RECIPES ----
-const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍎 Snacks & Treats','🌮 Tacos & Wraps'];
+const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍎 Snacks & Treats','🧂 Sides & Condiments','🌮 Tacos & Wraps'];
 
 function getAllRecipes() {
   const custom = JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
