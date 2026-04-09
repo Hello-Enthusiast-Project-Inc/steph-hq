@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v307 2026-04-08 -->
+<!-- v308 2026-04-08 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -19715,11 +19715,14 @@ const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker'
 function getAllRecipes() {
   const custom = JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
   const catOverrides = JSON.parse(localStorage.getItem('steph-recipe-cat-overrides') || '{}');
-  // Apply any category overrides to built-in recipes
-  const builtIn = RECIPES.map(r => {
-    const override = catOverrides[String(r.id)];
-    return override ? { ...r, cat: override } : r;
-  });
+  const hidden = JSON.parse(localStorage.getItem('steph-hidden-recipes') || '[]');
+  // Apply any category overrides to built-in recipes, filter hidden
+  const builtIn = RECIPES
+    .filter(r => !hidden.includes(String(r.id)))
+    .map(r => {
+      const override = catOverrides[String(r.id)];
+      return override ? { ...r, cat: override } : r;
+    });
   return [...builtIn, ...custom];
 }
 
@@ -19816,9 +19819,19 @@ function saveNewRecipe() {
 function deleteCustomRecipe(id) {
   if (!confirm('Remove this recipe?')) return;
   let custom = JSON.parse(localStorage.getItem('steph-custom-recipes') || '[]');
-  custom = custom.filter(r => r.id !== id);
+  custom = custom.filter(r => String(r.id) !== String(id));
   localStorage.setItem('steph-custom-recipes', JSON.stringify(custom));
   saveUserdata('steph-custom-recipes', custom);
+  showScreen('recipes');
+  renderRecipes();
+}
+function deleteBuiltInRecipe(id) {
+  if (!confirm('Hide this recipe from your list?')) return;
+  let hidden = JSON.parse(localStorage.getItem('steph-hidden-recipes') || '[]');
+  if (!hidden.includes(String(id))) hidden.push(String(id));
+  localStorage.setItem('steph-hidden-recipes', JSON.stringify(hidden));
+  saveUserdata('steph-hidden-recipes', hidden);
+  showScreen('recipes');
   renderRecipes();
 }
 
@@ -19838,8 +19851,8 @@ function showRecipe(id) {
     ${r.source ? `<p class="rd-source"><a href="${r.source}" target="_blank">View original recipe ↗</a></p>` : ''}
     ${r.body || ''}
     <div style="margin-top:24px;display:flex;gap:10px;">
-      <button onclick="openEditRecipeModal('${id}')" style="flex:1;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">📂 Move to Section</button>
-      ${isCustom ? `<button onclick="deleteCustomRecipe('${id}')" style="flex:1;background:none;border:1px solid #c8a882;color:var(--text-light);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">🗑 Delete</button>` : ''}
+      <button onclick="openEditRecipeModal('${id}')" style="flex:1;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">📂 Move</button>
+      <button onclick="${isCustom ? `deleteCustomRecipe('${id}')` : `deleteBuiltInRecipe('${id}')`}" style="flex:1;background:none;border:1px solid #c8a882;color:var(--text-light);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">🗑 Delete</button>
     </div>
   `;
   if (typeof _recipeBackScreen === 'undefined') _recipeBackScreen = 'recipes';
