@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v313 2026-04-11 -->
+<!-- v314 2026-04-11 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -20559,7 +20559,14 @@ function tsSaveBrain() {
   showSaveToast(true);
 }
 // Products
-function tsGetProducts() { return JSON.parse(localStorage.getItem('ts-products') || '[]'); }
+function tsGetProducts() {
+  var items = JSON.parse(localStorage.getItem('ts-products') || 'null');
+  if (!items) {
+    items = [{"id": "seed-p-001", "name": "Visor", "sku": "", "status": "idea", "notes": ""}, {"id": "seed-p-002", "name": "Baseball Cap", "sku": "", "status": "idea", "notes": ""}, {"id": "seed-p-003", "name": "T-Shirt", "sku": "", "status": "idea", "notes": ""}, {"id": "seed-p-004", "name": "Tote Bag", "sku": "", "status": "idea", "notes": ""}];
+    localStorage.setItem('ts-products', JSON.stringify(items));
+  }
+  return items;
+}
 function tsSetProducts(d) { localStorage.setItem('ts-products', JSON.stringify(d)); }
 function tsRenderProducts() {
   var list = document.getElementById('ts-products-list');
