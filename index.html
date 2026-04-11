@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v315 2026-04-11 -->
+<!-- v316 2026-04-11 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -20545,6 +20545,7 @@ function tsShow(id) {
   document.querySelectorAll('.ts-screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'ts-brain') {
+    tsInitBrain();
     var saved = localStorage.getItem('ts-brain') || '';
     document.getElementById('ts-brain-text').value = saved;
   }
@@ -20553,6 +20554,12 @@ function tsShow(id) {
   if (id === 'ts-todo') tsRenderTodo();
   if (id === 'ts-revenue') tsRenderRevenue();
   if (id === 'ts-inspo') tsRenderInspo();
+}
+function tsInitBrain() {
+  var saved = localStorage.getItem('ts-brain');
+  if (!saved || saved.trim() === '') {
+    localStorage.setItem('ts-brain', "\ud83c\udc04 TILE & SLAY \u2014 BRAND BRAIN DUMP\n====================================\n\n--- SLOGANS & PHRASES ---\n\u2022 Pong, Bitches\n\u2022 Chow Bella\n\u2022 On My Way to Jong\n\u2022 In My Jong Era\n\u2022 East Wind, Don't Care\n\u2022 I Came, I Saw, I Punged\n\u2022 Not a Regular Mom, I'm a Mahjong Mom\n\u2022 Sorry I Can't, I Have Mahjong\n\u2022 My Therapist Said Get a Hobby\n\u2022 She Who Discards Last, Pays First\n\u2022 Tile & Slay All Day\n\u2022 May Your Tiles Be Ever In Your Favour\n\u2022 Eyes on the Tiles\n\u2022 Kong Queen\n\u2022 Rack 'Em Up\n\u2022 Mahjong O'Clock\n\u2022 One Tile Away\n\u2022 Built Different, Dealt Better\n\u2022 Hot Girl Jong\n\u2022 Discard Her\n\u2022 Draw. Discard. Dominate.\n\u2022 Chow Now, Questions Later\n\u2022 Running on Tiles & Wine\n\u2022 I Don't Lose, I Discard Strategically\n\u2022 Wind Direction: Winning\n\u2022 Four Walls, One Winner\n\u2022 Punged and Dangerous\n\n--- COMPANY NAME IDEAS ---\n\u2022 Tile & Slay (current)\n\u2022 The Ivory Tile \u2190 top contender\n\u2022 Jong & Co.\n\u2022 The Jade Table\n\u2022 East Wind Studio\n\u2022 Rack & Roll\n\u2022 The Discard Pile\n\u2022 Four Winds\n\u2022 Pung Club\n\u2022 The Long Jong\n\u2022 Drawn Tile\n\u2022 Chow Down Co.\n\u2022 Flower Tile\n\u2022 The Jong Table\n\u2022 Slay the Tile\n\u2022 One Tile Club\n\u2022 Wind & Tile\n\u2022 Jade & Joyful\n\u2022 The Flower Wind\n\u2022 Petal & Pung\n\u2022 East Wind Girls\n\u2022 Lucky Tile Co.\n\u2022 The Blossom Table\n\u2022 Four Winds & Wine\n\u2022 Drawn in Pink\n\u2022 The Jade Sparrow\n\u2022 Plum Tile Studio\n\u2022 Cherry Blossom Jong\n\u2022 The Golden Rack\n\u2022 Whisper & Tile\n\u2022 Gilded Tiles\n\u2022 The Lotus Table\n\u2022 Bloom & Discard\n\u2022 Soft Wind Co.\n\u2022 The Tile Garden\n\u2022 Pearl & Pong\n\u2022 Mahjong in Bloom\n\u2022 Sweet Discard\n\u2022 Jade Girls Club\n\u2022 The Willow Table\n\u2022 Blossom & Bone\n\u2022 Pink Wind Studio\n\u2022 The Lucky Sparrow\n\u2022 Flutter & Tile\n\u2022 Rose Wind Co.\n\u2022 The Painted Tile\n\n--- LOGO CONCEPTS ---\n\u2022 Single jade green mahjong tile with dragon/flower motif (clean, embroiderable)\n\u2022 T&S monogram inside a tile shape (gold and cream)\n\u2022 Bold serif wordmark TILE & SLAY (sage green and cream, fashion label)\n\u2022 Flower tile motif \u2014 botanical chrysanthemum/plum blossom (dusty pink and gold)\n\u2022 Circle badge stamp logo \u2014 brand name arched, tile centre, gold accents \u2190 top contender\n\n--- PRODUCT IDEAS ---\nWearables: Visor, Baseball Cap, T-Shirt, Sweatshirt/Hoodie, Tank Top, Apron, Socks, Tote Bag, Fanny Pack\nTable & Game: Table Mat, Tile Rack Cover, Tile Bag/Pouch, Score Pad, Score Tracker\nDrinkware: Mug, Wine Tumbler, Shot Glass Set of 4, Cocktail Napkins\nStationery: Notepad, Greeting Cards, Stickers, Wrapping Paper\nAccessories: Enamel Pin, Keychain, Bracelet/Charm, Phone Case, Candle\nBundles: Starter Set, Host Set, Power Player Set");
+  }
 }
 function tsSaveBrain() {
   localStorage.setItem('ts-brain', document.getElementById('ts-brain-text').value);
