@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v311 2026-04-08 -->
+<!-- v312 2026-04-11 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -40,6 +40,11 @@
     max-width: 480px;
     margin: 0 auto;
   }
+
+  /* TILE & SLAY DRAWER */
+  --ts-gold: #c9a050;
+  --ts-gold-light: #f5e9d0;
+  --ts-gold-dark: #8a6020;
 
   /* SCREENS */
   .screen { display: none; padding: 0 0 80px 0; min-height: 100vh; }
@@ -489,6 +494,351 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
+
+  /* === TILE & SLAY DRAWER === */
+  #ts-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(61,46,38,0.35);
+    z-index: 500;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #ts-overlay.open { display: block; }
+  #ts-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 82%;
+    max-width: 360px;
+    background: var(--white);
+    z-index: 501;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: -6px 0 32px rgba(61,46,38,0.18);
+  }
+  #ts-drawer.open { transform: translateX(0); }
+  #ts-tab {
+    position: fixed;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(180deg, #c9a050 0%, #8a6020 100%);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: -apple-system, sans-serif;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    padding: 12px 6px;
+    border-radius: 10px 0 0 10px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    box-shadow: -3px 0 12px rgba(0,0,0,0.15);
+    z-index: 200;
+    -webkit-tap-highlight-color: transparent;
+    transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+  #ts-tab.hidden { right: -50px; }
+  .ts-drawer-header {
+    background: linear-gradient(135deg, #c9a050 0%, #8a6020 100%);
+    padding: 52px 20px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .ts-drawer-header .ts-emoji { font-size: 28px; }
+  .ts-drawer-header .ts-title {
+    font-size: 20px;
+    font-weight: 800;
+    font-style: italic;
+    color: #fff;
+    font-family: -apple-system, sans-serif;
+    letter-spacing: -0.3px;
+  }
+  .ts-drawer-header .ts-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.75);
+    font-family: -apple-system, sans-serif;
+    font-style: normal;
+    margin-top: 2px;
+  }
+  .ts-drawer-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 8px 0 80px; }
+  .ts-section-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--card);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    text-align: left;
+  }
+  .ts-section-btn:active { background: var(--card); }
+  .ts-section-btn .ts-s-emoji { font-size: 22px; min-width: 28px; }
+  .ts-section-btn .ts-s-text .ts-s-title {
+    font-size: 15px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+  }
+  .ts-section-btn .ts-s-text .ts-s-sub {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+    margin-top: 2px;
+  }
+  .ts-section-btn .ts-s-arrow {
+    margin-left: auto;
+    color: var(--text-light);
+    font-size: 18px;
+  }
+
+  /* TS Sub-screens */
+  .ts-screen { display: none; flex-direction: column; height: 100%; }
+  .ts-screen.active { display: flex; }
+  .ts-screen-header {
+    background: linear-gradient(135deg, #c9a050 0%, #8a6020 100%);
+    padding: 52px 20px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ts-back {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    font-family: -apple-system, sans-serif;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ts-screen-header h2 {
+    font-size: 18px;
+    font-weight: 800;
+    font-style: italic;
+    color: #fff;
+    font-family: -apple-system, sans-serif;
+  }
+  .ts-screen-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px 16px 80px; }
+
+  .ts-item-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow);
+  }
+  .ts-item-card .ts-item-name {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+  }
+  .ts-item-card .ts-item-meta {
+    font-size: 12px;
+    color: var(--text-light);
+    font-family: -apple-system, sans-serif;
+    margin-top: 3px;
+  }
+  .ts-item-card .ts-item-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .ts-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+  }
+  .ts-badge-active { background: #e8f5e9; color: #2e7d32; }
+  .ts-badge-pending { background: #fff3e0; color: #e65100; }
+  .ts-badge-delivered { background: var(--card2); color: var(--text-light); }
+  .ts-badge-idea { background: var(--ts-gold-light, #f5e9d0); color: var(--ts-gold-dark, #8a6020); }
+  .ts-badge-live { background: #e3f2fd; color: #1565c0; }
+  .ts-badge-paused { background: #fce4ec; color: #c62828; }
+
+  .ts-add-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #c9a050 0%, #8a6020 100%);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    cursor: pointer;
+    margin-top: 4px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ts-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(61,46,38,0.5);
+    z-index: 600;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .ts-modal-overlay.open { display: flex; }
+  .ts-modal {
+    background: var(--white);
+    border-radius: 24px 24px 0 0;
+    padding: 24px 20px 48px;
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .ts-modal h3 {
+    font-size: 17px;
+    font-weight: 800;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+  .ts-modal input, .ts-modal textarea, .ts-modal select {
+    width: 100%;
+    background: var(--card);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 14px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    outline: none;
+    box-sizing: border-box;
+  }
+  .ts-modal textarea { min-height: 80px; resize: none; }
+  .ts-modal-actions { display: flex; gap: 10px; }
+  .ts-modal-actions button {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    cursor: pointer;
+  }
+  .ts-modal-cancel { background: var(--card2); color: var(--text); }
+  .ts-modal-save { background: linear-gradient(135deg, #c9a050 0%, #8a6020 100%); color: #fff; }
+
+  .ts-todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--card);
+  }
+  .ts-todo-cb {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--ts-gold, #c9a050);
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ts-todo-cb.done { background: #c9a050; border-color: #c9a050; }
+  .ts-todo-text {
+    font-size: 14px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .ts-todo-text.done { text-decoration: line-through; color: var(--text-light); }
+  .ts-todo-del {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 0 2px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ts-brain-area {
+    width: 100%;
+    min-height: 200px;
+    background: var(--card);
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 14px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+    outline: none;
+    resize: none;
+    line-height: 1.6;
+    box-sizing: border-box;
+  }
+  .ts-save-inline {
+    width: 100%;
+    background: linear-gradient(135deg, #c9a050 0%, #8a6020 100%);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+    cursor: pointer;
+    margin-top: 8px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ts-revenue-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--card);
+  }
+  .ts-revenue-row .ts-rev-label {
+    flex: 1;
+    font-size: 14px;
+    font-family: -apple-system, sans-serif;
+    color: var(--text);
+  }
+  .ts-revenue-row .ts-rev-amount {
+    font-size: 14px;
+    font-weight: 700;
+    font-family: -apple-system, sans-serif;
+  }
+  .ts-rev-income { color: #2e7d32; }
+  .ts-rev-expense { color: #c62828; }
+  .ts-rev-summary {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ts-rev-summary .ts-rev-net-label { font-size: 13px; font-weight: 600; font-family: -apple-system, sans-serif; color: var(--text-light); }
+  .ts-rev-summary .ts-rev-net { font-size: 22px; font-weight: 800; font-family: -apple-system, sans-serif; }
 </style>
 </head>
 <body>
@@ -579,6 +929,197 @@
   if (!sessionStorage.getItem(SESSION_KEY)) show();
 })();
 </script>
+
+<!-- TILE & SLAY TAB -->
+<div id="ts-tab" onclick="tsOpenDrawer()">🀄 SLAY</div>
+
+<!-- TILE & SLAY OVERLAY -->
+<div id="ts-overlay" onclick="tsCloseDrawer()"></div>
+
+<!-- TILE & SLAY DRAWER -->
+<div id="ts-drawer">
+  <!-- Main menu -->
+  <div id="ts-main" class="ts-screen active">
+    <div class="ts-drawer-header">
+      <span class="ts-emoji">🀄</span>
+      <div>
+        <div class="ts-title">Tile &amp; Slay</div>
+        <div class="ts-sub">Mahjong merch · brain dump · business</div>
+      </div>
+    </div>
+    <div class="ts-drawer-body">
+      <button class="ts-section-btn" onclick="tsShow('ts-brain')">
+        <span class="ts-s-emoji">🧠</span>
+        <div class="ts-s-text">
+          <div class="ts-s-title">Brain Dump</div>
+          <div class="ts-s-sub">Ideas, thoughts, plans</div>
+        </div>
+        <span class="ts-s-arrow">›</span>
+      </button>
+      <button class="ts-section-btn" onclick="tsShow('ts-products')">
+        <span class="ts-s-emoji">🛍️</span>
+        <div class="ts-s-text">
+          <div class="ts-s-title">Products</div>
+          <div class="ts-s-sub">Hats, merch, SKUs</div>
+        </div>
+        <span class="ts-s-arrow">›</span>
+      </button>
+      <button class="ts-section-btn" onclick="tsShow('ts-shipments')">
+        <span class="ts-s-emoji">📦</span>
+        <div class="ts-s-text">
+          <div class="ts-s-title">Shipments</div>
+          <div class="ts-s-sub">Track orders in &amp; out</div>
+        </div>
+        <span class="ts-s-arrow">›</span>
+      </button>
+      <button class="ts-section-btn" onclick="tsShow('ts-todo')">
+        <span class="ts-s-emoji">✅</span>
+        <div class="ts-s-text">
+          <div class="ts-s-title">To-Do</div>
+          <div class="ts-s-sub">What needs doing</div>
+        </div>
+        <span class="ts-s-arrow">›</span>
+      </button>
+      <button class="ts-section-btn" onclick="tsShow('ts-revenue')">
+        <span class="ts-s-emoji">💰</span>
+        <div class="ts-s-text">
+          <div class="ts-s-title">Revenue &amp; Costs</div>
+          <div class="ts-s-sub">Simple money log</div>
+        </div>
+        <span class="ts-s-arrow">›</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Brain Dump -->
+  <div id="ts-brain" class="ts-screen">
+    <div class="ts-screen-header">
+      <button class="ts-back" onclick="tsShow('ts-main')">← Back</button>
+      <h2>🧠 Brain Dump</h2>
+    </div>
+    <div class="ts-screen-body">
+      <p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;">Dump it all here — ideas, plans, random thoughts. Just write.</p>
+      <textarea class="ts-brain-area" id="ts-brain-text" placeholder="Type anything..."></textarea>
+      <button class="ts-save-inline" onclick="tsSaveBrain()">Save</button>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div id="ts-products" class="ts-screen">
+    <div class="ts-screen-header">
+      <button class="ts-back" onclick="tsShow('ts-main')">← Back</button>
+      <h2>🛍️ Products</h2>
+    </div>
+    <div class="ts-screen-body">
+      <div id="ts-products-list"></div>
+      <button class="ts-add-btn" onclick="tsProductModal()">+ Add Product</button>
+    </div>
+  </div>
+
+  <!-- Shipments -->
+  <div id="ts-shipments" class="ts-screen">
+    <div class="ts-screen-header">
+      <button class="ts-back" onclick="tsShow('ts-main')">← Back</button>
+      <h2>📦 Shipments</h2>
+    </div>
+    <div class="ts-screen-body">
+      <div id="ts-shipments-list"></div>
+      <button class="ts-add-btn" onclick="tsShipmentModal()">+ Add Shipment</button>
+    </div>
+  </div>
+
+  <!-- To-Do -->
+  <div id="ts-todo" class="ts-screen">
+    <div class="ts-screen-header">
+      <button class="ts-back" onclick="tsShow('ts-main')">← Back</button>
+      <h2>✅ To-Do</h2>
+    </div>
+    <div class="ts-screen-body">
+      <div id="ts-todo-list"></div>
+      <div style="display:flex;gap:8px;margin-top:12px;">
+        <input id="ts-todo-input" class="ts-brain-area" style="min-height:unset;padding:12px 14px;flex:1;" placeholder="Add a task...">
+        <button onclick="tsAddTodo()" style="background:linear-gradient(135deg,#c9a050 0%,#8a6020 100%);color:#fff;border:none;border-radius:12px;padding:12px 16px;font-size:15px;cursor:pointer;">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Revenue -->
+  <div id="ts-revenue" class="ts-screen">
+    <div class="ts-screen-header">
+      <button class="ts-back" onclick="tsShow('ts-main')">← Back</button>
+      <h2>💰 Revenue &amp; Costs</h2>
+    </div>
+    <div class="ts-screen-body">
+      <div class="ts-rev-summary">
+        <div>
+          <div class="ts-rev-net-label">Net Profit</div>
+          <div class="ts-rev-net" id="ts-rev-net">$0.00</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">Income <span id="ts-rev-income-total" style="color:#2e7d32;font-weight:700;">$0</span></div>
+          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:3px;">Costs <span id="ts-rev-expense-total" style="color:#c62828;font-weight:700;">$0</span></div>
+        </div>
+      </div>
+      <div id="ts-revenue-list"></div>
+      <button class="ts-add-btn" onclick="tsRevenueModal()">+ Add Entry</button>
+    </div>
+  </div>
+</div>
+
+<!-- TS Modals -->
+<div class="ts-modal-overlay" id="ts-product-modal">
+  <div class="ts-modal">
+    <h3>🛍️ Add Product</h3>
+    <input id="ts-p-name" placeholder="Product name (e.g. Tile &amp; Slay Dad Hat)" />
+    <input id="ts-p-sku" placeholder="SKU or variant (optional)" />
+    <select id="ts-p-status">
+      <option value="idea">💡 Idea</option>
+      <option value="live">🟢 Live</option>
+      <option value="paused">⏸ Paused</option>
+    </select>
+    <textarea id="ts-p-notes" placeholder="Notes (supplier, price, link...)"></textarea>
+    <div class="ts-modal-actions">
+      <button class="ts-modal-cancel" onclick="tsCloseModal('ts-product-modal')">Cancel</button>
+      <button class="ts-modal-save" onclick="tsSaveProduct()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="ts-modal-overlay" id="ts-shipment-modal">
+  <div class="ts-modal">
+    <h3>📦 Add Shipment</h3>
+    <input id="ts-sh-desc" placeholder="What is it? (e.g. 50 blank hats from supplier)" />
+    <input id="ts-sh-tracking" placeholder="Tracking # (optional)" />
+    <input id="ts-sh-date" type="date" />
+    <select id="ts-sh-status">
+      <option value="pending">⏳ Pending / Ordered</option>
+      <option value="active">🚚 In Transit</option>
+      <option value="delivered">✅ Delivered</option>
+    </select>
+    <textarea id="ts-sh-notes" placeholder="Notes (supplier, cost, PO#...)"></textarea>
+    <div class="ts-modal-actions">
+      <button class="ts-modal-cancel" onclick="tsCloseModal('ts-shipment-modal')">Cancel</button>
+      <button class="ts-modal-save" onclick="tsSaveShipment()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="ts-modal-overlay" id="ts-revenue-modal">
+  <div class="ts-modal">
+    <h3>💰 Add Entry</h3>
+    <input id="ts-rv-desc" placeholder="Description (e.g. Hat sale × 3)" />
+    <input id="ts-rv-amount" type="number" step="0.01" placeholder="Amount (e.g. 45.00)" />
+    <select id="ts-rv-type">
+      <option value="income">💚 Income</option>
+      <option value="expense">🔴 Expense / Cost</option>
+    </select>
+    <input id="ts-rv-date" type="date" />
+    <div class="ts-modal-actions">
+      <button class="ts-modal-cancel" onclick="tsCloseModal('ts-revenue-modal')">Cancel</button>
+      <button class="ts-modal-save" onclick="tsSaveRevenue()">Save</button>
+    </div>
+  </div>
+</div>
 
 <!-- HOME -->
 <div class="screen active" id="screen-home">
@@ -19964,6 +20505,194 @@ function showSaveToast(ok) {
     el.style.transform = 'translateY(20px)';
   }, ok ? 2000 : 4000);
 }
+
+// ---- TILE & SLAY ----
+function tsOpenDrawer() {
+  document.getElementById('ts-drawer').classList.add('open');
+  document.getElementById('ts-overlay').classList.add('open');
+  document.getElementById('ts-tab').classList.add('hidden');
+  tsShow('ts-main');
+  tsRenderAll();
+}
+function tsCloseDrawer() {
+  document.getElementById('ts-drawer').classList.remove('open');
+  document.getElementById('ts-overlay').classList.remove('open');
+  document.getElementById('ts-tab').classList.remove('hidden');
+}
+function tsShow(id) {
+  document.querySelectorAll('.ts-screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'ts-brain') {
+    var saved = localStorage.getItem('ts-brain') || '';
+    document.getElementById('ts-brain-text').value = saved;
+  }
+  if (id === 'ts-products') tsRenderProducts();
+  if (id === 'ts-shipments') tsRenderShipments();
+  if (id === 'ts-todo') tsRenderTodo();
+  if (id === 'ts-revenue') tsRenderRevenue();
+}
+function tsSaveBrain() {
+  localStorage.setItem('ts-brain', document.getElementById('ts-brain-text').value);
+  showSaveToast(true);
+}
+// Products
+function tsGetProducts() { return JSON.parse(localStorage.getItem('ts-products') || '[]'); }
+function tsSetProducts(d) { localStorage.setItem('ts-products', JSON.stringify(d)); }
+function tsRenderProducts() {
+  var list = document.getElementById('ts-products-list');
+  var items = tsGetProducts();
+  if (!items.length) { list.innerHTML = '<p style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:8px 0 16px;">No products yet — add your first one!</p>'; return; }
+  var statusLabels = { idea: ['💡 Idea','ts-badge-idea'], live: ['🟢 Live','ts-badge-live'], paused: ['⏸ Paused','ts-badge-paused'] };
+  list.innerHTML = items.map((p,i) => {
+    var sl = statusLabels[p.status] || ['',''];
+    return '<div class="ts-item-card">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+      '<div class="ts-item-name" style="flex:1;">' + p.name + '</div>' +
+      '<span class="ts-badge ' + sl[1] + '">' + sl[0] + '</span></div>' +
+      (p.sku ? '<div class="ts-item-meta">SKU: ' + p.sku + '</div>' : '') +
+      (p.notes ? '<div class="ts-item-meta" style="margin-top:4px;">' + p.notes + '</div>' : '') +
+      '<div class="ts-item-actions">' +
+      '<button onclick="tsDeleteProduct(' + i + ')" style="background:none;border:none;color:var(--text-light);font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;padding:0;">Delete</button>' +
+      '</div></div>';
+  }).join('');
+}
+function tsProductModal() {
+  document.getElementById('ts-p-name').value = '';
+  document.getElementById('ts-p-sku').value = '';
+  document.getElementById('ts-p-status').value = 'idea';
+  document.getElementById('ts-p-notes').value = '';
+  document.getElementById('ts-product-modal').classList.add('open');
+}
+function tsSaveProduct() {
+  var name = document.getElementById('ts-p-name').value.trim();
+  if (!name) return;
+  var items = tsGetProducts();
+  items.push({ name, sku: document.getElementById('ts-p-sku').value.trim(), status: document.getElementById('ts-p-status').value, notes: document.getElementById('ts-p-notes').value.trim(), id: Date.now() });
+  tsSetProducts(items);
+  tsCloseModal('ts-product-modal');
+  tsRenderProducts();
+  showSaveToast(true);
+}
+function tsDeleteProduct(i) {
+  var items = tsGetProducts(); items.splice(i,1); tsSetProducts(items); tsRenderProducts();
+}
+// Shipments
+function tsGetShipments() { return JSON.parse(localStorage.getItem('ts-shipments') || '[]'); }
+function tsSetShipments(d) { localStorage.setItem('ts-shipments', JSON.stringify(d)); }
+function tsRenderShipments() {
+  var list = document.getElementById('ts-shipments-list');
+  var items = tsGetShipments();
+  if (!items.length) { list.innerHTML = '<p style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:8px 0 16px;">No shipments yet.</p>'; return; }
+  var statusLabels = { pending: ['⏳ Pending','ts-badge-pending'], active: ['🚚 In Transit','ts-badge-active'], delivered: ['✅ Delivered','ts-badge-delivered'] };
+  list.innerHTML = items.map((s,i) => {
+    var sl = statusLabels[s.status] || ['',''];
+    return '<div class="ts-item-card">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">' +
+      '<div class="ts-item-name" style="flex:1;">' + s.desc + '</div>' +
+      '<span class="ts-badge ' + sl[1] + '">' + sl[0] + '</span></div>' +
+      (s.tracking ? '<div class="ts-item-meta">Tracking: ' + s.tracking + '</div>' : '') +
+      (s.date ? '<div class="ts-item-meta">Date: ' + s.date + '</div>' : '') +
+      (s.notes ? '<div class="ts-item-meta" style="margin-top:4px;">' + s.notes + '</div>' : '') +
+      '<div class="ts-item-actions">' +
+      (s.status !== 'delivered' ? '<button onclick="tsMarkDelivered(' + i + ')" style="background:none;border:none;color:#2e7d32;font-size:12px;font-family:-apple-system,sans-serif;font-weight:700;cursor:pointer;padding:0;margin-right:12px;">Mark Delivered</button>' : '') +
+      '<button onclick="tsDeleteShipment(' + i + ')" style="background:none;border:none;color:var(--text-light);font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;padding:0;">Delete</button>' +
+      '</div></div>';
+  }).join('');
+}
+function tsShipmentModal() {
+  document.getElementById('ts-sh-desc').value = '';
+  document.getElementById('ts-sh-tracking').value = '';
+  document.getElementById('ts-sh-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ts-sh-status').value = 'pending';
+  document.getElementById('ts-sh-notes').value = '';
+  document.getElementById('ts-shipment-modal').classList.add('open');
+}
+function tsSaveShipment() {
+  var desc = document.getElementById('ts-sh-desc').value.trim();
+  if (!desc) return;
+  var items = tsGetShipments();
+  items.push({ desc, tracking: document.getElementById('ts-sh-tracking').value.trim(), date: document.getElementById('ts-sh-date').value, status: document.getElementById('ts-sh-status').value, notes: document.getElementById('ts-sh-notes').value.trim(), id: Date.now() });
+  tsSetShipments(items);
+  tsCloseModal('ts-shipment-modal');
+  tsRenderShipments();
+  showSaveToast(true);
+}
+function tsMarkDelivered(i) { var items = tsGetShipments(); items[i].status = 'delivered'; tsSetShipments(items); tsRenderShipments(); }
+function tsDeleteShipment(i) { var items = tsGetShipments(); items.splice(i,1); tsSetShipments(items); tsRenderShipments(); }
+// Todo
+function tsGetTodos() { return JSON.parse(localStorage.getItem('ts-todos') || '[]'); }
+function tsSetTodos(d) { localStorage.setItem('ts-todos', JSON.stringify(d)); }
+function tsRenderTodo() {
+  var list = document.getElementById('ts-todo-list');
+  var items = tsGetTodos();
+  if (!items.length) { list.innerHTML = '<p style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:8px 0 8px;">Nothing on the list yet!</p>'; return; }
+  list.innerHTML = items.map((t,i) => {
+    return '<div class="ts-todo-item">' +
+      '<div class="ts-todo-cb ' + (t.done ? 'done' : '') + '" onclick="tsToggleTodo(' + i + ')">' + (t.done ? '<span style="color:#fff;font-size:13px;">✓</span>' : '') + '</div>' +
+      '<div class="ts-todo-text ' + (t.done ? 'done' : '') + '">' + t.text + '</div>' +
+      '<button class="ts-todo-del" onclick="tsDeleteTodo(' + i + ')">×</button>' +
+      '</div>';
+  }).join('');
+}
+function tsAddTodo() {
+  var inp = document.getElementById('ts-todo-input');
+  var text = inp.value.trim();
+  if (!text) return;
+  var items = tsGetTodos();
+  items.push({ text, done: false, id: Date.now() });
+  tsSetTodos(items);
+  inp.value = '';
+  tsRenderTodo();
+}
+function tsToggleTodo(i) { var items = tsGetTodos(); items[i].done = !items[i].done; tsSetTodos(items); tsRenderTodo(); }
+function tsDeleteTodo(i) { var items = tsGetTodos(); items.splice(i,1); tsSetTodos(items); tsRenderTodo(); }
+// Revenue
+function tsGetRevenue() { return JSON.parse(localStorage.getItem('ts-revenue') || '[]'); }
+function tsSetRevenue(d) { localStorage.setItem('ts-revenue', JSON.stringify(d)); }
+function tsRenderRevenue() {
+  var items = tsGetRevenue();
+  var income = 0, expense = 0;
+  items.forEach(r => { if (r.type === 'income') income += r.amount; else expense += r.amount; });
+  var net = income - expense;
+  document.getElementById('ts-rev-net').textContent = (net >= 0 ? '+' : '') + '$' + net.toFixed(2);
+  document.getElementById('ts-rev-net').style.color = net >= 0 ? '#2e7d32' : '#c62828';
+  document.getElementById('ts-rev-income-total').textContent = '$' + income.toFixed(2);
+  document.getElementById('ts-rev-expense-total').textContent = '$' + expense.toFixed(2);
+  var list = document.getElementById('ts-revenue-list');
+  if (!items.length) { list.innerHTML = '<p style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:8px 0 16px;">No entries yet.</p>'; return; }
+  var sorted = [...items].sort((a,b) => (b.date||'') > (a.date||'') ? 1 : -1);
+  list.innerHTML = sorted.map((r,i) => {
+    var origIdx = items.indexOf(r);
+    return '<div class="ts-revenue-row">' +
+      '<div class="ts-rev-label">' +
+      (r.date ? '<div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;">' + r.date + '</div>' : '') +
+      r.desc + '</div>' +
+      '<div class="ts-rev-amount ' + (r.type === 'income' ? 'ts-rev-income' : 'ts-rev-expense') + '">' + (r.type === 'income' ? '+' : '−') + '$' + parseFloat(r.amount).toFixed(2) + '</div>' +
+      '<button onclick="tsDeleteRevenue(' + origIdx + ')" style="background:none;border:none;color:var(--text-light);font-size:16px;cursor:pointer;padding:0 2px;">×</button>' +
+      '</div>';
+  }).join('');
+}
+function tsRevenueModal() {
+  document.getElementById('ts-rv-desc').value = '';
+  document.getElementById('ts-rv-amount').value = '';
+  document.getElementById('ts-rv-type').value = 'income';
+  document.getElementById('ts-rv-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('ts-revenue-modal').classList.add('open');
+}
+function tsSaveRevenue() {
+  var desc = document.getElementById('ts-rv-desc').value.trim();
+  var amount = parseFloat(document.getElementById('ts-rv-amount').value);
+  if (!desc || isNaN(amount) || amount <= 0) return;
+  var items = tsGetRevenue();
+  items.push({ desc, amount, type: document.getElementById('ts-rv-type').value, date: document.getElementById('ts-rv-date').value, id: Date.now() });
+  tsSetRevenue(items);
+  tsCloseModal('ts-revenue-modal');
+  tsRenderRevenue();
+  showSaveToast(true);
+}
+function tsDeleteRevenue(i) { var items = tsGetRevenue(); items.splice(i,1); tsSetRevenue(items); tsRenderRevenue(); }
+function tsCloseModal(id) { document.getElementById(id).classList.remove('open'); }
+function tsRenderAll() { /* called on open — data loads lazily per section */ }
 
 // ---- INIT ----
 renderToday();
