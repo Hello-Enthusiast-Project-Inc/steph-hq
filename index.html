@@ -6,7 +6,7 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<!-- v321 2026-04-11 -->
+<!-- v322 2026-04-11 -->
 <!-- Home screen / PWA meta tags -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -88,7 +88,7 @@
     padding-bottom: 16px;
   }
   .home-header {
-    padding: 44px 20px 0px;
+    padding: 50px 20px 0px;
     text-align: center;
   }
   .home-widget {
@@ -96,31 +96,31 @@
     align-items: center;
     gap: 8px;
     font-family: -apple-system, sans-serif;
-    padding: 1px 20px 4px;
+    padding: 2px 20px 6px;
     justify-content: center;
   }
   .home-widget .hw-date {
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text);
   }
   .home-widget .hw-sep {
     color: var(--text-light);
-    font-size: 10px;
+    font-size: 11px;
   }
   .home-widget .hw-weather {
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-light);
   }
   .home-header h1 {
-    font-size: 22px;
+    font-size: 24px;
     font-style: italic;
     font-weight: 700;
     color: var(--text);
   }
   .home-header p {
     color: var(--text-light);
-    font-size: 12px;
+    font-size: 13px;
     margin-top: 2px;
     font-family: -apple-system, sans-serif;
   }
@@ -132,9 +132,9 @@
     padding: 0 16px 20px;
   }
   .home-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    padding: 0 14px 6px;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 0 14px 8px;
     flex: 1;
     align-content: center;
   }
@@ -149,19 +149,19 @@
     user-select: none;
   }
   .home-grid .tile {
-    border-radius: 16px;
-    padding: 12px 6px 10px;
+    border-radius: 22px;
+    padding: 20px 14px 18px;
   }
   .tile:active { transform: scale(0.96); filter: brightness(0.95); }
   .tile .tile-emoji { font-size: 34px; display: block; margin-bottom: 10px; }
-  .home-grid .tile .tile-emoji { font-size: 22px; margin-bottom: 4px; }
+  .home-grid .tile .tile-emoji { font-size: 30px; margin-bottom: 8px; }
   .tile .tile-label {
     font-size: 14px;
     font-family: -apple-system, sans-serif;
     color: #4a3728;
     font-weight: 600;
   }
-  .home-grid .tile .tile-label { font-size: 11px; font-weight: 600; }
+  .home-grid .tile .tile-label { font-size: 13px; font-weight: 600; }
 
   /* PROGRESS RING */
   .ring-wrap {
@@ -646,12 +646,14 @@
       <span class="tile-label">Household</span>
     </div>
   </div>
-  <div style="padding:0 14px 16px;display:flex;gap:8px;">
-    <a href="https://tile-slay-hq.vercel.app" target="_blank" style="flex:1;background:var(--card);border-radius:16px;padding:13px 8px;font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;justify-content:center;text-decoration:none;">
-      <span style="font-size:16px;">🀄</span> Tile &amp; Slay
+  <div style="padding:0 16px 8px;">
+    <a href="https://tile-slay-hq.vercel.app" target="_blank" style="width:100%;background:var(--card);border:none;border-radius:18px;padding:16px 20px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;justify-content:center;text-decoration:none;">
+      <span style="font-size:20px;">🀄</span> Tile &amp; Slay HQ
     </a>
-    <button onclick="showScreen('notes')" style="flex:1;background:var(--card);border:none;border-radius:16px;padding:13px 8px;font-size:13px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:6px;justify-content:center;">
-      <span style="font-size:16px;">📝</span> Notes
+  </div>
+  <div style="padding:0 16px 32px;">
+    <button onclick="showScreen('notes')" style="width:100%;background:var(--card);border:none;border-radius:18px;padding:16px 20px;font-size:15px;font-weight:600;font-family:-apple-system,sans-serif;cursor:pointer;color:var(--text);box-shadow:var(--shadow);display:flex;align-items:center;gap:10px;justify-content:center;">
+      <span style="font-size:20px;">📝</span> Notes
     </button>
   </div>
 </div>
