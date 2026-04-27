@@ -6811,6 +6811,7 @@ function renderThriveList(listId, items, type) {
     div.innerHTML = `
       <div class="tv-view-${item.id}" style="display:flex;width:100%;align-items:center;gap:4px;">
         <span class="li-text" style="flex:1;cursor:pointer;" onclick="thriveStartEdit(${item.id},'${cat}')">${item.text}${item.date ? ' <span style="font-size:11px;color:var(--text-light)">' + item.date + '</span>' : ''}</span>
+        ${item.receipt ? `<a href="${item.receipt}" target="_blank" style="font-size:18px;text-decoration:none;" title="View receipt">🧾</a>` : ''}
         ${item.amount ? `<span style="font-weight:600;color:var(--brown);font-family:-apple-system,sans-serif;min-width:60px;text-align:right;">${item.amount}</span>` : ''}
         <button onclick="thriveStartEdit(${item.id},'${cat}')" style="background:none;border:none;cursor:pointer;font-size:14px;color:var(--text-light);padding:0 4px;" title="Edit">✏️</button>
         <button onclick="deleteThriveItem('${cat}',${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;">×</button>
