@@ -826,7 +826,22 @@
       <span class="tile-emoji">🔧</span>
       <span class="tile-label">Maintenance</span>
     </div>
+    <div class="tile" onclick="showScreen('household-medical-receipts')">
+      <span class="tile-emoji">🏥</span>
+      <span class="tile-label">Medical Receipts</span>
+    </div>
 
+  </div>
+</div>
+
+<!-- HOUSEHOLD: MEDICAL RECEIPTS -->
+<div class="screen" id="screen-household-medical-receipts">
+  <div class="header">
+    <span class="back" onclick="showScreen('household')">← Household</span>
+    <h1>Medical Receipts 🏥</h1>
+  </div>
+  <div class="list-section">
+    <div id="household-medical-receipts-list"></div>
   </div>
 </div>
 
@@ -3551,6 +3566,7 @@ function showScreen(name) {
   if (name === 'household-bills') renderHouseholdBills();
   if (name === 'household-warranty') renderHouseholdWarranty();
   if (name === 'household-maintenance') renderHouseholdMaintenance();
+  if (name === 'household-medical-receipts') renderMedicalReceipts();
   if (name === 'packages') renderPackages();
   if (name === 'nutrition') { mealLogDate = new Date().toLocaleDateString('en-CA'); switchMealTab('log'); renderMealLog(); loadUserdata().then(() => { const todayMeals2 = (mealData || []).filter(m => m.date === new Date().toLocaleDateString('en-CA') && m.action !== 'delete'); const calsEaten2 = todayMeals2.reduce((s, m) => s + (m.cal || 0), 0); renderCalBalance(calsEaten2); }); }
   if (name === 'events') { renderEvents(); renderCalendarEvents(); renderAppointments(); }
@@ -6377,6 +6393,40 @@ function hhCancelEdit(id) {
 }
 function renderHouseholdBills() { householdBills = JSON.parse(localStorage.getItem('steph-household-bills') || '[]'); renderHouseholdList('household-bills-list', householdBills, {editFn:'editBill',deleteFn:'deleteBill'}); }
 function renderHouseholdWarranty() { householdWarranty = JSON.parse(localStorage.getItem('steph-household-warranty') || '[]'); renderHouseholdList('household-warranty-list', householdWarranty, {editFn:'editWarranty',deleteFn:'deleteWarranty'}); }
+function renderMedicalReceipts() {
+  const receipts = [
+    {
+      id: 1,
+      date: 'Apr 27, 2026',
+      desc: 'Clotrimazole Cream 1% Topical',
+      store: 'Summerland Pharmacy',
+      subtotal: '$13.99',
+      gst: '$0.70',
+      total: '$14.69',
+      url: 'https://raw.githubusercontent.com/Hello-Enthusiast-Project-Inc/steph-hq/main/receipts/thrive-2026-04-27-pharmacy.jpg'
+    }
+  ];
+  const list = document.getElementById('household-medical-receipts-list');
+  if (!list) return;
+  list.innerHTML = '';
+  if (!receipts.length) { list.innerHTML = '<div class="list-item"><span class="li-text" style="color:var(--text-light)">No receipts yet</span></div>'; return; }
+  receipts.forEach(r => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.style.cssText = 'flex-direction:column;align-items:flex-start;gap:4px;padding:14px 16px;';
+    div.innerHTML = `
+      <div style="display:flex;width:100%;align-items:center;gap:8px;">
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:600;color:var(--text);font-family:-apple-system,sans-serif;">${r.desc}</div>
+          <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:2px;">${r.store} · ${r.date}</div>
+          <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-top:2px;">Subtotal ${r.subtotal} · GST ${r.gst} · <strong style="color:var(--brown)">${r.total}</strong></div>
+        </div>
+        <a href="${r.url}" target="_blank" style="font-size:26px;text-decoration:none;" title="View receipt">🧾</a>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
 function renderHouseholdMaintenance() { householdMaintenance = JSON.parse(localStorage.getItem('steph-household-maintenance') || '[]'); renderHouseholdList('household-maintenance-list', householdMaintenance, {editFn:'editMaintenance',deleteFn:'deleteMaintenance'}); }
 function addBill() {
   const n = document.getElementById('bills-name');
