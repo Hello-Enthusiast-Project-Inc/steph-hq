@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Muscle Energy Techniques — Clinical Quick Reference</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: #f5f7fa; color: #1a1a2e; font-size: 13px; line-height: 1.5; }
+  header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); padding: 32px 20px 26px; text-align: center; color: white; }
+  header h1 { font-size: 1.45rem; font-weight: 600; margin-bottom: 4px; }
+  header p  { font-size: 0.75rem; opacity: 0.65; letter-spacing: 1px; text-transform: uppercase; }
+  .jump-nav { max-width: 900px; margin: 18px auto 0; padding: 0 16px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .jump-nav a { background: white; border-radius: 20px; padding: 5px 14px; font-size: 0.72rem; font-weight: 700; text-decoration: none; color: #444; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+  .page { max-width: 900px; margin: 0 auto; padding: 20px 16px 52px; }
+
+  .rh { border-radius: 12px; padding: 14px 18px; margin: 28px 0 12px; color: white; }
+  .rh h2 { font-size: 1rem; font-weight: 700; }
+  .rh p  { font-size: 0.72rem; opacity: 0.85; margin-top: 2px; }
+  .rh-purple { background: linear-gradient(135deg, #4a235a, #8e44ad); }
+  .rh-blue   { background: linear-gradient(135deg, #1a5276, #2980b9); }
+  .rh-green  { background: linear-gradient(135deg, #1e8449, #27ae60); }
+  .rh-orange { background: linear-gradient(135deg, #784212, #d35400); }
+  .rh-red    { background: linear-gradient(135deg, #7b241c, #c0392b); }
+  .rh-teal   { background: linear-gradient(135deg, #0e6655, #1abc9c); }
+
+  .card-list { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); overflow: hidden; margin-bottom: 10px; }
+  .card-row  { border-bottom: 1px solid #f2f2f2; padding: 12px 16px; }
+  .card-row:last-child { border-bottom: none; }
+  .card-name { font-weight: 700; font-size: 0.86rem; color: #1a1a2e; margin-bottom: 6px; }
+  .sub-label { font-size: 0.62rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; padding: 5px 14px; border-bottom: 1px solid #f0f0f0; color: #888; background: #fafafa; }
+
+  .cg { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 14px; margin-top: 5px; }
+  .cg-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px 14px; margin-top: 5px; }
+  .cg-item { font-size: 0.75rem; }
+  .cg-label { font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #bbb; display: block; }
+  .cg-val { color: #444; line-height: 1.4; }
+  .cg-full { grid-column: 1 / -1; }
+  @media (max-width: 600px) { .cg, .cg-3 { grid-template-columns: 1fr; } }
+
+  /* Technique cards */
+  .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .tech-card { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 16px; border-top: 5px solid #8e44ad; overflow: hidden; }
+  .tech-card.blue   { border-top-color: #2980b9; }
+  .tech-card.green  { border-top-color: #27ae60; }
+  .tech-card.orange { border-top-color: #d35400; }
+  .tech-card.teal   { border-top-color: #1abc9c; }
+  .tech-card.red    { border-top-color: #c0392b; }
+  .tech-title { font-size: 0.9rem; font-weight: 700; color: #1a1a2e; margin-bottom: 2px; }
+  .tech-abbr  { font-size: 0.65rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block; }
+  .tech-mech  { font-size: 0.72rem; background: #f8f4ff; border-radius: 6px; padding: 5px 8px; color: #6c3483; font-style: italic; margin-bottom: 8px; }
+  .tech-mech.blue  { background: #eaf4fb; color: #1a5276; }
+  .tech-mech.green { background: #eafaf1; color: #1e8449; }
+  .tech-mech.orange{ background: #fef5ec; color: #784212; }
+  .tech-mech.teal  { background: #e8fdf8; color: #0e6655; }
+  .tech-card ul { padding-left: 15px; }
+  .tech-card li { font-size: 0.74rem; color: #444; margin-bottom: 3px; line-height: 1.4; }
+
+  /* Protocol steps */
+  .steps { counter-reset: step; padding: 0; }
+  .step  { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid #f5f5f5; align-items: flex-start; }
+  .step:last-child { border-bottom: none; }
+  .step-num { background: #8e44ad; color: white; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .step-num.blue   { background: #2980b9; }
+  .step-num.green  { background: #27ae60; }
+  .step-num.orange { background: #d35400; }
+  .step-body { font-size: 0.76rem; color: #444; line-height: 1.45; }
+  .step-body strong { color: #1a1a2e; }
+
+  /* Application table */
+  .app-table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+  .app-table thead th { font-size: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: #aaa; padding: 4px 8px 4px 0; border-bottom: 2px solid #eee; text-align: left; }
+  .app-table tbody td { font-size: 0.76rem; color: #444; padding: 6px 8px 6px 0; border-bottom: 1px solid #f5f5f5; vertical-align: top; }
+  .app-table tbody tr:last-child td { border-bottom: none; }
+  .app-table td:first-child { font-weight: 700; color: #1a1a2e; white-space: nowrap; }
+  .tag { display: inline-block; font-size: 0.6rem; font-weight: 700; border-radius: 4px; padding: 1px 6px; margin: 1px 2px 1px 0; white-space: nowrap; }
+  .tag-pir  { background: #f3e5f5; color: #6c3483; }
+  .tag-ri   { background: #e3f2fd; color: #1a5276; }
+  .tag-pfs  { background: #e8f5e9; color: #2e7d32; }
+  .tag-iso  { background: #fff3e0; color: #e65100; }
+  .tag-both { background: #f5f5f5; color: #555; }
+
+  /* Dosage band */
+  .dose-row { display: flex; gap: 2px; margin: 8px 0; }
+  .dose-seg { flex: 1; border-radius: 6px; padding: 7px 10px; text-align: center; }
+  .dose-seg .ds-label { font-size: 0.57rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; display: block; color: white; }
+  .dose-seg .ds-val   { font-size: 0.82rem; font-weight: 700; color: white; }
+  .dc-1 { background: #8e44ad; }
+  .dc-2 { background: #2980b9; }
+  .dc-3 { background: #27ae60; }
+  .dc-4 { background: #d35400; }
+  @media (max-width: 480px) { .dose-row { flex-direction: column; } }
+
+  .pearl { background: #fffbea; border-left: 3px solid #f39c12; border-radius: 0 8px 8px 0; padding: 8px 12px; margin: 10px 0 4px; font-size: 0.76rem; color: #7d6608; }
+  .pearl strong { font-weight: 700; }
+
+  .warn-card { background: #fff5f5; border: 1px solid #f5c6cb; border-radius: 10px; padding: 12px 16px; margin: 10px 0; }
+  .warn-card .wc-title { font-size: 0.78rem; font-weight: 700; color: #c0392b; margin-bottom: 6px; }
+  .warn-card ul { padding-left: 16px; }
+  .warn-card li { font-size: 0.76rem; color: #c0392b; margin-bottom: 3px; }
+
+  footer { text-align: center; padding: 20px; color: #bbb; font-size: 0.68rem; border-top: 1px solid #eee; margin-top: 30px; }
+
+  @media print {
+    body { font-size: 10px; background: white; }
+    header, .rh { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .jump-nav { display: none; }
+    .card-list { box-shadow: none; border: 1px solid #ddd; }
+    .page { padding: 8px; }
+    .tech-card, .step-num, .dose-seg, .pearl { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Muscle Energy Techniques (MET)</h1>
+  <p>Clinical Quick Reference · Mechanisms · Protocols · Regional Applications</p>
+</header>
+
+<div class="jump-nav">
+  <a href="#overview">Overview</a>
+  <a href="#types">Types</a>
+  <a href="#protocol">Protocol</a>
+  <a href="#dosage">Dosage</a>
+  <a href="#applications">Applications</a>
+  <a href="#ci">Contraindications</a>
+</div>
+
+<div class="page">
+
+<!-- ======= OVERVIEW ======= -->
+<div class="rh rh-purple" id="overview">
+  <h2>💜 What is MET?</h2>
+  <p>Active patient participation · Controlled direction · Specific load · Evidence-based manual therapy</p>
+</div>
+
+<div class="card-list">
+  <div class="card-row">
+    <div class="card-name">Definition</div>
+    <p style="font-size:0.78rem;color:#444;line-height:1.5;">Muscle Energy Technique (MET) is a form of manual therapy in which the patient actively uses their muscles in a precisely controlled direction and at a specific intensity — against a clinician-applied counterforce — to achieve a therapeutic effect. Originally developed by Fred Mitchell Sr. (DO) in the 1950s.</p>
+  </div>
+  <div class="card-row">
+    <div class="card-name">Core Principles</div>
+    <div class="cg">
+      <div class="cg-item"><span class="cg-label">Patient-active</span><span class="cg-val">Client generates the muscle contraction — clinician provides counterforce, not movement</span></div>
+      <div class="cg-item"><span class="cg-label">Direction-specific</span><span class="cg-val">Contraction is directed toward or away from the barrier — not a general effort</span></div>
+      <div class="cg-item"><span class="cg-label">Controlled intensity</span><span class="cg-val">Submaximal effort (20–30% max) — not a strength exercise; precision over force</span></div>
+      <div class="cg-item"><span class="cg-label">Barrier concept</span><span class="cg-val">Tissue is taken to the first point of resistance (restrictive barrier) before the technique begins</span></div>
+      <div class="cg-item cg-full"><span class="cg-label">Effect</span><span class="cg-val">Reduces muscle tone, improves ROM, restores joint mobility, normalises reflexes — depending on technique used</span></div>
+    </div>
+  </div>
+  <div class="card-row">
+    <div class="card-name">The Restrictive Barrier</div>
+    <div class="cg">
+      <div class="cg-item"><span class="cg-label">Anatomical barrier</span><span class="cg-val">Absolute end of available ROM — bony/structural; should NOT be reached during MET</span></div>
+      <div class="cg-item"><span class="cg-label">Physiological barrier</span><span class="cg-val">Active end of ROM — controlled by muscle; normal limit during movement</span></div>
+      <div class="cg-item"><span class="cg-label">Restrictive barrier</span><span class="cg-val">Pathological resistance within physiological range — where MET is applied; the "bind"</span></div>
+      <div class="cg-item"><span class="cg-label">Feather-edge</span><span class="cg-val">Gentlest form — tissue taken to just before the restrictive barrier; used in acute/sensitive cases</span></div>
+    </div>
+    <div class="pearl">💡 <strong>Key concept:</strong> Always work at the <em>restrictive barrier</em>, not the anatomical end of range. If you push past it, you cause pain and lose the neurological window.</div>
+  </div>
+</div>
+
+<!-- ======= TYPES ======= -->
+<div class="rh rh-blue" id="types">
+  <h2>🔵 Types of MET</h2>
+  <p>Four main mechanisms — each uses a different neurophysiological pathway</p>
+</div>
+
+<div class="tech-grid">
+  <div class="tech-card">
+    <div class="tech-title">Post-Isometric Relaxation</div>
+    <span class="tech-abbr">PIR</span>
+    <div class="tech-mech">Mechanism: After isometric contraction, the Golgi tendon organ fires → autogenic inhibition → muscle relaxes</div>
+    <ul>
+      <li>Most commonly used MET technique</li>
+      <li>Contract the <strong>tight muscle</strong> isometrically</li>
+      <li>On relaxation, move into new range (the "gain")</li>
+      <li>Best for: hypertonic muscles, chronic tightness, spasm</li>
+      <li>Works via GTO (Golgi Tendon Organ) → Ib afferents</li>
+      <li>Effect: immediate reduction in resting tone</li>
+    </ul>
+  </div>
+
+  <div class="tech-card blue">
+    <div class="tech-title">Reciprocal Inhibition</div>
+    <span class="tech-abbr">RI</span>
+    <div class="tech-mech blue">Mechanism: Contraction of the agonist → Ia reciprocal inhibition of antagonist → antagonist relaxes</div>
+    <ul>
+      <li>Contract the <strong>antagonist</strong> of the tight muscle</li>
+      <li>Tight muscle is inhibited neurologically</li>
+      <li>Best for: acute pain, recent injury, post-surgical (avoids contracting the problem muscle)</li>
+      <li>Works via Ia afferents from muscle spindles</li>
+      <li>Gentler than PIR — good for sensitive/acute presentations</li>
+      <li>Example: tight hip flexors → activate glutes (antagonist)</li>
+    </ul>
+  </div>
+
+  <div class="tech-card green">
+    <div class="tech-title">Post-Facilitation Stretch</div>
+    <span class="tech-abbr">PFS</span>
+    <div class="tech-mech green">Mechanism: Maximal isometric contraction followed by rapid passive stretch during the refractory period</div>
+    <ul>
+      <li>Client contracts at <strong>near-maximal effort</strong> (80–100%)</li>
+      <li>Immediately followed by a quick passive stretch</li>
+      <li>Best for: chronic fibrotic tightness, long-standing restrictions</li>
+      <li>Exploits the post-contraction refractory window (~2–3 sec)</li>
+      <li>More aggressive than PIR — use when PIR has plateaued</li>
+      <li>Not suitable for acute or irritable tissues</li>
+    </ul>
+  </div>
+
+  <div class="tech-card orange">
+    <div class="tech-title">Isotonic Eccentric MET</div>
+    <span class="tech-abbr">Eccentric MET</span>
+    <div class="tech-mech orange">Mechanism: Clinician overcomes patient contraction → eccentric lengthening under load → lengthens and strengthens simultaneously</div>
+    <ul>
+      <li>Patient contracts; clinician slowly overcomes the effort</li>
+      <li>Muscle lengthens against resistance (eccentric)</li>
+      <li>Best for: muscle that is both tight AND weak</li>
+      <li>Particularly useful: hamstrings, hip flexors, cervical paraspinals</li>
+      <li>Improves flexibility and builds eccentric strength</li>
+      <li>Avoid in very acute or irritable muscles</li>
+    </ul>
+  </div>
+
+  <div class="tech-card teal">
+    <div class="tech-title">Isolytic Contraction</div>
+    <span class="tech-abbr">Isolytic</span>
+    <div class="tech-mech teal">Mechanism: Clinician forcibly overcomes maximal contraction — intentional breaking of adhesions/fibrosis</div>
+    <ul>
+      <li>Most aggressive MET — use with experience</li>
+      <li>Client resists maximally; clinician forces through</li>
+      <li>Breaks up fibrous adhesions in chronic restrictions</li>
+      <li>Typically causes mild soreness (pre-warn client)</li>
+      <li>Best for: chronic fibrotic tissue, scar tissue, organised adhesions</li>
+      <li>NOT for acute, hypermobile, osteoporotic, or inflamed tissue</li>
+    </ul>
+  </div>
+
+  <div class="tech-card red">
+    <div class="tech-title">Joint MET (Articulatory)</div>
+    <span class="tech-abbr">Joint / SI / Rib</span>
+    <div class="tech-mech" style="background:#fff5f5;color:#c0392b;">Mechanism: Muscle contraction creates a corrective force on a restricted or malpositioned joint</div>
+    <ul>
+      <li>Used for: SI joint, rib restrictions, pubic symphysis, atlanto-axial</li>
+      <li>Patient contracts specific muscles to "self-correct" joint position</li>
+      <li>Indirect approach — less provocative than HVLA</li>
+      <li>Common: anterior iliac rotation, SI dysfunction, elevated/depressed rib</li>
+      <li>Preferred over manipulation when HVLA is contraindicated</li>
+      <li>Evidence-based for SI joint + sacral dysfunction</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ======= PROTOCOL ======= -->
+<div class="rh rh-green" id="protocol">
+  <h2>🟢 Standard MET Protocol — Step by Step</h2>
+  <p>PIR template — the most common clinical application</p>
+</div>
+
+<div class="card-list">
+  <div class="card-row">
+    <div class="card-name">PIR — Post-Isometric Relaxation Protocol</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>Position at barrier:</strong> Passively move the tissue to the <em>first point of resistance</em> (restrictive barrier). Do not force past it. This is your starting position.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body"><strong>Instruct the client:</strong> "Gently push / pull against my hand" — direct contraction <em>toward</em> the restriction (or away if using RI). Use clear, consistent language; avoid "hard" or "really push."</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body"><strong>Isometric contraction:</strong> Client contracts at 20–30% maximum effort against your unyielding counterforce. No movement occurs. Hold <strong>7–10 seconds</strong>.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body"><strong>Release:</strong> "Completely relax." Wait <strong>2–3 seconds</strong> for full neurological relaxation (GTO refractory window). Do not rush this step.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body"><strong>Take up the slack:</strong> Gently move into the new available range — do not force or bounce. Move only to the <em>new</em> restrictive barrier. This is the "gain."</div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body"><strong>Repeat:</strong> Perform <strong>3–5 repetitions</strong> from each new barrier. Each rep should yield additional range. Stop when no further gain is obtained.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">7</div>
+        <div class="step-body"><strong>Reassess:</strong> Recheck active and passive ROM. Compare bilaterally. A good outcome = 10–15° improvement and reduced end-feel resistance.</div>
+      </div>
+    </div>
+    <div class="pearl">⭐ <strong>Clinical pearl:</strong> The 2–3 second post-contraction pause is the most commonly skipped step — and the most important. The GTO needs that window to fully inhibit the muscle. Rush it and you lose half the effect.</div>
+  </div>
+
+  <div class="card-row">
+    <div class="card-name">RI — Reciprocal Inhibition Protocol (Acute/Sensitive)</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num blue">1</div>
+        <div class="step-body"><strong>Position at barrier:</strong> Same as PIR — take tissue to first point of resistance (tight muscle is on stretch).</div>
+      </div>
+      <div class="step">
+        <div class="step-num blue">2</div>
+        <div class="step-body"><strong>Instruct contraction of the OPPOSITE muscle:</strong> "Push away from me" (instead of toward) — contracting the antagonist of the tight muscle.</div>
+      </div>
+      <div class="step">
+        <div class="step-num blue">3</div>
+        <div class="step-body"><strong>Hold 7–10 sec</strong> at same 20–30% effort → relax → take up the new range. Repeat 3–5 times.</div>
+      </div>
+      <div class="step">
+        <div class="step-num blue">4</div>
+        <div class="step-body"><strong>When to choose RI over PIR:</strong> Acute injury, inflammation, muscle spasm too painful to contract, post-surgical, or highly sensitive presentation.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= DOSAGE ======= -->
+<div class="rh rh-orange" id="dosage">
+  <h2>🟠 Dosage Parameters</h2>
+  <p>Force · Duration · Repetitions · Frequency — vary by technique and tissue state</p>
+</div>
+
+<div class="card-list">
+  <div class="card-row">
+    <div class="card-name">Standard Parameters at a Glance</div>
+    <div class="dose-row">
+      <div class="dose-seg dc-1"><span class="ds-label">Effort (PIR)</span><span class="ds-val">20–30%</span></div>
+      <div class="dose-seg dc-2"><span class="ds-label">Hold Duration</span><span class="ds-val">7–10 sec</span></div>
+      <div class="dose-seg dc-3"><span class="ds-label">Reps per Session</span><span class="ds-val">3–5 reps</span></div>
+      <div class="dose-seg dc-4"><span class="ds-label">Relaxation Pause</span><span class="ds-val">2–3 sec</span></div>
+    </div>
+    <table class="app-table" style="margin-top:10px;">
+      <thead><tr><th>Technique</th><th>Effort Level</th><th>Hold</th><th>Reps</th><th>Pause</th><th>Best For</th></tr></thead>
+      <tbody>
+        <tr><td>PIR</td><td>20–30% max</td><td>7–10 sec</td><td>3–5</td><td>2–3 sec</td><td>Hypertonic / chronic tightness</td></tr>
+        <tr><td>RI</td><td>20–30% max</td><td>7–10 sec</td><td>3–5</td><td>2–3 sec</td><td>Acute / sensitive / painful to contract</td></tr>
+        <tr><td>PFS</td><td>80–100% max</td><td>5–7 sec</td><td>3–5</td><td>Immediate stretch</td><td>Chronic fibrotic, stubborn restriction</td></tr>
+        <tr><td>Eccentric MET</td><td>Max → overcome</td><td>Slow 3–5 sec</td><td>5–8</td><td>None</td><td>Tight + weak muscle</td></tr>
+        <tr><td>Isolytic</td><td>Maximal</td><td>Forced through</td><td>3–5</td><td>None</td><td>Fibrous adhesions, scar tissue</td></tr>
+        <tr><td>Joint MET</td><td>30–50% max</td><td>5–7 sec</td><td>3–5</td><td>2–3 sec</td><td>SI joint, rib, pelvis</td></tr>
+      </tbody>
+    </table>
+    <div class="pearl">💡 <strong>Acute vs. chronic:</strong> Acute tissue → lighter effort (20%), shorter holds (5–7 sec), more reps at lower load. Chronic fibrotic tissue → heavier effort, longer holds, consider PFS or isolytic.</div>
+  </div>
+</div>
+
+<!-- ======= REGIONAL APPLICATIONS ======= -->
+<div class="rh rh-teal" id="applications">
+  <h2>🩵 Regional Applications</h2>
+  <p>Common presentations with muscle targets, technique choice, and position</p>
+</div>
+
+<div class="card-list">
+  <div class="sub-label">C0 — Occiput-Atlas (OA Joint)</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Dysfunction</th><th>Technique</th><th>Direction / Barrier</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>OA Flexion Restriction (most common)</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Cranio-cervical flexion (nodding) to barrier; resist extension</td>
+          <td>Supine; clinician cups occiput, fingers at C1-2, localise OA only — no mid-cervical movement. Client does gentle "yes" nod (chin tuck) against clinician’s cupped hand. 5–10% effort only. Relax → take further into flexion. 3–5 reps.</td>
+        </tr>
+        <tr>
+          <td>OA Extension Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Cranio-cervical extension (slight chin lift) to barrier; resist flexion</td>
+          <td>Supine; OA taken into slight extension barrier. Client nods chin down against hand. Relax → extend slightly further. Less common — usually post-whiplash.</td>
+        </tr>
+        <tr>
+          <td>OA Side-Bend Restriction (right or left)</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Contralateral SB of occiput on atlas; resist SB back to restriction side</td>
+          <td>Supine; clinician contacts occiput, OA SB to barrier (opposite to restricted side). Client pushes head toward restriction side (SB toward clinician’s hand). Relax → SB further away. Note: OA SB and rotation are OPPOSITE — SB right = rotation left.</td>
+        </tr>
+        <tr>
+          <td>Suboccipital Release (general tension)</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Cranio-cervical flexion; resist suboccipital extension</td>
+          <td>Supine; clinician’s fingertips under occiput at hairline. Client gently presses head back into hands (suboccipital extension × 7 sec). Relax → allow head to drop into flexion. Do NOT use for instability or alar laxity.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pearl">⭐ <strong>C0 key rules:</strong> OA coupling = SB and rotation OPPOSITE directions (unlike C2–C7). Use absolute minimal force (5–10%). Always rule out alar ligament laxity before OA MET (Sharp-Purser, alar stress tests). VBI screen mandatory. C0 work is contraindicated with: RA (atlantoaxial instability), Down syndrome, os odontoideum, recent whiplash grade 3+.</div>
+  </div>
+
+  <div class="sub-label">C1–C2 — Atlas-Axis (AA Joint)</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Dysfunction</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>AA Rotation Restriction (most common C1-2 dysfunction)</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Rotation to barrier at C1-2; resist return to midline</td>
+          <td>Supine; cervical spine in neutral or slight flexion to lock out C2–C7 (full flex locks AA). Clinician holds head at ears, rotates to AA barrier. Client rotates back toward midline against clinician. Relax → rotate further. AA provides ~50% of cervical rotation.</td>
+        </tr>
+        <tr>
+          <td>AA Flexion (atlantoaxial gap)</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Cervical flexion isolating AA; resist extension</td>
+          <td>Supine; slight cervical flexion. Client extends gently against cupped hand. Relax → flex. Use only after transverse ligament integrity confirmed (Sharp-Purser negative).</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pearl">⭐ <strong>AA note:</strong> Rotation is the primary motion at C1-2. Lateral flexion at AA is minimal. Transverse ligament MUST be screened (Sharp-Purser test) before any AA MET technique. Positive Sharp-Purser = absolute contraindication.</div>
+  </div>
+
+  <div class="sub-label">Cervical Spine C2–C7 (Mid &amp; Lower Cervical)</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target Muscle</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Upper Trapezius</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Side flex + depression, resist elevation + lateral flex toward tight side</td>
+          <td>Supine; head off table or clinician stabilises shoulder. Client pushes ear toward shoulder.</td>
+        </tr>
+        <tr>
+          <td>Levator Scapulae</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Flex + ipsilateral rotation + dep.; resist elevation + extension</td>
+          <td>Supine; cervical fully flexed, rotated slightly away, SCM relaxed. Client elevates shoulder.</td>
+        </tr>
+        <tr>
+          <td>SCM</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Extension + contralateral rotation; resist flexion + rotation to same side</td>
+          <td>Supine; head extended slightly over table. Client turns chin toward tight side.</td>
+        </tr>
+        <tr>
+          <td>Suboccipitals</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Cranio-cervical flexion; resist extension</td>
+          <td>Supine; OA joint only (not full neck). Client does gentle "chin tuck" against clinician's cupped hand.</td>
+        </tr>
+        <tr>
+          <td>Scalenes</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Depress + contralateral lateral flex; resist elevation + ipsilateral flex</td>
+          <td>Supine; stabilise 1st rib. Client laterally flexes toward tight side against resistance.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-label">Cervical Spine — Joint-Level (C2–C7 Segmental)</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Segment / Dysfunction</th><th>Technique</th><th>Direction / Barrier</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>C2–C4 Rotation Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Rotation + ipsilateral SB to barrier; resist return to midline</td>
+          <td>Supine; localise level with palpation, take to 3-plane barrier (flex/ext + SB + rot). Client rotates back toward midline against hand. Relax → take further into barrier. 3–5 reps.</td>
+        </tr>
+        <tr>
+          <td>C4–C7 Extension Restriction (common)</td>
+          <td><span class="tag-both tag">Joint MET</span> <span class="tag tag-pir">PIR</span></td>
+          <td>Extension + ipsilateral SB + rotation; resist flexion</td>
+          <td>Supine; lower cervical extended to barrier. Client flexes chin toward chest against clinician's hand. Relax → extend further. Common in forward head posture.</td>
+        </tr>
+        <tr>
+          <td>C2–C7 Flexion Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Flexion + contralateral SB + rotation to barrier; resist extension</td>
+          <td>Supine; segment localised. Client extends gently against hand. Relax → flex further. Less common than extension restriction.</td>
+        </tr>
+        <tr>
+          <td>C5–C7 Side-Bend Restriction</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Contralateral SB; resist ipsilateral SB</td>
+          <td>Supine; cervical SB to barrier. Client pushes ear toward shoulder (toward restriction) against hand. Relax → SB further away. Works scalenes + levator at lower levels.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pearl">⭐ <strong>Cervical joint MET note:</strong> Always use 3-plane locking to localise the target segment. C2–C7 coupling: SB and rotation are to the SAME side (opposite to OA). Never force past hard end-feel. VBI screen before any cervical technique: sustained rotation for 10–15 sec each direction, watch for dizziness, nystagmus, diplopia, dysarthria.</div>
+  </div>
+
+  <div class="sub-label">Thoracic Spine &amp; Ribs</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target / Area</th><th>Technique</th><th>Direction</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Thoracic Extension (general)</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Extension + rotation toward restriction; resist flexion</td>
+          <td>Seated or supine; hands clasped behind head. Client extends against clinician's forearm across spinous processes.</td>
+        </tr>
+        <tr>
+          <td>Elevated Rib (inhalation restriction)</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Force rib down + out (exhalation direction)</td>
+          <td>Supine; clinician contacts angle of rib. Client exhales fully then holds breath out; clinician takes up slack. Resist inhalation.</td>
+        </tr>
+        <tr>
+          <td>Depressed Rib (exhalation restriction)</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Force rib up + in (inhalation direction)</td>
+          <td>Client inhales fully; resist exhalation. Take up slack after exhale.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-label">Thoracic Spine — Segmental &amp; Facet</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Segment / Dysfunction</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>T1–T4 Extension + Rotation Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Extension + ipsilateral rotation to barrier; resist flexion + rotation back</td>
+          <td>Seated; hands clasped behind head. Clinician's forearm or thenar contact on spinous process. Client flexes against forearm. Relax → extend + rotate further. Upper T-spine is coupled SB = rotation same side.</td>
+        </tr>
+        <tr>
+          <td>T4–T8 Rotation Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Rotation to barrier; resist counter-rotation</td>
+          <td>Seated or sidelying. Localise with finger contact bilateral transverse processes. Sidelying: rotate top shoulder back. Client resists. Relax → rotate further into barrier.</td>
+        </tr>
+        <tr>
+          <td>T8–T12 Flexion Restriction (common)</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Flexion; resist extension</td>
+          <td>Seated, slumped forward. Client extends (sits up tall) against hand on upper thorax. Relax → flex further. Common in hyperlordotic posture — T-L junction is stiff in extension.</td>
+        </tr>
+        <tr>
+          <td>Costovertebral / Costotransverse Restriction</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Rib glide in restricted direction during breath cycle</td>
+          <td>Prone or sidelying. Palpate angle of rib. Use breath MET: inhalation or exhalation direction depending on restriction. Client breathes against clinician resistance at peak inhale/exhale.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-label">Lumbar Spine</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target Muscle</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Quadratus Lumborum</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Lateral flex away from tight side; resist elevation of hip / lateral flex back</td>
+          <td>Sidelying (tight side up); client drops top hip toward floor. Resist hip elevation toward ear.</td>
+        </tr>
+        <tr>
+          <td>Iliopsoas</td>
+          <td><span class="tag tag-pir">PIR</span> <span class="tag tag-ri">RI</span></td>
+          <td>Hip extension; resist hip flexion (PIR) or contract glute (RI)</td>
+          <td>Thomas test position: supine, one leg hanging off table. PIR: client flexes hip against hand. RI: client contracts glute/extends hip against band.</td>
+        </tr>
+        <tr>
+          <td>Lumbar Paraspinals / Erector Spinae</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Lumbar flexion; resist extension</td>
+          <td>Supine, knees to chest. Client tries to extend (flatten back) against clinician's hold. Relax → pull knees closer.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-label">Lordotic Curve — Hyperlordosis / Lumbar Extension Pattern</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Iliopsoas (primary driver of hyperlordosis)</td>
+          <td><span class="tag tag-pir">PIR</span> <span class="tag tag-ri">RI</span></td>
+          <td>Hip extension (lengthen hip flexor); resist hip flexion (PIR) or activate glute (RI)</td>
+          <td>Thomas test: supine, one leg off table. PIR: client flexes hip against hand × 7 sec. RI: client squeezes glute/extends hip. Both → posterior pelvic tilt + reduce lordosis.</td>
+        </tr>
+        <tr>
+          <td>Rectus Femoris</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Knee flexion + hip extension; resist knee extension</td>
+          <td>Prone; knee flexed to barrier. Client extends knee against clinician's hand. Relax → flex further. Distinguishes from iliopsoas by knee position.</td>
+        </tr>
+        <tr>
+          <td>Lumbar Erector Spinae (overactive)</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Lumbar flexion; resist extension</td>
+          <td>Supine, knees to chest. Client pushes low back into table (extends) against clinician hold. Relax → curl knees in further. Posterior pelvic tilt re-education during relaxation phase.</td>
+        </tr>
+        <tr>
+          <td>Thoracolumbar Fascia / Deep Multifidus</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Lumbar rotation + flexion; resist extension + rotation back</td>
+          <td>Sidelying; top hip and knee forward (lumbar rotation barrier). Client tries to extend/rotate back against clinician's hand on pelvis. Relax → increase rotation.</td>
+        </tr>
+        <tr>
+          <td>Anterior Pelvic Tilt Correction (functional)</td>
+          <td><span class="tag tag-ri">RI</span></td>
+          <td>Posterior pelvic tilt via antagonist activation</td>
+          <td>Supine, hook-lying. Client performs abdominal hollowing + posterior pelvic tilt. Clinician provides resistance to hip flexion while client activates lower abs. Goal: retrain neutral pelvis over repeated sets.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pearl">⭐ <strong>Hyperlordosis sequence:</strong> Release iliopsoas first (dominant driver) → then rectus femoris → then lumbar erectors. Follow with motor re-education (posterior pelvic tilt, transversus activation). MET alone without functional retraining has poor long-term results.</div>
+  </div>
+
+  <div class="sub-label">Pelvis &amp; SI Joint</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Area / Dysfunction</th><th>Technique</th><th>Protocol</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Anterior Iliac Rotation</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Supine; flex hip + knee to 90°. Client pushes knee into clinician's hand (hip flexion). Resist → posterior rotation of ilium.</td>
+          <td>3–5 reps; reassess with standing flexion test (Gillet). Most common SI dysfunction.</td>
+        </tr>
+        <tr>
+          <td>Posterior Iliac Rotation</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Prone; hip extended slightly. Client pushes foot toward ceiling (hip ext). Resist → anterior rotation of ilium.</td>
+          <td>Less common; usually follows a fall on the posterior iliac crest.</td>
+        </tr>
+        <tr>
+          <td>Pubic Symphysis</td>
+          <td><span class="tag-both tag">Joint MET</span></td>
+          <td>Supine, knees bent, feet flat. Adductor squeeze against fist (adduction) then abductor push against clinician's hands (abduction). Alternate 3× each.</td>
+          <td>Common postpartum — gentle variation; use feather-edge barrier.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pearl">⭐ <strong>Postpartum note:</strong> Pubic symphysis MET and gentle anterior iliac correction are safe and effective postpartum (6+ weeks cleared). Always confirm obstetrical clearance and use minimal force — 10–15% effort only.</div>
+  </div>
+
+  <div class="sub-label">Hip &amp; Lower Limb</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target Muscle</th><th>Technique</th><th>Direction</th><th>Position / Setup</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Piriformis</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Hip IR + flexion; resist ER + extension</td>
+          <td>Supine, hip at 90°. Client externally rotates (pushes foot outward) against hand. Relax → move into IR.</td>
+        </tr>
+        <tr>
+          <td>Hip Adductors</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Abduction; resist adduction</td>
+          <td>Supine, leg abducted to barrier. Client squeezes knees together against clinician's hand/knee. Relax → abduct further.</td>
+        </tr>
+        <tr>
+          <td>TFL / IT Band</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Hip adduction + extension; resist abduction / flexion</td>
+          <td>Sidelying (tight side up). Ober's test position. Client abducts against clinician's hand. Relax → adduct into new range.</td>
+        </tr>
+        <tr>
+          <td>Hamstrings</td>
+          <td><span class="tag tag-pir">PIR</span> <span class="tag tag-iso">Eccentric</span></td>
+          <td>Knee extension + hip flexion; resist knee flexion</td>
+          <td>Supine, SLR position (hip at barrier). Client tries to flex knee against clinician's hand (PIR). Eccentric: client resists as clinician extends knee slowly.</td>
+        </tr>
+        <tr>
+          <td>Gastrocnemius / Soleus</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Dorsiflexion; resist plantar flexion</td>
+          <td>Supine, knee straight (gastroc) or slightly bent (soleus). Client plantar flexes against clinician's hand. Relax → DF further.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sub-label">Shoulder &amp; Upper Limb</div>
+  <div class="card-row">
+    <table class="app-table">
+      <thead><tr><th>Target Muscle</th><th>Technique</th><th>Direction</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Pectoralis Minor</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Posterior tipping of scapula / shoulder retraction + depression; resist anterior tipping</td>
+          <td>Supine. Press down on anterior shoulder. Client protracts shoulder against hand. Relax → take scapula into more posterior tipping.</td>
+        </tr>
+        <tr>
+          <td>Posterior Capsule / Infraspinatus</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Horizontal adduction + IR; resist ER + horizontal abduction</td>
+          <td>Supine; arm across chest (horizontal add barrier). Client pulls arm back (ER + horiz abd) against clinician. Relax → adduct further.</td>
+        </tr>
+        <tr>
+          <td>Pectoralis Major</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Horizontal abduction + ER; resist adduction + IR</td>
+          <td>Supine; arm to barrier in horizontal abduction. Client pushes arm across chest. Relax → abduct further.</td>
+        </tr>
+        <tr>
+          <td>Biceps / Forearm Flexors</td>
+          <td><span class="tag tag-pir">PIR</span></td>
+          <td>Elbow extension + supination; resist flexion + pronation</td>
+          <td>Seated; arm straight at barrier. Client flexes elbow against hand. Relax → extend further.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ======= CONTRAINDICATIONS ======= -->
+<div class="rh rh-red" id="ci">
+  <h2>🔴 Contraindications &amp; Precautions</h2>
+  <p>When NOT to use MET — or when to modify</p>
+</div>
+
+<div class="warn-card">
+  <div class="wc-title">⛔ Absolute Contraindications — Do Not Perform</div>
+  <ul>
+    <li>Acute fracture or suspected fracture at the treatment region</li>
+    <li>Active joint dislocation or unstable joint</li>
+    <li>Severe osteoporosis (high fracture risk with any loading)</li>
+    <li>Malignancy in or near the region being treated</li>
+    <li>Active infection, osteomyelitis, or joint sepsis</li>
+    <li>Spinal cord injury with upper motor neuron signs — risk of neurological deterioration</li>
+    <li>Severe ligamentous instability (e.g., alar ligament laxity — use extreme caution at OA joint)</li>
+  </ul>
+</div>
+
+<div class="card-list" style="margin-top:8px;">
+  <div class="card-row">
+    <div class="card-name">⚠️ Relative Precautions — Modify Technique</div>
+    <div class="cg">
+      <div class="cg-item"><span class="cg-label">Acute inflammation / recent injury</span><span class="cg-val">Use RI only; feather-edge barrier; minimal force (10%); avoid PIR directly on acutely injured muscle</span></div>
+      <div class="cg-item"><span class="cg-label">Hypermobility (EDS, generalised)</span><span class="cg-val">Avoid end-range work; use mid-range only; avoid PFS and isolytic; strengthen focus over stretching</span></div>
+      <div class="cg-item"><span class="cg-label">Pregnancy (first trimester)</span><span class="cg-val">Avoid prone; use sidelying; gentle effort only; avoid abdominal pressure; pubic symphysis: minimal force</span></div>
+      <div class="cg-item"><span class="cg-label">Postpartum (early)</span><span class="cg-val">Pelvic MET: wait 6+ weeks; use 10–15% effort; monitor diastasis recti and PGP before loading</span></div>
+      <div class="cg-item"><span class="cg-label">Severe muscle guarding / spasm</span><span class="cg-val">Don't force to barrier; use RI first to reduce tone before PIR; heat + breathing help pre-inhibit</span></div>
+      <div class="cg-item"><span class="cg-label">Neural tension / neurological symptoms</span><span class="cg-val">Avoid techniques that load the neural container; modify position to remove neural tension first</span></div>
+    </div>
+  </div>
+  <div class="card-row">
+    <div class="card-name">MET vs. Other Techniques — When to Choose</div>
+    <div class="cg">
+      <div class="cg-item"><span class="cg-label">MET over HVLA manipulation</span><span class="cg-val">CI to manipulation, client preference, acute, high irritability, neurological risk — MET is the safe alternative</span></div>
+      <div class="cg-item"><span class="cg-label">MET over passive stretching</span><span class="cg-val">Chronic hypertonic muscle, failed stretching, protective spasm — PIR achieves gains passive stretch cannot</span></div>
+      <div class="cg-item"><span class="cg-label">MET over STR / massage</span><span class="cg-val">Joint restriction with muscle component, motor control needed, functional carry-over required</span></div>
+      <div class="cg-item"><span class="cg-label">Combine with:</span><span class="cg-val">Joint mobilisation (pre or post), Pilates motor control, home exercise program, STR, dry needling</span></div>
+    </div>
+    <div class="pearl">💡 <strong>Best results:</strong> MET works best when combined with motor re-education (teaching the nervous system to accept the new range) and a targeted home stretch/activation program. The gain disappears without reinforcement.</div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<footer>Steph Raitt — AT · RMT · Pilates &nbsp;|&nbsp; Clinical Quick Reference · Muscle Energy Techniques (MET) · Feb 2026</footer>
+
+</body>
+</html>
