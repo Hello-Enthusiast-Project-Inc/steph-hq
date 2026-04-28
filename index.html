@@ -4920,7 +4920,7 @@ function estimateCalsBurned(text) {
 // Suggested calorie estimates per workout day
 const WORKOUT_CALS = [
   { label: 'HIIT Class', est: '~350–450 cal', detail: 'HIIT · 45–60 min · moderate intensity' },
-  { label: 'Move If You Can', est: '~100–200 cal', detail: 'Light movement · 20–30 min' },
+  { label: 'Hans Strength Day 7', est: '~300–400 cal', detail: 'Strength circuits + explosive elements · ~50 min' },
   { label: 'Pilates Reformer', est: '~85–120 cal', detail: 'Restorative reformer · 30 min · light springs' },
   { label: 'Hans Strength Day 4', est: '~280–320 cal', detail: 'Strength circuits + jump elements · ~50 min' },
   { label: 'Hans Strength Day 6', est: '~280–320 cal', detail: 'Strength circuits + explosive elements · ~50 min' },
@@ -4985,7 +4985,7 @@ function openWorkoutDay(index, contentOnly) {
     // Note exists — always show it as primary (what they actually did/plan to do)
     mainContent = `<div style="background:var(--card);border-radius:16px;padding:16px;margin-bottom:4px;">
         <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:8px;">${isDone ? '✅ WHAT YOU DID' : '✏️ WHAT YOU LOGGED'}</div>
-        <div style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.6;">${savedNote}</div>
+        <div style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.6;">${savedNote.replace(/\\n/g,'\n').replace(/"/g,'').replace(/\n/g,'<br>')}</div>
        </div>`;
     if (swappedItem) {
       swapBanner = `<button onclick="restoreOriginal(${index})" style="margin-bottom:8px;background:none;border:1px solid var(--text-light);color:var(--text-light);border-radius:12px;padding:7px 16px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;width:100%;">↩ Restore original workout</button>`;
@@ -5018,7 +5018,7 @@ function openWorkoutDay(index, contentOnly) {
     </div>
     <div style="padding:8px 0 24px;">
       <div style="font-size:13px;font-weight:600;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:8px;letter-spacing:0.3px;">${savedNote ? '✏️ EDIT WHAT YOU DID' : '✏️ WHAT I ACTUALLY DID'}</div>
-      <textarea id="workout-note-input" placeholder="e.g. 30 min walk + 15 min stretching, skipped weights today..." style="width:100%;box-sizing:border-box;min-height:90px;padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:var(--card);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;outline:none;">${savedNote}</textarea>
+      <textarea id="workout-note-input" placeholder="e.g. 30 min walk + 15 min stretching, skipped weights today..." style="width:100%;box-sizing:border-box;min-height:90px;padding:12px 14px;border-radius:14px;border:1px solid rgba(0,0,0,0.1);background:var(--card);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);resize:none;outline:none;">${savedNote.replace(/\\n/g,'\n').replace(/^"|"$/g,'')}</textarea>
       <button onclick="saveWorkoutNote(${index})" style="margin-top:8px;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:12px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;width:100%;">Save & Calculate Calories</button>
       ${savedNote ? `<button onclick="clearWorkoutNote(${index})" style="margin-top:6px;background:none;border:none;color:var(--text-light);font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;width:100%;padding:4px;">Clear — show suggested workout instead</button>` : ''}
     </div>`;
