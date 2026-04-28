@@ -1250,15 +1250,13 @@
     <!-- Add Entry -->
     <div style="background:var(--card);border-radius:18px;padding:16px 20px;margin-bottom:16px;">
       <div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.5px;font-family:-apple-system,sans-serif;margin-bottom:12px;">+ ADD MEASUREMENT</div>
-      <div style="display:flex;gap:8px;margin-bottom:8px;">
-        <div style="flex:1;">
-          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Date</div>
-          <input id="growth-date" type="date" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
-        </div>
-        <div style="flex:1;">
-          <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Label (optional)</div>
-          <input id="growth-label" type="text" placeholder="e.g. 6-month appt" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
-        </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Date</div>
+        <input id="growth-date" type="date" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
+      </div>
+      <div style="margin-bottom:8px;">
+        <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:4px;">Label (optional)</div>
+        <input id="growth-label" type="text" placeholder="e.g. 6-month appt" style="width:100%;box-sizing:border-box;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--white);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);">
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;">
         <div>
@@ -9022,6 +9020,19 @@ function deleteGrowthEntry(id) {
   renderGrowthTracker();
   setTimeout(drawGrowthChart, 50);
 }
+function calcPercentile(value, month, tab) {
+  const who = WHO_BOYS[tab];
+  const m = Math.round(Math.min(month, 12));
+  const toKg = lbs => lbs * 0.453592;
+  const v = tab === 'weight' ? toKg(value) : value;
+  const p3=who.p3[m], p15=who.p15[m], p50=who.p50[m], p85=who.p85[m], p97=who.p97[m];
+  if (v < p3) return '<3rd';
+  if (v < p15) return Math.round(3 + (v-p3)/(p15-p3)*12)+'th';
+  if (v < p50) return Math.round(15 + (v-p15)/(p50-p15)*35)+'th';
+  if (v < p85) return Math.round(50 + (v-p50)/(p85-p50)*35)+'th';
+  if (v < p97) return Math.round(85 + (v-p85)/(p97-p85)*12)+'th';
+  return '>97th';
+}
 function renderGrowthTracker() {
   const summaryEl = document.getElementById('hayes-growth-summary');
   const historyEl = document.getElementById('hayes-growth-history');
@@ -9034,18 +9045,27 @@ function renderGrowthTracker() {
   const latest = data.length ? data[data.length - 1] : null;
   const birth = data.find(e => e.label && e.label.toLowerCase().includes('birth')) || data[0];
   if (latest) {
+    const birthDate = new Date('2025-09-09');
+    const measDate = new Date(latest.date + 'T12:00:00');
+    const ageMonths = (measDate - birthDate) / (1000*60*60*24*30.44);
+    const wPct = latest.weight ? calcPercentile(latest.weight, ageMonths, 'weight') : null;
+    const hPct = latest.height ? calcPercentile(latest.height, ageMonths, 'height') : null;
+    const hdPct = latest.head ? calcPercentile(latest.head, ageMonths, 'head') : null;
     summaryEl.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:4px;">
       <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
         <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">WEIGHT</div>
         <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.weight ? latest.weight+'<span style="font-size:11px;font-weight:400"> lbs</span>' : '—'}</div>
+        ${wPct ? `<div style="font-size:11px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;margin-top:2px;">${wPct} %ile</div>` : ''}
       </div>
       <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
         <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">HEIGHT</div>
         <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.height ? latest.height+'<span style="font-size:11px;font-weight:400"> cm</span>' : '—'}</div>
+        ${hPct ? `<div style="font-size:11px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;margin-top:2px;">${hPct} %ile</div>` : ''}
       </div>
       <div style="background:var(--brown);border-radius:14px;padding:12px;text-align:center;">
         <div style="font-size:11px;color:rgba(255,255,255,0.7);font-family:-apple-system,sans-serif;">HEAD</div>
         <div style="font-size:20px;font-weight:700;color:white;font-family:-apple-system,sans-serif;">${latest.head ? latest.head+'<span style="font-size:11px;font-weight:400"> cm</span>' : '—'}</div>
+        ${hdPct ? `<div style="font-size:11px;color:rgba(255,255,255,0.8);font-family:-apple-system,sans-serif;margin-top:2px;">${hdPct} %ile</div>` : ''}
       </div>
     </div>
     <div style="font-size:11px;color:var(--text-light);font-family:-apple-system,sans-serif;text-align:center;margin-bottom:16px;">Last measured: ${latest.displayDate}${latest.label ? ' · '+latest.label : ''}</div>`;
