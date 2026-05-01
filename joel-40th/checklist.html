@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Joel's 40th — Master Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: #f8f6f1;
+    color: #1a1a1a;
+    font-size: 13px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── Page ── */
+  .page {
+    max-width: 750px;
+    margin: 0 auto;
+    padding: 0 0 60px;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    padding: 36px 48px 30px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-style: italic;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .header-left h1 span { color: #e2b96f; }
+  .header-left .sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+  .header-right {
+    text-align: right;
+  }
+  .header-right .date {
+    font-size: 13px;
+    font-weight: 700;
+    color: #e2b96f;
+  }
+  .header-right .location {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 3px;
+  }
+
+  /* ── Progress bar ── */
+  .progress-bar-wrap {
+    background: #1a1a2e;
+    padding: 0 48px 16px;
+  }
+  .progress-label {
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #e2b96f;
+    border-radius: 3px;
+    transition: width 0.4s;
+  }
+
+  /* ── Content ── */
+  .content { padding: 0 40px; }
+
+  /* ── Section ── */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 32px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2b96f;
+  }
+  .section-icon { font-size: 18px; }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: #1a1a2e;
+  }
+  .section-tag {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #e2b96f;
+    margin-left: auto;
+  }
+
+  /* ── Checklist items ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    margin-bottom: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+    user-select: none;
+  }
+  .checklist li:hover { background: rgba(226,185,111,0.08); }
+  .checklist li.done { opacity: 0.45; }
+  .checklist li.done .item-text { text-decoration: line-through; color: #999; }
+
+  /* Checkbox */
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    border: 2px solid #c0622a;
+    border-radius: 5px;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    background: white;
+  }
+  .checklist li.done .checkbox {
+    background: #c0622a;
+    border-color: #c0622a;
+  }
+  .checkbox::after {
+    content: '';
+    display: none;
+    width: 5px;
+    height: 9px;
+    border: 2px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  .checklist li.done .checkbox::after { display: block; }
+
+  .item-text {
+    flex: 1;
+    line-height: 1.45;
+    color: #2d3748;
+    font-size: 13px;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .badge-asap { background: #fc8181; color: #fff; }
+  .badge-may7  { background: #fbd38d; color: #744210; }
+  .badge-may11 { background: #c6f6d5; color: #276749; }
+  .badge-may14 { background: #bee3f8; color: #2a69ac; }
+  .badge-may16 { background: #d6bcfa; color: #44337a; }
+  .badge-may17 { background: #1a1a2e; color: #e2b96f; }
+  .badge-done  { background: #c6f6d5; color: #276749; }
+
+  /* Sub-label */
+  .item-note {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 2px;
+    display: block;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px dashed #ddd;
+    margin: 4px 0;
+  }
+
+  /* ── Counter ── */
+  .counter-bar {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 20px;
+    margin: 20px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #718096;
+  }
+  .counter-bar strong { color: #1a1a2e; font-size: 15px; }
+
+  /* ── Print ── */
+  @media print {
+    @page { size: A4; margin: 12mm 14mm; }
+    body { background: white; font-size: 12px; }
+    .page { max-width: 100%; padding: 0; }
+    .header { padding: 24px 36px 20px; }
+    .progress-bar-wrap { padding: 0 36px 12px; }
+    .content { padding: 0 28px; }
+    .checklist li { padding: 7px 10px; }
+    .counter-bar { display: none; }
+    .section-head { margin-top: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Joel's <span>40th</span> 🎉</h1>
+      <div class="sub">Master Planning Checklist · Bucket Golf Tournament · BBQ</div>
+    </div>
+    <div class="header-right">
+      <div class="date">Sunday May 17, 2026 · 3PM</div>
+      <div class="location">13105 Dale Meadows Rd · Summerland, BC</div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar-wrap">
+    <div class="progress-label" id="progress-label">0 of 0 done</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+  </div>
+
+  <div class="content">
+
+    <!-- Counter -->
+    <div class="counter-bar">
+      <span>16 days to go 🎉</span>
+      <span><strong id="done-count">0</strong> / <strong id="total-count">0</strong> tasks complete</span>
+    </div>
+
+    <!-- ── INVITES & RSVPs ── -->
+    <div class="section-head">
+      <span class="section-icon">📨</span>
+      <span class="section-title">Invites & RSVPs</span>
+      <span class="section-tag">Week of May 1</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Follow up with no-answer guests: Mitch Carefoot, Derek Johnson, Carley (cousin), Russ & Sophie, Derian & brothers, Chris & Kelly <span class="item-note">6 groups still outstanding</span></div>
+        <span class="badge badge-asap">ASAP</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Lock in final headcount <span class="item-note">Need numbers to confirm food quantities</span></div>
+        <span class="badge badge-may7">By May 7</span>
+      </li>
+    </ul>
+
+    <!-- ── BUCKET GOLF ── -->
+    <div class="section-head">
+      <span class="section-icon">⛳</span>
+      <span class="section-title">Bucket Golf Setup</span>
+      <span class="section-tag">Week of May 11</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Open and test bucket golf set — check all clubs, balls, buckets are there and working</div>
+        <span class="badge badge-asap">ASAP</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Walk the field and map out 6 holes <span class="item-note">Mark distances, note any obstacles or slopes</span></div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Make hole markers / flags — numbered 1 to 6 <span class="item-note">DIY or buy</span></div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Print scorecards for each team <span class="item-note">Already designed — ready to print</span></div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Decide team format — how many per team, stagger start times</div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Sort prizes — 1st place, last place, best tank top, hole-in-one <span class="item-note">Keep it light and funny — dollar store + wine</span></div>
+        <span class="badge badge-may14">May 14–15</span>
+      </li>
+    </ul>
+
+    <!-- ── FOOD ── -->
+    <div class="section-head">
+      <span class="section-icon">🍔</span>
+      <span class="section-title">Food & Drinks</span>
+      <span class="section-tag">Ongoing</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Finalize food menu — confirm what you're making vs. buying</div>
+        <span class="badge badge-may7">By May 7</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Costco run — dry goods, meats, beer, wine, spirits, disposables <span class="item-note">Burger patties, sausages, shrimp cocktail, Caesar kits, coleslaw bags, watermelon, drinks</span></div>
+        <span class="badge badge-may11">Week of May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Grocery run — fresh produce, buns, toppings, chips, condiments, crackers <span class="item-note">Corn, burger buns x80, veggies, hummus, guac, salsa, bruschetta</span></div>
+        <span class="badge badge-may14">May 14–15</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Estimate and buy drinks <span class="item-note">~10–12 cases beer · 15–18 rosé/white · 8–10 red · spirits · mixers · non-alcoholic · 12+ bags ice</span></div>
+        <span class="badge badge-may11">Week of May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Check cooler situation — how many do you have? Get extras if needed</div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Confirm cake pickup — date, time, refrigeration needed <span class="item-note">Already ordered ✅ — just confirm logistics</span></div>
+        <span class="badge badge-may14">May 14–15</span>
+      </li>
+    </ul>
+
+    <!-- ── SETUP & LOGISTICS ── -->
+    <div class="section-head">
+      <span class="section-icon">🪑</span>
+      <span class="section-title">Setup & Logistics</span>
+      <span class="section-tag">Confirm by May 11</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Seating — tables, chairs, lawn chairs. Do you have enough for ~60 adults?</div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Tent / shade — May in Summerland can be hot <span class="item-note">Rent or borrow if needed</span></div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Music and speaker setup</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">BBQ — clean it, check propane is full, tools ready <span class="item-note">Don't leave this till the day</span></div>
+        <span class="badge badge-may14">May 14–15</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Kids area — space for Rush + other kids to play safely during golf</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Plates, cups, cutlery — real or disposable? Enough for 60+?</div>
+        <span class="badge badge-may11">By May 11</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Set up garbage and recycling bins around the yard</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Parking — flag a field area for overflow parking if needed</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Party decorations — balloons, "40" signage, fairy lights for evening (optional)</div>
+        <span class="badge badge-may14">May 14–15</span>
+      </li>
+    </ul>
+
+    <!-- ── DAY BEFORE ── -->
+    <div class="section-head">
+      <span class="section-icon">🌙</span>
+      <span class="section-title">Day Before — Saturday May 16</span>
+      <span class="section-tag">May 16</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Prep all salads and cold apps — refrigerate overnight <span class="item-note">Pasta salad, coleslaw, bruschetta, charcuterie boards</span></div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Set up bucket golf course in the field</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Set up tables, chairs, and tent</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Load ice into coolers, chill drinks overnight</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Marinate any meats</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">Get a good night's sleep 😄</div>
+        <span class="badge badge-may16">May 16</span>
+      </li>
+    </ul>
+
+    <!-- ── DAY OF ── -->
+    <div class="section-head">
+      <span class="section-icon">🎉</span>
+      <span class="section-title">Day Of — Sunday May 17</span>
+      <span class="section-tag">May 17</span>
+    </div>
+    <ul class="checklist">
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">8am — Tables, chairs, tent setup. Final course setup. Pull oven meals to room temp.</div>
+        <span class="badge badge-may17">8:00 AM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">10am — Pull salads from fridge, set up food stations, top up ice</div>
+        <span class="badge badge-may17">10:00 AM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">2pm — Oven meals go in. Preheat oven for oven-ready dishes.</div>
+        <span class="badge badge-may17">2:00 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">2:45pm — Set out apps, charcuterie, veggie trays, chips, shrimp cocktail. Drinks station ready.</div>
+        <span class="badge badge-may17">2:45 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">3pm — Guests arrive 🎉 Welcome drinks, mingle, music on.</div>
+        <span class="badge badge-may17">3:00 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">3:30pm — Announce teams, stagger starts, bucket golf tournament begins ⛳</div>
+        <span class="badge badge-may17">3:30 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">5pm — Fire up the BBQ. Start burgers, sausages, corn.</div>
+        <span class="badge badge-may17">5:00 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">5:30pm — Dinner service. Tournament results + prizes. 🏆</div>
+        <span class="badge badge-may17">5:30 PM</span>
+      </li>
+      <li onclick="toggle(this)">
+        <div class="checkbox"></div>
+        <div class="item-text">8:30pm — Birthday cake. Gather everyone. Candles. Sing. Sunset photos. 🎂</div>
+        <span class="badge badge-may17">8:30 PM</span>
+      </li>
+    </ul>
+
+  </div><!-- end content -->
+</div><!-- end page -->
+
+<script>
+  function toggle(li) {
+    li.classList.toggle('done');
+    updateProgress();
+    save();
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('.checklist li');
+    const done = document.querySelectorAll('.checklist li.done');
+    const pct = all.length ? Math.round((done.length / all.length) * 100) : 0;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = done.length + ' of ' + all.length + ' done · ' + pct + '%';
+    document.getElementById('done-count').textContent = done.length;
+    document.getElementById('total-count').textContent = all.length;
+  }
+
+  function save() {
+    const states = [...document.querySelectorAll('.checklist li')].map(li => li.classList.contains('done'));
+    localStorage.setItem('joel40checklist', JSON.stringify(states));
+  }
+
+  function load() {
+    const saved = JSON.parse(localStorage.getItem('joel40checklist') || '[]');
+    const items = document.querySelectorAll('.checklist li');
+    saved.forEach((done, i) => { if (done && items[i]) items[i].classList.add('done'); });
+    updateProgress();
+  }
+
+  window.addEventListener('DOMContentLoaded', load);
+</script>
+</body>
+</html>
