@@ -4880,6 +4880,7 @@ function estimateCalsBurned(text) {
   const isBike = /bike|cycling|spin/.test(t);
   const isDance = /dance/.test(t);
   const isRest = /rest/.test(t);
+  const isLagree = /lagree|megaformer/.test(t);
 
   let met;
 
@@ -4901,6 +4902,8 @@ function estimateCalsBurned(text) {
     met = 7.0;
   } else if (isDance) {
     met = 5.0;
+  } else if (isLagree) {
+    met = /intense|hard/.test(t) ? 6.5 : 6.0; // Lagree is much more intense than regular Pilates
   } else if (isPilates) {
     met = 4.5;
   } else if (isWalk) {
