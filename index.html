@@ -4779,6 +4779,8 @@ function renderWorkouts() {
     let c = parseInt(localStorage.getItem(calsKey) || '0');
     if (i === todayIdx) c = Math.max(0, c - postureCalsToday); // avoid double-count
     if (c > 0) { totalCals += c; daysLogged++; }
+    // Add extra workouts that are marked done
+    totalCals += getExtrasCalForDay(weekKey, i);
   });
 
   // Weekly tally card
@@ -5008,7 +5010,71 @@ function openWorkoutDay(index, contentOnly) {
       <button onclick="saveWorkoutNote(${index})" style="margin-top:8px;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:12px;padding:8px 20px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;width:100%;">Save & Calculate Calories</button>
       ${savedNote ? `<button onclick="clearWorkoutNote(${index})" style="margin-top:6px;background:none;border:none;color:var(--text-light);font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;width:100%;padding:4px;">Clear — show suggested workout instead</button>` : ''}
     </div>`;
+  // Extra workouts section
+  const extrasKey = 'steph-workout-extras-' + getWorkoutWeekKey() + '-' + index;
+  const extras = JSON.parse(localStorage.getItem(extrasKey) || '[]');
+  const extrasHTML = extras.map((ex, ei) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+      <span style="font-size:15px;">${ex.done ? '✅' : '⬜'}</span>
+      <div style="flex:1;">
+        <div style="font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);font-weight:${ex.done ? '600' : '400'};">${ex.name}</div>
+        <div style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;">~${ex.cals} cal${ex.done ? ' · logged ✓' : ''}</div>
+      </div>
+      <button onclick="toggleExtra(${index},${ei})" style="background:${ex.done ? 'rgba(122,158,126,0.15)' : 'var(--card)'};border:1px solid ${ex.done ? 'var(--green)' : 'var(--text-light)'};color:${ex.done ? 'var(--green)' : 'var(--text-light)'};border-radius:10px;padding:5px 10px;font-size:11px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">${ex.done ? 'Done' : 'Mark Done'}</button>
+      <button onclick="removeExtra(${index},${ei})" style="background:none;border:none;color:var(--text-light);font-size:16px;cursor:pointer;padding:4px;">×</button>
+    </div>`).join('');
+
+  const extraSection = document.createElement('div');
+  extraSection.style.cssText = 'padding:12px 0 24px;';
+  extraSection.innerHTML = `
+    <div style="font-size:13px;font-weight:700;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;letter-spacing:0.3px;">➕ EXTRA WORKOUTS</div>
+    <div id="extras-list-${index}">${extrasHTML || '<div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:6px 0;">No extras yet</div>'}</div>
+    <div style="display:flex;gap:8px;margin-top:10px;">
+      <input id="extra-input-${index}" type="text" placeholder="e.g. 45 min walk" style="flex:1;padding:10px 12px;border-radius:12px;border:1px solid rgba(0,0,0,0.1);background:var(--card);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);outline:none;" />
+      <button onclick="addExtra(${index})" style="background:var(--brown);color:#fff;border:none;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">Add</button>
+    </div>`;
+
+  document.getElementById('workout-day-content').appendChild(extraSection);
   if (!contentOnly) showScreen('workout-day');
+}
+
+function getExtrasCalForDay(weekKey, index) {
+  const extrasKey = 'steph-workout-extras-' + weekKey + '-' + index;
+  const extras = JSON.parse(localStorage.getItem(extrasKey) || '[]');
+  return extras.filter(e => e.done).reduce((sum, e) => sum + (e.cals || 0), 0);
+}
+
+function addExtra(index) {
+  const inp = document.getElementById('extra-input-' + index);
+  if (!inp || !inp.value.trim()) return;
+  const name = inp.value.trim();
+  const { cals } = estimateCalsBurned(name);
+  const extrasKey = 'steph-workout-extras-' + getWorkoutWeekKey() + '-' + index;
+  const extras = JSON.parse(localStorage.getItem(extrasKey) || '[]');
+  extras.push({ name, cals, done: false });
+  localStorage.setItem(extrasKey, JSON.stringify(extras));
+  inp.value = '';
+  renderWorkoutDayContent(index);
+  renderWorkouts();
+}
+
+function toggleExtra(index, ei) {
+  const extrasKey = 'steph-workout-extras-' + getWorkoutWeekKey() + '-' + index;
+  const extras = JSON.parse(localStorage.getItem(extrasKey) || '[]');
+  if (!extras[ei]) return;
+  extras[ei].done = !extras[ei].done;
+  localStorage.setItem(extrasKey, JSON.stringify(extras));
+  renderWorkoutDayContent(index);
+  renderWorkouts();
+}
+
+function removeExtra(index, ei) {
+  const extrasKey = 'steph-workout-extras-' + getWorkoutWeekKey() + '-' + index;
+  const extras = JSON.parse(localStorage.getItem(extrasKey) || '[]');
+  extras.splice(ei, 1);
+  localStorage.setItem(extrasKey, JSON.stringify(extras));
+  renderWorkoutDayContent(index);
+  renderWorkouts();
 }
 
 function saveWorkoutNote(index) {
