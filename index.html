@@ -4160,7 +4160,7 @@ function renderTodoCatList() {
     div.setAttribute('data-todo-id', item.id);
     div.innerHTML = `
       <span class="todo-drag-handle" title="Hold &amp; drag to reorder">⠿</span>
-      <div class="li-check"></div>
+      <div class="li-check" onclick="event.stopPropagation();toggleTodo(${item.id})"></div>
       <span class="li-text" contenteditable="false" data-todo-edit-id="${item.id}" onblur="saveEdit('todo-cat-list',${item.id},this.textContent)">${item.text}</span>
       <span class="todo-pin-btn" data-action="pin" title="${item.pinned ? 'Unpin' : 'Pin to top'}">${item.pinned ? '📌' : '📍'}</span>
       <span data-action="move" title="Move to category" style="cursor:pointer;font-size:15px;padding:0 2px;color:var(--text-light);">⇄</span>
@@ -4203,6 +4203,19 @@ function renderTodoCatList() {
         }
       }
       e.preventDefault();
+      toggleTodo(item.id);
+    });
+    // Desktop click handler (mirrors touchend logic for non-touch devices)
+    div.addEventListener('click', e => {
+      if (e._handledByTouch) return; // already handled by touchend
+      const target = e.target;
+      const action = target.dataset.action;
+      if (action === 'pin') { toggleTodoPin(item.id); return; }
+      if (action === 'move') { moveTodoPrompt(item.id); return; }
+      if (action === 'delete') { deleteTodo(item.id); return; }
+      if (target.classList.contains('todo-drag-handle')) return;
+      if (target.classList.contains('li-check') || target.closest('.li-check')) { toggleTodo(item.id); return; }
+      if (target.classList.contains('li-text')) return; // let text be clickable for editing
       toggleTodo(item.id);
     });
     // Drag events
