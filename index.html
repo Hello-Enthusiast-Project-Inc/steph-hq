@@ -1058,11 +1058,29 @@
       <span class="tile-emoji">🤝</span>
       <span class="tile-label">Playdates</span>
     </div>
+    <div class="tile" onclick="showScreen('kids-packing')">
+      <span class="tile-emoji">🧳</span>
+      <span class="tile-label">Packing List</span>
+    </div>
     <div class="tile" onclick="showScreen('kids-activities')" style="grid-column:1/-1;">
       <span class="tile-emoji">🎨</span>
       <span class="tile-label">Activity Ideas</span>
     </div>
   </div>
+</div>
+
+<!-- KIDS: PACKING LIST -->
+<div class="screen" id="screen-kids-packing">
+  <div class="header">
+    <span class="back" onclick="showScreen('kids')">← Kids</span>
+    <h1>🧳 Packing List</h1>
+  </div>
+  <div style="padding:0 16px 8px;display:flex;gap:8px;align-items:center;">
+    <div id="packing-progress" style="flex:1;font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;"></div>
+    <button onclick="clearPackingList()" style="background:none;border:1px solid var(--text-light);color:var(--text-light);border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">Clear All</button>
+    <button onclick="uncheckPackingList()" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">Uncheck All</button>
+  </div>
+  <div id="packing-list-container" style="padding:0 16px 100px;"></div>
 </div>
 
 <!-- KIDS: ACTIVITY IDEAS -->
@@ -3560,6 +3578,7 @@ function showScreen(name) {
   if (name === 'kids-hayes-growth') { loadUserdata().then(() => { renderGrowthTracker(); setTimeout(drawGrowthChart, 50); }); }
   if (name === 'kids-hayes-lp') { loadUserdata().then(() => renderLP()); }
   if (name === 'kids-activities') { loadUserdata().then(() => renderKidsActivities()); }
+  if (name === 'kids-packing') { renderPackingList(); }
   if (name === 'kids-hayes') { renderKidsFocus(); renderKidFacts('hayes'); loadUserdata().then(() => renderKidFacts('hayes')); }
   if (name === 'kids-rush-memories') { renderMemories(); }
   if (name === 'kids-hayes-memories') { renderMemories(); }
@@ -8741,6 +8760,72 @@ function deleteKidFact(kid, id) {
   saveUserdata(`steph-kids-facts-${kid}-v2`, facts);
   renderKidFacts(kid);
 }
+// ---- PACKING LIST ----
+const PACKING_LIST = [
+  { cat: '🧳 Luggage & Bags', items: ['1 fanny pack','3 carry on','3 suit cases','Purse/wallet/ID/passport','Diaper bag (wipes, diaper, change of clothes, hand sanitizer, snacks, toys, books, iPad)'] },
+  { cat: '🛏️ Sleep & Comfort', items: ['Blankets','Playpen and sheets','Pillow','Sleep sac','Sound machine','Black out blinds','Nanit','Night light','Stuffy'] },
+  { cat: '🍼 Baby Gear', items: ['Stroller','Carrier','Play mat','Car seat','Hayes chair','Changer block extra','Stroller fan','Haaka','Spit rags','Hook toys for play gym'] },
+  { cat: '👶 Baby Essentials', items: ['Diapers','Wipes','Lotion','Sunscreen','Vit D','Milk cup','Thermostat'] },
+  { cat: '👕 Kids Clothes', items: ['Rush sweat pants for diaper bag','Rush sweaters','Rush PJs','Rush hat','Clothes (t shirt, long sleeve/sweater, pants, shorts)','Socks','Jacket','Shoes','Swim stuff','Winter edition - hat, mitts, boots, slush pants'] },
+  { cat: '🍽️ Food & Feeding', items: ['Feed bubs','Food from fridge','Food/lunch bento box','Plate, bowl, cutlery','Snack','Water bottle'] },
+  { cat: '🎮 Entertainment & Toys', items: ['iPad with charger and downloaded shows','Yoto','Construction toys','Arts and crafts kit','Car/airplane toy bin','Bedtime books','Toys'] },
+  { cat: '🏊 Activities', items: ['Swim stuff','Outdoor chair?'] },
+  { cat: '🧴 Personal (Steph)', items: ['Toothbrush','Toothpaste','Hair stuff','Make up','Face creams','Face wash/shampoo/conditioner','Shaver','Deodorant','Jewelry','Q tips','Shoes','Coat','Purses','Outfits','Contact stuff','Hair elastics','Multivitamin','Sunglasses?','Pen/reading book','Blue shirt'] },
+  { cat: '📱 Tech & Chargers', items: ['Phone charger','Window phone charger','Ear plugs','iPad with charger'] },
+  { cat: '🏥 Health & Safety', items: ['Tylenol','Bandaid','Bath stuff (soap, cloth, towel, toys, temp crab)','Rush birth certificate','Add paper for insurance'] },
+  { cat: '🐾 Roni', items: ['Roni prepped','Pack Roni'] },
+  { cat: '🏠 Before You Leave', items: ['Garbage/compost','Stripe bed','Make parent temporary code','Turn down hot tub','Thermostat','Me packed','Sunela'] },
+];
+
+const PACKING_KEY = 'steph-packing-checked';
+
+function getPackingChecked() {
+  return JSON.parse(localStorage.getItem(PACKING_KEY) || '{}');
+}
+
+function togglePackingItem(itemKey) {
+  const checked = getPackingChecked();
+  checked[itemKey] = !checked[itemKey];
+  localStorage.setItem(PACKING_KEY, JSON.stringify(checked));
+  renderPackingList();
+}
+
+function uncheckPackingList() {
+  localStorage.setItem(PACKING_KEY, '{}');
+  renderPackingList();
+}
+
+function clearPackingList() {
+  if (!confirm('Uncheck everything?')) return;
+  localStorage.setItem(PACKING_KEY, '{}');
+  renderPackingList();
+}
+
+function renderPackingList() {
+  const container = document.getElementById('packing-list-container');
+  const progressEl = document.getElementById('packing-progress');
+  if (!container) return;
+  const checked = getPackingChecked();
+  let total = 0, done = 0;
+  let html = '';
+  PACKING_LIST.forEach(section => {
+    html += `<div style="margin-bottom:6px;"><div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:14px 0 6px;text-transform:uppercase;">${section.cat}</div>`;
+    section.items.forEach(item => {
+      const key = section.cat + '::' + item;
+      const isDone = !!checked[key];
+      total++;
+      if (isDone) done++;
+      html += `<div onclick="togglePackingItem('${key.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:6px;cursor:pointer;opacity:${isDone ? '0.5' : '1'};">
+        <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${isDone ? 'var(--green)' : 'rgba(0,0,0,0.2)'};background:${isDone ? 'var(--green)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${isDone ? '<span style="color:white;font-size:13px;font-weight:700;">✓</span>' : ''}</div>
+        <span style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);text-decoration:${isDone ? 'line-through' : 'none'};">${item}</span>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+  if (progressEl) progressEl.textContent = `${done} of ${total} packed`;
+}
+
 function renderKidsTodos() {
   const list = document.getElementById('kids-todo-list');
   if (!list) return;
