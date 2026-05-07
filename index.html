@@ -8801,27 +8801,87 @@ function clearPackingList() {
   renderPackingList();
 }
 
+const PACKING_CUSTOM_KEY = 'steph-packing-custom';
+const PACKING_DELETED_KEY = 'steph-packing-deleted';
+
+function getPackingCustom() { return JSON.parse(localStorage.getItem(PACKING_CUSTOM_KEY) || '[]'); }
+function getPackingDeleted() { return JSON.parse(localStorage.getItem(PACKING_DELETED_KEY) || '[]'); }
+
+function deletePackingItem(itemKey) {
+  const deleted = getPackingDeleted();
+  if (!deleted.includes(itemKey)) deleted.push(itemKey);
+  localStorage.setItem(PACKING_DELETED_KEY, JSON.stringify(deleted));
+  // Also remove from custom if it's there
+  const custom = getPackingCustom().filter(x => x.key !== itemKey);
+  localStorage.setItem(PACKING_CUSTOM_KEY, JSON.stringify(custom));
+  renderPackingList();
+}
+
+function addPackingItem() {
+  const inp = document.getElementById('packing-add-input');
+  const catSel = document.getElementById('packing-add-cat');
+  if (!inp || !inp.value.trim()) return;
+  const name = inp.value.trim();
+  const cat = catSel ? catSel.value : PACKING_LIST[0].cat;
+  const key = cat + '::' + name + '::custom';
+  const custom = getPackingCustom();
+  custom.push({ key, name, cat });
+  localStorage.setItem(PACKING_CUSTOM_KEY, JSON.stringify(custom));
+  inp.value = '';
+  renderPackingList();
+}
+
 function renderPackingList() {
   const container = document.getElementById('packing-list-container');
   const progressEl = document.getElementById('packing-progress');
   if (!container) return;
   const checked = getPackingChecked();
+  const deleted = getPackingDeleted();
+  const custom = getPackingCustom();
   let total = 0, done = 0;
   let html = '';
-  PACKING_LIST.forEach(section => {
+
+  // Build merged list (base + custom, minus deleted)
+  const allSections = PACKING_LIST.map(s => ({
+    cat: s.cat,
+    items: s.items.map(item => ({ name: item, key: s.cat + '::' + item, isCustom: false }))
+      .filter(i => !deleted.includes(i.key))
+  }));
+  // Add custom items to their sections
+  custom.forEach(c => {
+    if (deleted.includes(c.key)) return;
+    const sec = allSections.find(s => s.cat === c.cat);
+    if (sec) sec.items.push({ name: c.name, key: c.key, isCustom: true });
+  });
+
+  allSections.forEach(section => {
+    if (!section.items.length) return;
     html += `<div style="margin-bottom:6px;"><div style="font-size:12px;font-weight:700;letter-spacing:0.5px;color:var(--text-light);font-family:-apple-system,sans-serif;padding:14px 0 6px;text-transform:uppercase;">${section.cat}</div>`;
-    section.items.forEach(item => {
-      const key = section.cat + '::' + item;
+    section.items.forEach(({ name, key, isCustom }) => {
       const isDone = !!checked[key];
       total++;
       if (isDone) done++;
-      html += `<div onclick="togglePackingItem('${key.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')" style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:6px;cursor:pointer;opacity:${isDone ? '0.5' : '1'};">
-        <div style="width:22px;height:22px;border-radius:50%;border:2px solid ${isDone ? 'var(--green)' : 'rgba(0,0,0,0.2)'};background:${isDone ? 'var(--green)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">${isDone ? '<span style="color:white;font-size:13px;font-weight:700;">✓</span>' : ''}</div>
-        <span style="font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);text-decoration:${isDone ? 'line-through' : 'none'};">${item}</span>
+      const safeKey = key.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--card);border-radius:12px;margin-bottom:6px;">
+        <div onclick="togglePackingItem('${safeKey}')" style="width:22px;height:22px;border-radius:50%;border:2px solid ${isDone ? 'var(--green)' : 'rgba(0,0,0,0.2)'};background:${isDone ? 'var(--green)' : 'transparent'};display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;">${isDone ? '<span style="color:white;font-size:13px;font-weight:700;">✓</span>' : ''}</div>
+        <span onclick="togglePackingItem('${safeKey}')" style="flex:1;font-size:15px;font-family:-apple-system,sans-serif;color:var(--text);text-decoration:${isDone ? 'line-through' : 'none'};opacity:${isDone ? '0.5' : '1'};cursor:pointer;">${name}${isCustom ? ' <span style="font-size:10px;color:var(--text-light);">+</span>' : ''}</span>
+        <button onclick="deletePackingItem('${safeKey}')" style="background:none;border:none;color:var(--text-light);font-size:18px;cursor:pointer;padding:2px 6px;line-height:1;" title="Remove">&times;</button>
       </div>`;
     });
     html += '</div>';
   });
+
+  // Add item form
+  const catOptions = PACKING_LIST.map(s => `<option value="${s.cat}">${s.cat}</option>`).join('');
+  html += `<div style="margin-top:16px;padding:14px;background:var(--card);border-radius:16px;">
+    <div style="font-size:12px;font-weight:700;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:10px;text-transform:uppercase;">➕ Add Item</div>
+    <select id="packing-add-cat" style="width:100%;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--bg);font-size:13px;font-family:-apple-system,sans-serif;color:var(--text);margin-bottom:8px;">${catOptions}</select>
+    <div style="display:flex;gap:8px;">
+      <input id="packing-add-input" type="text" placeholder="e.g. Rain jacket" style="flex:1;padding:9px 12px;border-radius:10px;border:1px solid rgba(0,0,0,0.1);background:var(--bg);font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);outline:none;" onkeydown="if(event.key==='Enter')addPackingItem()" />
+      <button onclick="addPackingItem()" style="background:var(--brown);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">Add</button>
+    </div>
+  </div>`;
+
   container.innerHTML = html;
   if (progressEl) progressEl.textContent = `${done} of ${total} packed`;
 }
