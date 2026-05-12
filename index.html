@@ -1077,6 +1077,7 @@
   </div>
   <div style="padding:0 16px 8px;display:flex;gap:8px;align-items:center;">
     <div id="packing-progress" style="flex:1;font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;"></div>
+    <button onclick="resetPackingList()" style="background:none;border:1px solid #e07b39;color:#e07b39;border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">↺ Reset</button>
     <button onclick="clearPackingList()" style="background:none;border:1px solid var(--text-light);color:var(--text-light);border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">Clear All</button>
     <button onclick="uncheckPackingList()" style="background:none;border:1px solid var(--brown);color:var(--brown);border-radius:10px;padding:5px 12px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">Uncheck All</button>
   </div>
@@ -8826,6 +8827,14 @@ function uncheckPackingList() {
 function clearPackingList() {
   if (!confirm('Uncheck everything?')) return;
   localStorage.setItem(PACKING_KEY, '{}');
+  renderPackingList();
+}
+
+function resetPackingList() {
+  if (!confirm('Reset to full default list? This will restore all removed items and uncheck everything.')) return;
+  localStorage.setItem(PACKING_KEY, '{}');
+  localStorage.removeItem(PACKING_DELETED_KEY);
+  localStorage.removeItem(PACKING_CUSTOM_KEY);
   renderPackingList();
 }
 
