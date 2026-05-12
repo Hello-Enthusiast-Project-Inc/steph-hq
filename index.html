@@ -19895,6 +19895,7 @@ async function renderKidsActivities() {
         ${a.age ? `<div style="font-size:11px;color:var(--brown);font-family:-apple-system,sans-serif;font-weight:600;margin-bottom:6px;">👶 ${a.age}</div>` : ''}
         ${a.desc ? `<div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;line-height:1.5;margin-bottom:8px;">${a.desc}</div>` : ''}
         ${a.materials && a.materials.length ? `<div style="font-size:12px;font-weight:700;color:var(--text-light);letter-spacing:0.4px;font-family:-apple-system,sans-serif;margin-bottom:4px;">📦 MATERIALS</div><div style="font-size:13px;color:var(--text);font-family:-apple-system,sans-serif;line-height:1.7;">${a.materials.map(m=>'• '+m).join('<br>')}</div>` : ''}
+        ${a.image ? `<img src="${a.image}" style="width:100%;border-radius:10px;margin-top:10px;display:block;" />` : ''}
       </div>`;
     list.appendChild(card);
   });
