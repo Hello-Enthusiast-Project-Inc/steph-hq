@@ -8834,7 +8834,19 @@ function resetPackingList() {
   if (!confirm('Reset to full default list? This will restore all removed items and uncheck everything.')) return;
   localStorage.setItem(PACKING_KEY, '{}');
   localStorage.removeItem(PACKING_DELETED_KEY);
-  localStorage.removeItem(PACKING_CUSTOM_KEY);
+  // Rebuild custom list from saved defaults (preserves user-added items)
+  const defaults = JSON.parse(localStorage.getItem('steph-packing-defaults') || 'null');
+  if (defaults) {
+    const baseKeys = new Set(PACKING_LIST.flatMap(s => s.items.map(i => s.cat + '::' + i)));
+    const customItems = [];
+    defaults.forEach(s => s.items.forEach(i => {
+      const k = s.cat + '::' + i + '::custom';
+      if (!baseKeys.has(s.cat + '::' + i)) customItems.push({ key: k, name: i, cat: s.cat });
+    }));
+    localStorage.setItem(PACKING_CUSTOM_KEY, JSON.stringify(customItems));
+  } else {
+    localStorage.removeItem(PACKING_CUSTOM_KEY);
+  }
   renderPackingList();
 }
 
@@ -8861,9 +8873,16 @@ function addPackingItem() {
   const name = inp.value.trim();
   const cat = catSel ? catSel.value : PACKING_LIST[0].cat;
   const key = cat + '::' + name + '::custom';
+  // Add to custom list (for display)
   const custom = getPackingCustom();
   custom.push({ key, name, cat });
   localStorage.setItem(PACKING_CUSTOM_KEY, JSON.stringify(custom));
+  // ALSO add to permanent defaults so it survives Reset
+  const defaults = JSON.parse(localStorage.getItem('steph-packing-defaults') || 'null') || PACKING_LIST.map(s => ({cat: s.cat, items: [...s.items]}));
+  const section = defaults.find(s => s.cat === cat);
+  if (section && !section.items.includes(name)) section.items.push(name);
+  else if (!section) defaults.push({ cat, items: [name] });
+  localStorage.setItem('steph-packing-defaults', JSON.stringify(defaults));
   inp.value = '';
   renderPackingList();
 }
