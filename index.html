@@ -5658,16 +5658,10 @@ function getTodayCalGoal() {
   const todayIdx = dayOrder.indexOf(todayDayOfWeek);
   const log = getWorkoutLog();
   const workoutDone = !!log[getWorkoutKey(todayIdx)];
+  const steps = (_todayHealthData && _todayHealthData.steps) ? _todayHealthData.steps : 0;
 
-  // If Apple Health data available, use active calories from watch/phone
-  if (_todayHealthData && _todayHealthData.activeCalories > 0) {
-    const activeCal = Math.round(_todayHealthData.activeCalories);
-    return { base: CAL_GOAL_BASE, bonus: activeCal, total: CAL_GOAL_BASE + activeCal, source: 'apple', steps: _todayHealthData.steps || 0, workoutDone, todayIdx };
-  }
-
-  // Fallback: use workout schedule bonus if marked done
-  const workoutBonus = workoutDone ? (WORKOUT_BURN_BY_DAY[todayIdx] || 0) : 0;
-  return { base: CAL_GOAL_BASE, bonus: workoutBonus, total: CAL_GOAL_BASE + workoutBonus, source: 'schedule', steps: 0, workoutDone, todayIdx };
+  // Flat goal — no workout bonus added (Steph doesn't want to eat more on workout days)
+  return { base: CAL_GOAL_BASE, bonus: 0, total: CAL_GOAL_BASE, source: 'flat', steps, workoutDone, todayIdx };
 }
 
 function renderCalBalance(calsIn) {
