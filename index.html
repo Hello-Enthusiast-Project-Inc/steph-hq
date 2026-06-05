@@ -5634,9 +5634,9 @@ function switchMealTab(tab) {
 }
 
 // ---- CALORIES REMAINING ----
-// Cal goal base: 1,900 (midpoint of 1,800–1,950 target)
+// Cal goal base: 1,800 (Steph's updated daily target)
 // Workout bonus by day index (Mon=0 … Sun=6) — used if Apple Health not connected
-const CAL_GOAL_BASE = 1900;
+const CAL_GOAL_BASE = 1800;
 const WORKOUT_BURN_BY_DAY = [300, 250, 200, 250, 150, 0, 0];
 
 let _todayHealthData = null; // cached Apple Health data for today
@@ -5883,7 +5883,7 @@ function renderMealLogFromData(meals) {
     const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     const dateLabel = viewKey === today ? `Today — ${months[d.getMonth()]} ${d.getDate()}` : `${months[d.getMonth()]} ${d.getDate()}`;
     card.innerHTML = `<h3>${dateLabel}</h3>
-      <div class="macro-row"><span class="macro-label">🔥 Calories</span><span class="macro-val">${totals.cal} / 1,800–1,950 ${totals.cal > 1950 ? '⚠️' : totals.cal >= 1800 ? '✅' : ''}</span></div>
+      <div class="macro-row"><span class="macro-label">🔥 Calories</span><span class="macro-val">${totals.cal} / 1,800 ${totals.cal > 1800 ? '⚠️' : totals.cal >= 1600 ? '✅' : ''}</span></div>
       <div class="macro-row"><span class="macro-label">💪 Protein</span><span class="macro-val">${totals.protein}g / 120–140g ${totals.protein > 140 ? '⚠️' : totals.protein >= 120 ? '✅' : ''}</span></div>
       <div class="macro-row"><span class="macro-label">🌾 Carbs</span><span class="macro-val">${totals.carbs}g / 120–150g ${totals.carbs > 150 ? '⚠️' : totals.carbs >= 120 ? '✅' : ''}</span></div>
       <div class="macro-row"><span class="macro-label">🥑 Fat</span><span class="macro-val">${totals.fat||0}g / 60–70g ${(totals.fat||0) > 70 ? '⚠️' : (totals.fat||0) >= 60 ? '✅' : ''}</span></div>
