@@ -5324,12 +5324,36 @@ async function renderWorkoutLibrary() {
   const catOrder = ['💪 Hans Strength Program', '🏋️ Gym', '🧘 Reformer', '🧘 Mat Pilates', '🚶 Cardio', '💆 Recovery', '📋 Other'];
   const sortedCats = [...new Set([...catOrder.filter(c => grouped[c]), ...Object.keys(grouped).filter(c => !catOrder.includes(c))])];
 
+  // Track collapsed state per category in sessionStorage
+  const collapseKey = 'wl-collapsed';
+  let collapsedCats = JSON.parse(sessionStorage.getItem(collapseKey) || '{}');
+
   sortedCats.forEach(cat => {
-    // Category header
+    const catId = 'wl-cat-' + cat.replace(/[^a-z0-9]/gi, '-');
+    const isCollapsed = collapsedCats[cat] !== false; // default collapsed
+    const count = grouped[cat].length;
+
+    // Collapsible category header
     const header = document.createElement('div');
-    header.style.cssText = 'font-size:12px;font-weight:700;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;margin:16px 0 8px;text-transform:uppercase;';
-    header.textContent = cat;
+    header.style.cssText = 'display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin:16px 0 8px;padding:8px 12px;background:var(--card2);border-radius:12px;user-select:none;';
+    header.innerHTML = `
+      <span style="font-size:12px;font-weight:700;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;text-transform:uppercase;">${cat} <span style="font-weight:400;opacity:0.6;">(${count})</span></span>
+      <span id="${catId}-arrow" style="font-size:14px;color:var(--text-light);transition:transform 0.2s;display:inline-block;transform:${isCollapsed ? 'rotate(0deg)' : 'rotate(90deg)'};">›</span>`;
+    header.onclick = () => {
+      const group = document.getElementById(catId);
+      const arrow = document.getElementById(catId + '-arrow');
+      const nowCollapsed = group.style.display !== 'none';
+      group.style.display = nowCollapsed ? 'none' : 'block';
+      arrow.style.transform = nowCollapsed ? 'rotate(0deg)' : 'rotate(90deg)';
+      collapsedCats[cat] = nowCollapsed;
+      sessionStorage.setItem(collapseKey, JSON.stringify(collapsedCats));
+    };
     container.appendChild(header);
+
+    // Group container
+    const group = document.createElement('div');
+    group.id = catId;
+    group.style.display = isCollapsed ? 'none' : 'block';
 
     grouped[cat].forEach(item => {
       const div = document.createElement('div');
@@ -5347,8 +5371,9 @@ async function renderWorkoutLibrary() {
           <div style="font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.7;white-space:pre-wrap;">${item.content}</div>
           <button onclick="event.stopPropagation();deleteFromLibrary(${item.id})" style="margin-top:12px;background:none;border:1px solid #e57373;color:#e57373;border-radius:10px;padding:7px 16px;font-size:12px;font-family:-apple-system,sans-serif;cursor:pointer;">🗑 Delete</button>
         </div>`;
-      container.appendChild(div);
+      group.appendChild(div);
     });
+    container.appendChild(group);
   });
 }
 
