@@ -20391,7 +20391,7 @@ function showRecipe(id) {
     <h2>${r.name}</h2>
     ${r.cat ? `<p style="font-size:12px;color:var(--text-light);font-family:-apple-system,sans-serif;margin-bottom:6px;">${r.cat}</p>` : ''}
     ${r.source ? `<p class="rd-source"><a href="${r.source}" target="_blank">View original recipe ↗</a></p>` : ''}
-    ${r.body || ''}
+    <div style="font-size:14px;font-family:-apple-system,sans-serif;color:var(--text);line-height:1.8;margin-top:8px;">${(r.body||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/•/g,'•').replace(/\n\n/g,'</p><p style="margin:10px 0;">').replace(/\n/g,'<br>')}</div>
     <div style="margin-top:24px;display:flex;gap:10px;">
       <button onclick="openEditRecipeModal('${id}')" style="flex:1;background:var(--card);border:1px solid var(--brown);color:var(--brown);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">📂 Move</button>
       <button onclick="${isCustom ? `deleteCustomRecipe('${id}')` : `deleteBuiltInRecipe('${id}')`}" style="flex:1;background:none;border:1px solid #c8a882;color:var(--text-light);border-radius:14px;padding:12px 0;font-size:14px;font-weight:600;cursor:pointer;font-family:-apple-system,sans-serif;">🗑 Delete</button>
