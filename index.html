@@ -20286,9 +20286,19 @@ async function renderRecipes() {
     const section = document.createElement('div');
     section.dataset.cat = cat;
     // Section header — drop target
+    const catKey = 'recipe-collapsed-' + encodeURIComponent(cat);
+    const isCollapsed = localStorage.getItem(catKey) === '1';
+    const cardsWrapper = document.createElement('div');
+    cardsWrapper.style.display = isCollapsed ? 'none' : 'block';
     const header = document.createElement('div');
-    header.style.cssText = 'padding:20px 16px 8px;';
-    header.innerHTML = `<span style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;font-weight:600;">${cat}</span>`;
+    header.style.cssText = 'padding:20px 16px 8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;';
+    header.innerHTML = `<span style="font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--text-light);font-family:-apple-system,sans-serif;font-weight:600;">${cat}</span><span style="font-size:16px;color:var(--text-light);font-family:-apple-system,sans-serif;transition:transform 0.2s;" class="collapse-arrow">${isCollapsed ? '▶' : '▼'}</span>`;
+    header.addEventListener('click', () => {
+      const collapsed = cardsWrapper.style.display === 'none';
+      cardsWrapper.style.display = collapsed ? 'block' : 'none';
+      header.querySelector('.collapse-arrow').textContent = collapsed ? '▼' : '▶';
+      localStorage.setItem(catKey, collapsed ? '0' : '1');
+    });
     header.addEventListener('dragover', e => { e.preventDefault(); header.style.background='rgba(139,90,60,0.08)'; header.style.borderRadius='12px'; });
     header.addEventListener('dragleave', () => { header.style.background=''; });
     header.addEventListener('drop', e => {
@@ -20298,6 +20308,7 @@ async function renderRecipes() {
       if (id) moveRecipeToCat(id, cat);
     });
     section.appendChild(header);
+    section.appendChild(cardsWrapper);
     cats[cat].forEach(r => {
       const card = document.createElement('div');
       card.className = 'recipe-card';
@@ -20312,7 +20323,7 @@ async function renderRecipes() {
       });
       card.addEventListener('dragend', () => { card.style.opacity = '1'; });
       card.onclick = () => { if (_dragRecipeId) { _dragRecipeId = null; return; } showRecipe(r.id); };
-      section.appendChild(card);
+      cardsWrapper.appendChild(card);
     });
     grid.appendChild(section);
   });
