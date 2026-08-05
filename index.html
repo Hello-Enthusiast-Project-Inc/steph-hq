@@ -5544,7 +5544,8 @@ async function renderWorkoutLibrary() {
 
   // Track collapsed state per category in sessionStorage
   const collapseKey = 'wl-collapsed';
-  let collapsedCats = JSON.parse(sessionStorage.getItem(collapseKey) || '{}');
+  sessionStorage.removeItem(collapseKey); // always start fresh so default-expanded works
+  let collapsedCats = {};
 
   sortedCats.forEach(cat => {
     const catId = 'wl-cat-' + cat.replace(/[^a-z0-9]/gi, '-');
