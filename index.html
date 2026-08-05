@@ -1824,23 +1824,8 @@
   <div style="padding:0 16px 8px;display:flex;flex-direction:column;gap:10px;">
     <button onclick="showScreen('my-program')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--green);font-size:15px;font-weight:700;color:#fff;font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">💪 My Training Program</button>
     <button onclick="showScreen('workout-library')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--card);font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">📚 My Workout Library</button>
-    <button onclick="showScreen('group-circuits')" style="width:100%;padding:16px;border-radius:16px;border:none;background:var(--card);font-size:15px;font-weight:700;color:var(--brown);font-family:-apple-system,sans-serif;cursor:pointer;letter-spacing:0.3px;">🏋️ Group Circuits</button>
   </div>
   <div id="weight-tracker-card" style="margin:0 16px 24px;background:var(--card);border-radius:18px;padding:16px 20px;"></div>
-</div>
-
-<!-- GROUP CIRCUITS SCREEN -->
-<div class="screen" id="screen-group-circuits">
-  <div class="header">
-    <span class="back" onclick="showScreen('workouts')">← Workouts</span>
-    <h1>Group Circuits 🏋️</h1>
-  </div>
-  <div style="padding:0 16px 80px;" id="group-circuits-container">
-    <div style="background:var(--card);border-radius:18px;padding:14px 18px;margin-bottom:16px;">
-      <div style="font-size:13px;color:var(--text-light);font-family:-apple-system,sans-serif;">10-person station circuits. 2 per station · A+B superset · 3 rounds then rotate.</div>
-    </div>
-    <div id="group-circuits-list"></div>
-  </div>
 </div>
 
 <!-- MY TRAINING PROGRAM SCREEN -->
@@ -5563,7 +5548,7 @@ async function renderWorkoutLibrary() {
 
   sortedCats.forEach(cat => {
     const catId = 'wl-cat-' + cat.replace(/[^a-z0-9]/gi, '-');
-    const isCollapsed = collapsedCats[cat] !== false; // default collapsed
+    const isCollapsed = collapsedCats[cat] === true; // default expanded
     const count = grouped[cat].length;
 
     // Collapsible category header
