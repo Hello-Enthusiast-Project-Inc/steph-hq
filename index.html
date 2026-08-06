@@ -2354,7 +2354,7 @@ const RECIPES = [
     id: 4,
     name: 'The BEST Apple Pie',
     desc: "Natasha's Kitchen · Crowd-pleaser · Thanksgiving favourite",
-    cat: '🍰 Desserts',
+    cat: '🍰 Baking & Desserts',
     source: 'https://natashaskitchen.com/apple-pie-recipe/',
     body: `
       <h3>Ingredients (Serves 8)</h3>
@@ -2543,7 +2543,7 @@ const RECIPES = [
     id: 8,
     name: 'Chocolate Chip Protein Muffins',
     desc: 'High protein · 21g protein each · Grab & go · 14 min · Makes 8–10',
-    cat: '🥐 Baking',
+    cat: '🍰 Baking & Desserts',
     source: null,
     body: `
       <h3>Ingredients (Makes 8–10)</h3>
@@ -2574,7 +2574,7 @@ const RECIPES = [
     id: 9,
     name: 'Morning Glory Muffins',
     desc: 'Bakerita · Paleo · Gluten-free · Dairy-free · 31 min · Makes 12',
-    cat: '🥐 Baking',
+    cat: '🍰 Baking & Desserts',
     source: null,
     body: `
       <h3>Ingredients (Makes 12)</h3>
@@ -2771,7 +2771,7 @@ const RECIPES = [
     id: 16,
     name: 'Crispy Rice Salad',
     desc: 'Homemade · Baked crispy rice + sweet chilli creamy dressing · 45 min',
-    cat: '🥗 Salads',
+    cat: '🥗 Salads & Bowls',
     source: null,
     body: `
       <h3>Ingredients</h3>
@@ -3004,7 +3004,7 @@ const RECIPES = [
   id: 100,
     name: 'Greek Bread Dipping Oil',
     desc: 'Food by Maria · Olive oil, feta, kalamata + castelvetrano olives, fresh herbs · 5 min',
-    cat: '🥗 Appetizers & Snacks',
+    cat: '🍎 Snacks & Treats',
     source: 'https://www.foodbymaria.com/bread-dipping-oil/',
     body: `
       <h3>The Base</h3>
@@ -20404,7 +20404,7 @@ function addWellness(type) {
 }
 
 // ---- RECIPES ----
-const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Desserts','🥐 Baking','🍎 Snacks & Treats','🧂 Sides & Condiments','🌮 Tacos & Wraps'];
+const RECIPE_CAT_ORDER = ['🥘 One Pan / One Pot','🫕 Crockpot / Slow Cooker','🍝 Pasta','🥗 Salads & Bowls','🫕 Soups & Stews','📋 Sheet Pan','⚡ Quick & Easy','🍳 Breakfast & Brunch','🍰 Baking & Desserts','🌏 Asian-Inspired','🍎 Snacks & Treats','🧂 Sides & Condiments','🌮 Tacos & Wraps'];
 
 function getAllRecipes() {
   // Always read from _userdataCache (API) first, fall back to localStorage only if cache is empty
