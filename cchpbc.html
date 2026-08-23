@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Steph's CCHPBC Study Notes</title>
 <style>
+  .answer-box { background: #eaf4ea; border-left: 3px solid #66bb6a; border-radius: 8px; padding: 10px 14px; margin: 6px 0 4px; font-size: 13px; color: #2e5e2e; line-height: 1.6; }
+  .answer-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #388e3c; margin-bottom: 3px; }
+  .wip-badge { display: inline-block; background: #fff3e0; color: #e65100; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-left: 8px; vertical-align: middle; }
+</style>
+<style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -243,6 +248,7 @@
 <div class="nav">
   <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
   <button class="nav-btn" onclick="showTab('module1')">Module 1</button>
+  <button class="nav-btn" onclick="showTab('module2')">Module 2</button>
   <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
 </div>
 
@@ -253,7 +259,7 @@
 
   <div class="card">
     <div class="card-title">📚 Your Progress</div>
-    <div class="module-card" onclick="showTab('module1'); setNav('module1')">
+    <div class="module-card" onclick="showTab('module1'); setNav('module1')" style="cursor:pointer;">
       <div class="module-badge badge-done">✅</div>
       <div class="module-info">
         <div class="module-name">Module 1 — Record-Keeping <span class="badge-pill">Complete</span></div>
@@ -261,12 +267,13 @@
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
-    <div class="module-card" style="opacity:0.5;cursor:default;">
-      <div class="module-badge badge-todo">🔒</div>
+    <div class="module-card" onclick="showTab('module2'); setNav('module2')">
+      <div class="module-badge" style="background:#fff3e0;">🔄</div>
       <div class="module-info">
-        <div class="module-name">Module 2 — Coming Soon</div>
-        <div class="module-status">Not yet started</div>
+        <div class="module-name">Module 2 — Advertising & Marketing + Scope of Practice <span class="wip-badge">In Progress</span></div>
+        <div class="module-status">Started Aug 23, 2026 · 2 workbooks · Advertising Q1–3 complete</div>
       </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
     </div>
     <div class="module-card" style="opacity:0.5;cursor:default;">
       <div class="module-badge badge-todo">🔒</div>
@@ -535,6 +542,74 @@
 
 </div>
 
+<!-- MODULE 2 -->
+<div class="screen" id="tab-module2">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#7a5c42;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 2 — Advertising & Marketing + Scope of Practice</div>
+    <div style="font-size:13px;opacity:0.8;">Started Aug 23, 2026 · In Progress</div>
+  </div>
+
+  <!-- Advertising & Marketing -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('m2p1')">
+      <h2>Advertising & Marketing — Principle 1: Professional, Accurate, Clear & Verifiable</h2>
+      <span class="arrow" id="m2p1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="m2p1-body">
+
+      <div class="qa">
+        <div class="q">Q1a: What type of advertising tactic is: "Don't wait until your pain becomes unbearable. Book now before it's too late!"</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Pressure-based tactic. Also exploits the emotional and psychological vulnerability of intended recipients. Prohibited under Principle 1.9.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Fear-inducing / threatening — makes it feel like patients have no choice but to book. No pressure tactics used in your advertising.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q1b: Why should you not use this type of advertising?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>It takes advantage of the physical, emotional, or psychological vulnerability of intended recipients and uses pressure-based tactics. (Principle 1.9.1 and 1.9.2)</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Manipulates patients into booking out of fear rather than genuine need — undermines trust and clinical integrity.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: Which option best aligns with the professional standard when designing advertising content?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>B — Verifiable and accurate. (Principle 1.2: Ensure the information included in advertising and marketing is accurate, clear, and verifiable.)</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Keep it minimal and straightforward. Include full name and credentials so patients can look you up in the registry and verify who you are.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3a: What are you required to keep when it comes to advertising materials?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer (Principle 1.11)</div>
+        — A copy of the publication<br>
+        — A recording of any broadcast through electronic media (email, social media, website, radio, TV)<br>
+        — A written record of when and where it was published or broadcast<br>
+        — Evidence verifying any statements or claims made
+        </div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Advertising has been minimal — going forward: save screenshots of anything posted and log the date and platform.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3b: How long must you keep advertising and marketing materials?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>3 years from the date of publication or broadcast. (Principle 1.11)</div>
+      </div>
+
+      <div class="qa" style="opacity:0.5;">
+        <div class="q">Q4–Q6 + Principle 2 — Coming soon</div>
+        <div class="a" style="font-size:13px;color:#a07850;">Paused here — to be completed next session.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card" style="background:#f5f0eb;border:2px dashed #c9b89a;">
+    <div style="font-size:14px;font-weight:700;color:#7a5c42;margin-bottom:6px;">📖 Scope of Practice workbook</div>
+    <div style="font-size:13px;color:#7a6050;line-height:1.6;">3 Principles · 10 questions · Not yet started. Will be added in the next session.</div>
+  </div>
+
+</div>
+
 <!-- ACTION ITEMS -->
 <div class="screen" id="tab-actions">
 
@@ -579,7 +654,7 @@ function showTab(name) {
 }
 function setNav(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { overview: 0, module1: 1, actions: 2 };
+  const map = { overview: 0, module1: 1, module2: 2, actions: 3 };
   document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
 }
 function togglePrinciple(id) {
