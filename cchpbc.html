@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Steph's CCHPBC Study Notes</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f0eb;
+    color: #3a2e26;
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+  .header {
+    background: #6b4f3a;
+    color: white;
+    padding: 32px 24px 24px;
+    text-align: center;
+  }
+  .header h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .header p { font-size: 14px; opacity: 0.8; }
+  .nav {
+    display: flex;
+    gap: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    background: #fff;
+    border-bottom: 1px solid #e0d8cf;
+  }
+  .nav-btn {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    background: #f0ebe3;
+    color: #6b4f3a;
+    transition: background 0.2s;
+  }
+  .nav-btn.active { background: #6b4f3a; color: white; }
+  .screen { display: none; padding: 16px; max-width: 680px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* Cards */
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #a07850;
+    margin-bottom: 12px;
+  }
+
+  /* Principle sections */
+  .principle {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .principle-header {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+  .principle-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #3a2e26;
+  }
+  .principle-header .arrow {
+    font-size: 16px;
+    color: #a07850;
+    transition: transform 0.2s;
+  }
+  .principle-body { display: none; padding: 0 20px 20px; border-top: 1px solid #f0ebe3; }
+  .principle-body.open { display: block; }
+
+  /* Q&A */
+  .qa { margin-bottom: 16px; padding-top: 16px; border-top: 1px solid #f5f0eb; }
+  .qa:first-child { border-top: none; padding-top: 8px; }
+  .q {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b4f3a;
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+  .a {
+    font-size: 14px;
+    color: #3a2e26;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .in-practice {
+    background: #f5f0eb;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #5a4435;
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+  .in-practice-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #a07850;
+    margin-bottom: 4px;
+  }
+
+  /* Gaps / Action items */
+  .gap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .gap-item:last-child { border-bottom: none; }
+  .gap-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .dot-red { background: #e57373; }
+  .dot-green { background: #81c784; }
+  .dot-amber { background: #ffb74d; }
+
+  /* Action items */
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid #f0ebe3;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .action-item:last-child { border-bottom: none; }
+  .action-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #a07850;
+    flex-shrink: 0;
+    margin-top: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+    cursor: pointer;
+  }
+  .action-check.done { background: #6b4f3a; border-color: #6b4f3a; }
+
+  /* Module status */
+  .module-card {
+    background: white;
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    cursor: pointer;
+  }
+  .module-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .badge-done { background: #e8f5e9; }
+  .badge-todo { background: #f5f0eb; }
+  .module-info { flex: 1; }
+  .module-name { font-size: 15px; font-weight: 700; color: #3a2e26; }
+  .module-status { font-size: 12px; color: #a07850; margin-top: 2px; }
+
+  /* Reflection */
+  .reflection-q {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b4f3a;
+    margin-bottom: 4px;
+  }
+  .reflection-a {
+    font-size: 14px;
+    color: #3a2e26;
+    margin-bottom: 14px;
+    line-height: 1.6;
+  }
+
+  .badge-pill {
+    display: inline-block;
+    background: #e8f5e9;
+    color: #388e3c;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .badge-pill.amber {
+    background: #fff3e0;
+    color: #e65100;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 CCHPBC Study Notes</h1>
+  <p>Steph Raitt · RMT · Learning Series</p>
+</div>
+
+<div class="nav">
+  <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
+  <button class="nav-btn" onclick="showTab('module1')">Module 1</button>
+  <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
+</div>
+
+<!-- OVERVIEW -->
+<div class="screen active" id="tab-overview">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card">
+    <div class="card-title">📚 Your Progress</div>
+    <div class="module-card" onclick="showTab('module1'); setNav('module1')">
+      <div class="module-badge badge-done">✅</div>
+      <div class="module-info">
+        <div class="module-name">Module 1 — Record-Keeping <span class="badge-pill">Complete</span></div>
+        <div class="module-status">Completed June 13, 2026 · 4 Principles · 3 gaps identified</div>
+      </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
+    </div>
+    <div class="module-card" style="opacity:0.5;cursor:default;">
+      <div class="module-badge badge-todo">🔒</div>
+      <div class="module-info">
+        <div class="module-name">Module 2 — Coming Soon</div>
+        <div class="module-status">Not yet started</div>
+      </div>
+    </div>
+    <div class="module-card" style="opacity:0.5;cursor:default;">
+      <div class="module-badge badge-todo">🔒</div>
+      <div class="module-info">
+        <div class="module-name">Module 3 — Coming Soon</div>
+        <div class="module-status">Not yet started</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Open Action Items</div>
+    <div class="action-item">
+      <div class="action-check" id="ac1" onclick="toggleAction('ac1')"></div>
+      <div>Source and implement <strong>secure digital data destruction software</strong></div>
+    </div>
+    <div class="action-item">
+      <div class="action-check" id="ac2" onclick="toggleAction('ac2')"></div>
+      <div>Add <strong>privacy/consent statement</strong> to Jane App intake form</div>
+    </div>
+    <div class="action-item">
+      <div class="action-check" id="ac3" onclick="toggleAction('ac3')"></div>
+      <div>Create procedure for <strong>logging scheduling texts/emails</strong> into patient records</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODULE 1 -->
+<div class="screen" id="tab-module1">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#6b4f3a;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 1 — Record-Keeping</div>
+    <div style="font-size:13px;opacity:0.8;">Completed June 13, 2026 · Professional Standard</div>
+  </div>
+
+  <!-- Principle 1 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('p1')">
+      <h2>Principle 1 — Creating & Maintaining Accurate Records</h2>
+      <span class="arrow" id="p1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="p1-body">
+
+      <div class="qa">
+        <div class="q">Q1a: Does each patient require a separate health care record?</div>
+        <div class="a">Yes.</div>
+        <div class="q" style="margin-top:10px;">Q1b: What other records must be maintained separately?</div>
+        <div class="a">Daily appointment log and billing records/receipts.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Yes, a patient could have one shared record in a multi-disciplinary setting. Paper must be in a locked file. Electronic must be on a password-protected computer and stored securely in the cloud.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: What information is missing from a record that only has name and treatment?</div>
+        <div class="a">Sex/gender, DOB, contact info, emergency contact, medical history, consent, assessment, communications (reports, emails, texts, correspondence pertinent to care).</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Has a procedure but could be better for texts and emails related to scheduling changes — needs to be added more consistently.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3: What is required when completing health care records?</div>
+        <div class="a">Complete records at time of visit or as soon as practical afterward, ensuring they are dated, signed, and legible.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Very strict about this. Leaves time between each patient to ensure records are completed before the next patient arrives.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q4: How do you correct an error in a health care record?</div>
+        <div class="a">Make the change and initial it, ensuring the original entry is not removed. For digital records: create a new entry stating the change, referencing the original date, then sign and date the new entry.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Since notes are online, creates a new dated and signed entry referencing and correcting the original. Preserves integrity of the record.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q5: Policy for records documented in a language other than English?</div>
+        <div class="a">Documents in English only — standard is already met. Has a legal contact available to produce certified translated copies if ever needed.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Principle 2 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('p2')">
+      <h2>Principle 2 — Storing, Retaining & Disposing Securely</h2>
+      <span class="arrow" id="p2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="p2-body">
+
+      <div class="qa">
+        <div class="q">Q1: How many years must a patient's health care record be stored?</div>
+        <div class="a">16 years from date of last entry, or until the patient reaches the age of majority — whichever is later.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice — Three-Tier System</div>
+          Current records in Jane App (digital, secure) · Pre-digital records in locked file cabinet · Future archiving: downloaded to hard drive, secured in locked cabinet.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: What disposal requirements must be met?</div>
+        <div class="a">Permanently and securely destroyed so information cannot be retrieved or reconstructed. Paper: shred. Digital: secure data destruction software required.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Paper: shredded. Digital: still need to source secure data destruction software — this is an identified gap. ⚠️
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3: Patient privacy and confidentiality is governed by which legislative act?</div>
+        <div class="a">Personal Information Protection Act (PIPA).</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Obtains a signed consent form before releasing records to any third party.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q4: Another licensee requests a former patient's health care records — what do you do?</div>
+        <div class="a">Contact the patient and have them complete a consent form before releasing anything. Documentation required: the signed consent form.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q5: Switching digital health care record providers — what is required?</div>
+        <div class="a">New provider must comply with PIPA, have appropriate physical/electronic/administrative safeguards, securely transfer records, limit access to authorized individuals, and maintain documentation of storage and security measures.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Uses Jane App — a Canadian, PIPA-compliant platform with encrypted storage and strong access controls. ✅
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Principle 3 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('p3')">
+      <h2>Principle 3 — Responding to Record Requests</h2>
+      <span class="arrow" id="p3-arrow">›</span>
+    </div>
+    <div class="principle-body" id="p3-body">
+
+      <div class="qa">
+        <div class="q">Q1: How long do you have to provide a copy of a health care record?</div>
+        <div class="a">30 business days.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Acknowledges the request, explains the record fee, and provides records as soon as possible.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: How much can you charge for producing a copy of a health care record?</div>
+        <div class="a">A reasonable amount.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          $25 flat fee for all patients. Reflects 30 min–1 hr retrieval time. Consistent, equal for all, and significantly less than the cost of a treatment.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Principle 4 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('p4')">
+      <h2>Principle 4 — Handling Personal Information Lawfully</h2>
+      <span class="arrow" id="p4-arrow">›</span>
+    </div>
+    <div class="principle-body" id="p4-body">
+
+      <div class="qa">
+        <div class="q">Q1: What are the two acceptable reasons for collecting personal information?</div>
+        <div class="a">1. To provide health care (only what is reasonably required)<br>2. To fulfill legal obligations</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Reviews intake form annually. Will do a thorough review before returning from maternity leave.
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: What three things must you tell a patient about collection of their personal information?</div>
+        <div class="a">1. What information is being collected<br>2. Why it is being collected<br>3. How it will be used</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Patients can see the form when filling it out. Explains why and how verbally. Action item: add a brief written statement to the top of the Jane App intake form covering all three. ⚠️
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3: Can you disclose treatment info to a practitioner not involved in the patient's care?</div>
+        <div class="a">No — patient consent is required first.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Almost never asked. Obtains consent every time it is requested. ✅
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q4: Is emailing patients about an unrelated charity fundraiser acceptable?</div>
+        <div class="a">No — patient contact info was collected for health care purposes only. Using it for unrelated purposes violates PIPA.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Only emails patients about matters directly related to their treatment. ✅
+        </div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q5: A colleague leaves their tablet open with records visible in a shared lunchroom. Which requirement is not being met?</div>
+        <div class="a">Security and confidentiality of personal health information — unauthorized individuals in a shared space could view patient records, violating PIPA.</div>
+        <div class="in-practice">
+          <div class="in-practice-label">In Your Practice</div>
+          Auto-lock enabled on all devices with a very short timeout. ✅
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Gaps Summary -->
+  <div class="card">
+    <div class="card-title">📊 Gaps & Strengths Summary</div>
+    <div style="font-size:12px;font-weight:700;color:#388e3c;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Consistently Meeting ✅</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Separate records for each patient</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Records completed at time of visit</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Separate daily appointment log and billing records</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Paper records in locked file cabinet</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Jane App (PIPA-compliant, encrypted)</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Patient consent before releasing records</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Record requests responded to within 30 business days</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Consistent $25 fee for record copies</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Patient contact info used for treatment purposes only</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Errors corrected by new dated/signed entries</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Documenting in English</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Auto-lock on all devices</div>
+
+    <div style="font-size:12px;font-weight:700;color:#e65100;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Gaps to Address ⚠️</div>
+    <div class="gap-item"><div class="gap-dot dot-red"></div>Scheduling-related texts/emails not consistently added to patient records</div>
+    <div class="gap-item"><div class="gap-dot dot-red"></div>No secure digital data destruction software in place</div>
+    <div class="gap-item"><div class="gap-dot dot-red"></div>No privacy/consent statement on Jane App intake form</div>
+  </div>
+
+  <!-- Reflection -->
+  <div class="card">
+    <div class="card-title">🪞 Reflection Questions</div>
+    <div class="reflection-q">Are health care records securely stored with access limited to authorized persons only?</div>
+    <div class="reflection-a">Yes. ✅</div>
+    <div class="reflection-q">If in a multi-disciplinary clinic, is patient consent obtained before sharing records?</div>
+    <div class="reflection-a">Yes — though not currently in a multi-disciplinary clinic. ✅</div>
+    <div class="reflection-q">If using an EMR, how is access controlled?</div>
+    <div class="reflection-a">Sole user of Jane App — no one else has login access. ✅</div>
+    <div class="reflection-q">When entering a business or employment contract, can professional obligations for storage, maintenance, transfer and disposal be met?</div>
+    <div class="reflection-a">Yes. ✅</div>
+  </div>
+
+</div>
+
+<!-- ACTION ITEMS -->
+<div class="screen" id="tab-actions">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card">
+    <div class="card-title">⚡ Action Items — Module 1</div>
+    <p style="font-size:13px;color:#a07850;margin-bottom:16px;">Changes to make within 1–3 months of completing Module 1.</p>
+
+    <div class="action-item">
+      <div class="action-check" id="a1" onclick="toggleAction('a1')"></div>
+      <div>
+        <div style="font-weight:600;font-size:14px;">Source secure digital data destruction software</div>
+        <div style="font-size:13px;color:#7a6050;margin-top:3px;">Required for PIPA-compliant disposal of digital patient records. Research options compatible with Mac/Jane App workflow.</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-check" id="a2" onclick="toggleAction('a2')"></div>
+      <div>
+        <div style="font-weight:600;font-size:14px;">Add privacy/consent statement to Jane App intake form</div>
+        <div style="font-size:13px;color:#7a6050;margin-top:3px;">Brief statement at the top covering: what is collected, why it's collected, and how it will be used.</div>
+      </div>
+    </div>
+
+    <div class="action-item">
+      <div class="action-check" id="a3" onclick="toggleAction('a3')"></div>
+      <div>
+        <div style="font-weight:600;font-size:14px;">Create procedure for logging scheduling texts/emails</div>
+        <div style="font-size:13px;color:#7a6050;margin-top:3px;">Any texts or emails related to scheduling changes, cancellations, or clinical matters must be added to the relevant patient record.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  setNav(name);
+}
+function setNav(name) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const map = { overview: 0, module1: 1, actions: 2 };
+  document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
+}
+function togglePrinciple(id) {
+  const body = document.getElementById(id + '-body');
+  const arrow = document.getElementById(id + '-arrow');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open');
+  arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(90deg)';
+}
+function toggleAction(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('done');
+  el.textContent = el.classList.contains('done') ? '✓' : '';
+  // Save state
+  const state = {};
+  document.querySelectorAll('.action-check').forEach(a => { state[a.id] = a.classList.contains('done'); });
+  localStorage.setItem('cchpbc-actions', JSON.stringify(state));
+}
+// Restore action states
+try {
+  const state = JSON.parse(localStorage.getItem('cchpbc-actions') || '{}');
+  Object.entries(state).forEach(([id, done]) => {
+    const el = document.getElementById(id);
+    if (el && done) { el.classList.add('done'); el.textContent = '✓'; }
+  });
+} catch(e) {}
+</script>
+</body>
+</html>
