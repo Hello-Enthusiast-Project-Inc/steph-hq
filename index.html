@@ -3836,19 +3836,72 @@ function renderToday() {
 
   const container = document.getElementById('today-checklist');
   container.innerHTML = '';
-  todayItems.forEach(item => {
+  todayItems.forEach((item, idx) => {
     const done = !!todayChecked[item.id];
     const div = document.createElement('div');
     div.className = 'check-item' + (done ? ' done' : '');
     div.style.cssText = 'position:relative;';
+    div.dataset.idx = idx;
     div.innerHTML = `
+      <span class="todo-drag-handle" style="cursor:grab;font-size:16px;color:var(--text-light);padding:0 6px 0 0;user-select:none;touch-action:none;">⠿</span>
       <div class="ci-radio" onclick="toggleToday(${item.id})"></div>
       <span class="ci-emoji" onclick="toggleToday(${item.id})">${item.emoji}</span>
       <span class="ci-label" onclick="toggleToday(${item.id})">${item.label}</span>
       <button onclick="deleteTodayItem(${item.id})" style="background:none;border:none;cursor:pointer;font-size:18px;color:var(--text-light);padding:0 4px;margin-left:auto;flex-shrink:0;">×</button>`;
     container.appendChild(div);
   });
+  initTodayDrag(container);
   updateRing();
+}
+
+function initTodayDrag(container) {
+  let dragEl = null, startY = 0, startIdx = 0, clone = null;
+  function getY(e) { return e.touches ? e.touches[0].clientY : e.clientY; }
+  function onStart(e) {
+    if (!e.target.closest('.todo-drag-handle')) return;
+    dragEl = e.target.closest('.check-item');
+    if (!dragEl) return;
+    startY = getY(e);
+    startIdx = parseInt(dragEl.dataset.idx);
+    dragEl.style.opacity = '0.4';
+    e.preventDefault();
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, { passive: false });
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+  }
+  function onMove(e) {
+    if (!dragEl) return;
+    e.preventDefault();
+    const y = getY(e);
+    const items = [...container.querySelectorAll('.check-item')];
+    let targetIdx = startIdx;
+    items.forEach((el, i) => {
+      const rect = el.getBoundingClientRect();
+      if (y > rect.top + rect.height / 2) targetIdx = i;
+    });
+    if (targetIdx !== startIdx) {
+      const moved = todayItems.splice(startIdx, 1)[0];
+      todayItems.splice(targetIdx, 0, moved);
+      startIdx = targetIdx;
+      saveUserdata('steph-today-items', todayItems);
+      renderToday();
+      // Re-find the dragged element after re-render
+      const newItems = container.querySelectorAll('.check-item');
+      dragEl = newItems[startIdx] || null;
+      if (dragEl) dragEl.style.opacity = '0.4';
+    }
+  }
+  function onEnd() {
+    if (dragEl) dragEl.style.opacity = '1';
+    dragEl = null;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchend', onEnd);
+  }
+  container.addEventListener('mousedown', onStart);
+  container.addEventListener('touchstart', onStart, { passive: false });
 }
 
 function addTodayItem() {
