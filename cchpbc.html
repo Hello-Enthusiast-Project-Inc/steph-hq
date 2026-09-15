@@ -249,6 +249,7 @@
   <button class="nav-btn active" onclick="showTab('overview')">Overview</button>
   <button class="nav-btn" onclick="showTab('module1')">Module 1</button>
   <button class="nav-btn" onclick="showTab('module2')">Module 2</button>
+  <button class="nav-btn" onclick="showTab('module3')">Module 3</button>
   <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
 </div>
 
@@ -268,19 +269,20 @@
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
     <div class="module-card" onclick="showTab('module2'); setNav('module2')">
-      <div class="module-badge" style="background:#fff3e0;">🔄</div>
+      <div class="module-badge badge-done">✅</div>
       <div class="module-info">
-        <div class="module-name">Module 2 — Advertising & Marketing + Scope of Practice <span class="wip-badge">In Progress</span></div>
-        <div class="module-status">Started Aug 23, 2026 · 2 workbooks · Advertising Q1–3 complete</div>
+        <div class="module-name">Module 2 — Advertising & Marketing <span class="badge-pill">Complete</span></div>
+        <div class="module-status">Completed Sep 14, 2026 · 2 Principles · 6 questions</div>
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
-    <div class="module-card" style="opacity:0.5;cursor:default;">
-      <div class="module-badge badge-todo">🔒</div>
+    <div class="module-card" onclick="showTab('module3'); setNav('module3')">
+      <div class="module-badge" style="background:#fff3e0;">🔄</div>
       <div class="module-info">
-        <div class="module-name">Module 3 — Coming Soon</div>
-        <div class="module-status">Not yet started</div>
+        <div class="module-name">Module 3 — Professional Boundaries & Person-Centred Care <span class="wip-badge">In Progress</span></div>
+        <div class="module-status">Started Sep 14, 2026 · 2 workbooks · Boundaries Principle 1 complete</div>
       </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
     </div>
   </div>
 
@@ -549,8 +551,8 @@
 
   <div class="card" style="background:#7a5c42;color:white;">
     <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
-    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 2 — Advertising & Marketing + Scope of Practice</div>
-    <div style="font-size:13px;opacity:0.8;">Started Aug 23, 2026 · In Progress</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 2 — Advertising & Marketing</div>
+    <div style="font-size:13px;opacity:0.8;">Completed Sep 14, 2026 · 2 Principles</div>
   </div>
 
   <!-- Advertising & Marketing -->
@@ -595,17 +597,147 @@
         <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>3 years from the date of publication or broadcast. (Principle 1.11)</div>
       </div>
 
-      <div class="qa" style="opacity:0.5;">
-        <div class="q">Q4–Q6 + Principle 2 — Coming soon</div>
-        <div class="a" style="font-size:13px;color:#a07850;">Paused here — to be completed next session.</div>
+      <div class="qa">
+        <div class="q">Q4: When are you NOT permitted to use your reserved title in advertising?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>You are not permitted to use your reserved title to promote services or activities that fall outside your scope of practice. (Principle 1.6)</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>RMT title is only used for massage therapy advertising. Pilates business is registered separately and marketed completely independently — "RMT" and CCHPBC registration number are never used in Pilates advertising.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q5: Which statements should you NOT use? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ Correct: A, C, D</div>
+        A — "Specializing in chronic pain" → Cannot use "specialist" or similar designations (Principle 1.7)<br>
+        C — "Better than physiotherapy" → Cannot use comparative language implying superiority (Principle 1.4)<br>
+        D — "100% success rate" → Unsubstantiated claim creating unjustified expectation (Principle 1.3.1)<br>
+        B is acceptable — honest, accurate, doesn't overclaim ✅
+        </div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Before posting anything, run a quick mental checklist: Is it factual? Can I prove it? Does it imply superiority or guarantee outcomes? If yes to the last two, reword it.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q6: When can you solicit testimonials or reviews?</div>
+        <div class="answer-box"><div class="answer-label">✅ Correct: D — None of the time</div>Soliciting testimonials is not permitted regardless of consent. (Principle 1.10) The power dynamic means patients may feel obligated to leave positive reviews. Voluntarily left reviews are acceptable; soliciting them is not.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Do not ask patients for Google reviews or send follow-up messages requesting feedback. Let reviews come organically.</div>
       </div>
 
     </div>
   </div>
 
+  <!-- Principle 2 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('m2p2')">
+      <h2>Advertising & Marketing — Principle 2: Free from Conflicts of Interest</h2>
+      <span class="arrow" id="m2p2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="m2p2-body">
+
+      <div class="qa">
+        <div class="q">P2 Q1: Which of the following represent an incentive/inducement likely to encourage inappropriate or unnecessary health services? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ Correct: A, B, D</div>
+        A — Memberships and treatment packages → Can incentivize unnecessary visits<br>
+        B — Reduced rates to encourage more frequent treatment → Directly encourages unnecessary visits<br>
+        D — $25 gift card for first time patients → Financial inducement compromising clinical judgment<br>
+        C is acceptable — reduced rates to fill last-minute openings is a legitimate business practice ✅
+        </div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>No current conflicts of interest. If ever considering treatment packages (e.g. buy 5 get 1 free), evaluate carefully against this principle.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">P2 Q2: You are an ambassador for a health and wellness company receiving financial incentives per referral. You want to refer patients and recruit them as ambassadors. Which requirement addresses this?</div>
+        <div class="answer-box"><div class="answer-label">✅ Answer: Principle 2 — Conflicts of Interest</div>Principle 2.3 — Cannot receive financial incentives for referring patients to products/services. Cannot involve patients in selling or recruiting for those products/services. Exploits the practitioner-patient trust relationship.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Currently no conflicts of interest. No products sold, no referral fees, no financial arrangements with other businesses that patients interact with. If ever approached as a brand ambassador — any financial tie to patient referrals is a conflict of interest.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Areas for Growth -->
+  <div class="card">
+    <div class="card-title">📊 Areas for Growth</div>
+    <div style="font-size:12px;font-weight:700;color:#388e3c;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Consistently Meeting ✅</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>No pressure-based or fear-inducing advertising</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Advertising is accurate, clear, and verifiable</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>No testimonial solicitation</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>No conflicts of interest or referral fee arrangements</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>RMT and Pilates brands kept completely separate</div>
+    <div style="font-size:12px;font-weight:700;color:#e65100;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Areas for Growth ⚠️</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Start saving screenshots of all advertising with date/platform logged</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Review advertising quarterly for compliance</div>
+  </div>
+
+  <!-- Reflections -->
+  <div class="card">
+    <div class="card-title">🪞 Reflection Questions</div>
+    <div class="reflection-q">How do you plan to maintain copies of all advertising and marketing materials for the required 3 years?</div>
+    <div class="reflection-a">Saved images to a folder on my computer.</div>
+    <div class="reflection-q">How often do you review your advertising and marketing materials?</div>
+    <div class="reflection-a">Quarterly. Practice is small and advertising is minimal (primarily word of mouth and Jane App profile). Any time new materials are created, review against the standard before publishing.</div>
+    <div class="reflection-q">Do your advertising and marketing practices prioritize patient well-being over business interests?</div>
+    <div class="reflection-a">Yes. Advertising is kept educational and health-forward rather than sales-driven. Practice is currently at capacity through word of mouth, so advertising is minimal and not used to boost business volume.</div>
+  </div>
+
+</div>
+
+<!-- MODULE 3 -->
+<div class="screen" id="tab-module3">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#5c6b7a;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 3 — Professional Boundaries & Person-Centred Care</div>
+    <div style="font-size:13px;opacity:0.8;">Started Sep 14, 2026 · 2 workbooks · In Progress</div>
+  </div>
+
+  <!-- Workbook A: Professional Boundaries -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('m3p1')">
+      <h2>Professional Boundaries — Principle 1: Maintain Professional & Personal Boundaries</h2>
+      <span class="arrow" id="m3p1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="m3p1-body">
+
+      <div class="qa">
+        <div class="q">Q1: Which of the following could be considered boundary crossings? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ Correct: A, B, C</div>
+        A — Sharing personal relationship struggles with a patient → Makes patient your emotional support<br>
+        B — Accepting a free ticket to a social event from a patient → Creates personal relationship outside therapy<br>
+        C — Encouraging more appointments to fill your schedule → Prioritizes business over patient needs<br>
+        D is fine — Homecare instructions via email with consent is appropriate clinical communication ✅
+        </div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Don't share personal info with patients. Only have them book appointments they need. Don't attend social events hosted by patients.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q2: True or False — The therapeutic relationship must be terminated if a boundary crossing has taken place.</div>
+        <div class="answer-box"><div class="answer-label">✅ False</div>A boundary crossing doesn't automatically mean termination. You must acknowledge it, re-establish the boundary, and document it. Termination is only required for severe, repeated, or escalating cases (e.g. sexual misconduct).</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>If a crossing occurs, gently redirect future conversations to clinical topics and document that you recognized and addressed it.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q3: Ways to maintain professional boundaries through communication? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ Correct: A, C</div>
+        A — Observing and responding to non-verbal cues ✅<br>
+        C — Interacting in a culturally respectful manner ✅<br>
+        B — Using jargon creates barriers, not boundaries ❌<br>
+        D — Never dismiss patient concerns ❌
+        </div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Speak kindly and with words patients can understand.</div>
+      </div>
+
+      <div class="qa">
+        <div class="q">Q4: A patient says you remind them of their child. What is occurring?</div>
+        <div class="answer-box"><div class="answer-label">✅ D — Transference</div>Transference is when a patient projects feelings from another relationship onto the practitioner. Counter-transference (A) is the opposite — when the practitioner projects their own feelings onto the patient.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>If a patient seems unusually attached or overly familiar, maintain professional boundaries and document if it becomes significant.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Principles 2-4 coming soon -->
   <div class="card" style="background:#f5f0eb;border:2px dashed #c9b89a;">
-    <div style="font-size:14px;font-weight:700;color:#7a5c42;margin-bottom:6px;">📖 Scope of Practice workbook</div>
-    <div style="font-size:13px;color:#7a6050;line-height:1.6;">3 Principles · 10 questions · Not yet started. Will be added in the next session.</div>
+    <div style="font-size:14px;font-weight:700;color:#7a5c42;margin-bottom:6px;">📖 Principles 2–4 + Person-Centred Care workbook</div>
+    <div style="font-size:13px;color:#7a6050;line-height:1.6;">To be completed in the next session.</div>
   </div>
 
 </div>
@@ -654,7 +786,7 @@ function showTab(name) {
 }
 function setNav(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { overview: 0, module1: 1, module2: 2, actions: 3 };
+  const map = { overview: 0, module1: 1, module2: 2, module3: 3, actions: 4 };
   document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
 }
 function togglePrinciple(id) {
