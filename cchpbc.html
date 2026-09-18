@@ -250,6 +250,7 @@
   <button class="nav-btn" onclick="showTab('module1')">Module 1</button>
   <button class="nav-btn" onclick="showTab('module2')">Module 2</button>
   <button class="nav-btn" onclick="showTab('module3')">Module 3</button>
+  <button class="nav-btn" onclick="showTab('module4')">Module 4</button>
   <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
 </div>
 
@@ -281,6 +282,14 @@
       <div class="module-info">
         <div class="module-name">Module 3 — Professional Boundaries & Person-Centred Care <span class="badge-pill">Complete</span></div>
         <div class="module-status">Completed Sep 18, 2026 · 2 workbooks · All principles done</div>
+      </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
+    </div>
+    <div class="module-card" onclick="showTab('module4'); setNav('module4')">
+      <div class="module-badge" style="background:#fff3e0;">🔄</div>
+      <div class="module-info">
+        <div class="module-name">Module 4 — Communication, Professionalism & Practice Environment <span class="wip-badge">In Progress</span></div>
+        <div class="module-status">Started Sep 18, 2026 · 2 workbooks · Comm & Prof complete</div>
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
@@ -993,6 +1002,193 @@
 
 </div>
 
+<!-- MODULE 4 -->
+<div class="screen" id="tab-module4">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#3a5a7a;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 4 — Communication & Professionalism</div>
+    <div style="font-size:13px;opacity:0.8;">Completed Sep 18, 2026 · 5 Principles</div>
+  </div>
+
+  <!-- Comm & Prof Principle 1 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('cp1')">
+      <h2>Comm & Prof — Principle 1: Uphold Professionalism</h2>
+      <span class="arrow" id="cp1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="cp1-body">
+      <div class="qa">
+        <div class="q">Q1: Why is monitoring and maintaining your health required?</div>
+        <div class="answer-box"><div class="answer-label">✅ B — To ensure safe practice</div>Your health directly impacts your ability to provide safe, competent care. If injured or unwell and continuing to practice, you put patients at risk.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Go to the gym regularly, eat healthy, use proper body mechanics during treatment to avoid injury, and ensure table height is appropriate for each session.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: True or False — As a licensee, you must report a colleague's unsafe behaviour to the appropriate authorities.</div>
+        <div class="answer-box"><div class="answer-label">✅ True</div>You have a duty to report unsafe behaviour by a colleague to the appropriate authorities — whether it relates to treatment or personal conduct that affects their fitness to practise.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: A treatment resulted in an undesirable outcome. What action must you take?</div>
+        <div class="answer-box"><div class="answer-label">✅ C — Accept accountability and discuss it openly with the patient</div>Blaming the patient, avoiding the conversation, or chalking it up to chance are never acceptable.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Have an open conversation with the patient about the outcome, document it in the patient record, and refer out if needed.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: What forms of abuse must you be aware of and never engage in?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Physical, sexual, emotional/psychological, and financial abuse — plus harassment and exploitation of patients. Never engage in any form.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comm & Prof Principle 2 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('cp2')">
+      <h2>Comm & Prof — Principle 2: Address Biases & Assumptions</h2>
+      <span class="arrow" id="cp2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="cp2-body">
+      <div class="qa">
+        <div class="q">Q1: Which aspects of practice may be influenced by biases, assumptions, and stereotypes? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, B, C</div>A — Types of decisions during treatment · B — Content and style of communication · C — Professional conduct during care. D (authority over the patient) is not influenced by bias — it's inherent to the therapeutic relationship.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Sometimes assumes patients have more knowledge about exercise and body mechanics than they do. Working on using simpler language and checking in to ensure understanding.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: True or False — Licensees are required to proactively identify, address and mitigate the impact of biases, assumptions, and stereotypes.</div>
+        <div class="answer-box"><div class="answer-label">✅ True</div>It's not enough to be aware — you must actively and proactively work to identify, address, and reduce their impact.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: What actions must you take to make your practice more equitable and inclusive? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, C</div>A — Research and implement inclusive practices · C — Reflect on feedback from people with disabilities. B (relying only on your own perceptions) and D (relying on old beliefs) are both wrong.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Stay up to date with inclusive practice courses, take patient feedback seriously, and proactively inform patients with disabilities of any accessibility limitations.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comm & Prof Principle 3 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('cp3')">
+      <h2>Comm & Prof — Principle 3: Safe, Respected & Supported</h2>
+      <span class="arrow" id="cp3-arrow">›</span>
+    </div>
+    <div class="principle-body" id="cp3-body">
+      <div class="qa">
+        <div class="q">Q1: Fill in the blank — As a licensee, you must establish a practice environment that is ___, and treat each patient as ___.</div>
+        <div class="answer-box"><div class="answer-label">✅ A — Safe; an individual</div>Every patient must feel safe and be treated as an individual — not a diagnosis, demographic, or stereotype.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: A patient in a wheelchair requires assistance. What must you do?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Inform the patient of accessibility limitations before their appointment. On arrival, ask how they'd like to be assisted — ensuring their comfort and dignity. Ensure you can safely assist them without risk to either party.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: A patient discloses they identify as non-binary and asks to be referred to as they/them. What must you do?</div>
+        <div class="answer-box"><div class="answer-label">✅ Use their preferred pronouns</div>Respect and use the patient's preferred pronouns (they/them) in all communication and documentation. Affirm their identity and ensure all records reflect their preferences.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: A patient discloses they have experienced racism in a health care setting. What must you do?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Listen to and acknowledge the patient's experience without dismissing it. Create a safe, welcoming, discrimination-free environment. Reflect on personal biases. Take action if any discriminatory behaviour is observed in your practice.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comm & Prof Principle 4 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('cp4')">
+      <h2>Comm & Prof — Principle 4: Clear & Respectful Communication</h2>
+      <span class="arrow" id="cp4-arrow">›</span>
+    </div>
+    <div class="principle-body" id="cp4-body">
+      <div class="qa">
+        <div class="q">Q1: True or False — You are required to take reasonable steps to accommodate a patient's language and communication needs.</div>
+        <div class="answer-box"><div class="answer-label">✅ True (Principle 4.1)</div>Take reasonable steps including use of an interpreter, communication supports, and accessibility accommodations.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: How must you communicate clinical information?</div>
+        <div class="answer-box"><div class="answer-label">✅ B — Use understandable language (Principle 4.2)</div>Communicate in a way patients can actually understand. Jargon creates barriers to informed decision-making.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: A colleague uses fear-based and pressuring language. How should licensees handle this?</div>
+        <div class="answer-box"><div class="answer-label">✅ D — Never use this language (Principle 4.3)</div>Fear-based, coercive, or pressuring language is never acceptable — in person, online, in texts, emails, virtual care. Nowhere, ever.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: What must you do to ensure language is inclusive? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, B, C, D, E — All of them (Principle 4.4)</div>Affirm and validate patient identities · Avoid stereotyping language · Ensure tone and non-verbal cues support dignity and cultural sensitivity · Adapt communication styles as needed · Seek feedback to continuously improve inclusivity.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comm & Prof Principle 5 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('cp5')">
+      <h2>Comm & Prof — Principle 5: Billing Practices</h2>
+      <span class="arrow" id="cp5-arrow">›</span>
+    </div>
+    <div class="principle-body" id="cp5-body">
+      <div class="qa">
+        <div class="q">Q1: True or False — You can accept payment for health care services not yet rendered.</div>
+        <div class="answer-box"><div class="answer-label">✅ False (Principle 5.2)</div>You cannot accept payment for services not yet rendered. Payment is only accepted after services have been provided.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: What does the standard require regarding fees?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer (Principle 5.1)</div>Fees must be fair, reasonable, accurate, and clearly displayed and explained to the patient prior to providing any service.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: You discover a billing error. What must you do?</div>
+        <div class="answer-box"><div class="answer-label">✅ C — Correct the error and document the findings, action and outcome (Principle 5.3)</div>You can't just fix it quietly — it must be on record.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: Which of the following is an example of fraudulent billing?</div>
+        <div class="answer-box"><div class="answer-label">✅ D — Billing an insurance provider a higher fee than you normally charge (Principle 5.4)</div>Also fraudulent: billing for false/misleading services or billing outside your scope of practice as if within scope.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q5: A colleague has been using your licence number to submit billing without your knowledge. What must you do?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer (Principle 5.5)</div>Accept responsibility for all billing under your licence number and immediately report the fraudulent use of your licence information to CCHPBC and appropriate authorities.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Comm & Prof Areas for Growth -->
+  <div class="card">
+    <div class="card-title">📊 Areas for Growth — Communication & Professionalism</div>
+    <div style="font-size:12px;font-weight:700;color:#388e3c;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Consistently Meeting ✅</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Billing is fair, transparent, and explained upfront</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Inclusive communication — language adapted to each patient</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Aware of and actively working on personal biases</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Accountable — open conversations with patients when outcomes not as expected</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Reports unsafe behaviour when required</div>
+    <div style="font-size:12px;font-weight:700;color:#e65100;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Areas for Growth ⚠️</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Proactively and consistently reflecting on biases — check in regularly rather than only when a situation arises</div>
+    <div style="margin-top:14px;font-size:13px;color:#7a6050;"><strong>CPD:</strong> Attend the CCHPBC Module 4 webinar on Communication & Professionalism. Stay open to bias awareness, inclusive practice, or communication-focused CPD.</div>
+  </div>
+
+  <!-- Practice Environment Header -->
+  <div class="card" style="background:#5a3a6b;color:white;margin-top:20px;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 4 — Practice Environment</div>
+    <div style="font-size:13px;opacity:0.8;">Started Sep 18, 2026 · In Progress</div>
+  </div>
+
+  <!-- Practice Environment Principle 1 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('pe1')">
+      <h2>Practice Environment — Principle 1: Licensing & Legal Requirements</h2>
+      <span class="arrow" id="pe1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="pe1-body">
+      <div class="qa">
+        <div class="q">Q1: Which requirements must you follow? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, B, C</div>A — Municipal bylaws · B — Privacy legislation (PIPA) · C — Public health directives. D (Statutory holidays) is not a regulatory requirement for your practice environment.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#f5f0eb;border:2px dashed #c9b89a;">
+    <div style="font-size:14px;font-weight:700;color:#7a5c42;margin-bottom:6px;">📖 Practice Environment — Principles 2–4</div>
+    <div style="font-size:13px;color:#7a6050;line-height:1.6;">To be completed in the next session.</div>
+  </div>
+
+</div>
+
 <!-- ACTION ITEMS -->
 <div class="screen" id="tab-actions">
 
@@ -1037,7 +1233,7 @@ function showTab(name) {
 }
 function setNav(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { overview: 0, module1: 1, module2: 2, module3: 3, actions: 4 };
+  const map = { overview: 0, module1: 1, module2: 2, module3: 3, module4: 4, actions: 5 };
   document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
 }
 function togglePrinciple(id) {
