@@ -251,6 +251,7 @@
   <button class="nav-btn" onclick="showTab('module2')">Module 2</button>
   <button class="nav-btn" onclick="showTab('module3')">Module 3</button>
   <button class="nav-btn" onclick="showTab('module4')">Module 4</button>
+  <button class="nav-btn" onclick="showTab('module5')">Module 5</button>
   <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
 </div>
 
@@ -290,6 +291,14 @@
       <div class="module-info">
         <div class="module-name">Module 4 — Communication, Professionalism & Practice Environment <span class="wip-badge">In Progress</span></div>
         <div class="module-status">Started Sep 18, 2026 · 2 workbooks · Comm & Prof complete</div>
+      </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
+    </div>
+    <div class="module-card" onclick="showTab('module5'); setNav('module5')">
+      <div class="module-badge badge-done">✅</div>
+      <div class="module-info">
+        <div class="module-name">Module 5 — Truth & Reconciliation <span class="badge-pill">Complete</span></div>
+        <div class="module-status">Completed Sep 18, 2026 · 4 Principles · Reflective</div>
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
@@ -1189,6 +1198,131 @@
 
 </div>
 
+<!-- MODULE 5 -->
+<div class="screen" id="tab-module5">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#5a3a2a;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Module 5 — Truth & Reconciliation</div>
+    <div style="font-size:13px;opacity:0.8;">Completed Sep 18, 2026 · 4 Principles · Reflective (no answer key)</div>
+  </div>
+
+  <div class="card" style="background:#fff8e8;border-left:4px solid #e0a800;">
+    <div style="font-size:13px;color:#7a5c00;line-height:1.6;"><strong>Note:</strong> This module is reflective — there are no right or wrong answers. Questions are designed to support personal reflection and your reconciliation journey.</div>
+  </div>
+
+  <!-- Principle 1 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('tr1')">
+      <h2>Principle 1 — Ongoing Education in Cultural Safety & Anti-Racism</h2>
+      <span class="arrow" id="tr1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="tr1-body">
+      <div class="qa">
+        <div class="q">Q1: How has your understanding of the history of Indigenous Peoples in Canada developed over time?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Taking more courses over time and the country’s growing collective awareness has broadened both understanding and compassion. Opportunities for further learning include continuing to seek out Indigenous-led resources, books, and perspectives.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: How do your CPD activities support your understanding of this standard?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Completed the cultural safety course through CMTBC. Also had personal conversations with my husband’s cousin, who is Indigenous, which provided real lived-experience perspective that goes beyond formal courses.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Principle 2 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('tr2')">
+      <h2>Principle 2 — Ongoing Reflective Practice</h2>
+      <span class="arrow" id="tr2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="tr2-body">
+      <div class="qa">
+        <div class="q">Q1: Do you know how to recognize bias and assumptions you hold? How do you respond when you recognize them, or observe them in others?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Able to recognize personal biases but acknowledges room to be more consistent with reflection. When recognized, works to acknowledge and actively change them. When observed in others, addresses it calmly and directly without escalating into conflict.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: How do you understand your role in advancing reconciliation in your practice?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Contributes to reconciliation by treating every patient with equal dignity regardless of background, using inclusive and respectful language, and being open to accommodating support persons or Elders if a patient requests their presence.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: In what ways do you actively identify and address Indigenous-specific racism in your practice?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Would address it directly — whether witnessed in practice or disclosed by a patient. Zero tolerance for racism or discrimination. Would know where to report it (CCHPBC).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Principle 3 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('tr3')">
+      <h2>Principle 3 — Person-Centred, Strengths-Based & Trauma-Informed Care</h2>
+      <span class="arrow" id="tr3-arrow">›</span>
+    </div>
+    <div class="principle-body" id="tr3-body">
+      <div class="qa">
+        <div class="q">Q1: How do you ensure care is respectful, strengths-based, and trauma-informed?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Open conversations with patients, checking in during treatment, adjusting approach based on feedback, and creating a safe space where patients feel comfortable speaking openly about their needs.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: How do you adapt your language and communication style to each patient?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Speak to everyone the same way — simple, plain terms rather than clinical jargon. Always ask if the patient understands and wants to proceed before moving forward.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: How do you respond when a patient requests support persons, Elders, or others be present?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Welcome support persons, family members, or Elders if the patient requests it and it can be accommodated comfortably. Patient comfort and support always comes first.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: Do you understand what appropriation means? How do you acknowledge Indigenous knowledge without appropriation?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Understands what appropriation means. Don’t pretend to be Indigenous or adopt cultural practices as your own — approach Indigenous knowledge, traditions, and beliefs with genuine respect and openness.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Principle 4 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('tr4')">
+      <h2>Principle 4 — Active Advocacy & Advancing Reconciliation</h2>
+      <span class="arrow" id="tr4-arrow">›</span>
+    </div>
+    <div class="principle-body" id="tr4-body">
+      <div class="qa">
+        <div class="q">Q1: When you witness Indigenous-specific racism, how prepared are you to act?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Would act, but acknowledges some uncertainty and discomfort about how to respond in the moment. Identified as an area for growth — building more confidence and knowledge about how to intervene and where to report.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: How do you contribute to a practice environment that prevents discriminatory practices?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Treats all patients equally, uses inclusive language, maintains zero tolerance for racism and discrimination, and would address or call it out if witnessed.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: How do you support patients and colleagues who have experienced racism?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Listens, acknowledges the experience, takes it seriously, and ensures the patient feels safe. Area for growth: building more confidence around supporting colleagues in similar situations.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: Do you know where to report Indigenous-specific racism in health care settings?</div>
+        <div class="in-practice"><div class="in-practice-label">Reflection</div>Not fully aware of all reporting channels — identified as an area for growth. Key places: CCHPBC (practicesupport@cchpbc.ca), BC Human Rights Tribunal, and internal complaints processes within a clinic or health care setting.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Areas for Growth -->
+  <div class="card">
+    <div class="card-title">📊 Areas for Growth — Truth & Reconciliation</div>
+    <div style="font-size:12px;font-weight:700;color:#388e3c;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Consistently Meeting ✅</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Treating all patients with equal dignity and respect</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Using inclusive, plain language with all patients</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Welcoming support persons and Elders when requested</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Acknowledging and addressing personal bias when recognized</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Taking racism and discrimination seriously when disclosed by patients</div>
+    <div style="font-size:12px;font-weight:700;color:#e65100;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Areas for Growth ⚠️</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Not fully confident about how to intervene when witnessing Indigenous-specific racism in the moment</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Not yet aware of all reporting channels for Indigenous-specific racism in BC health care</div>
+    <div style="margin-top:14px;font-size:13px;color:#7a6050;"><strong>Action (1–3 months):</strong> Research reporting channels. Explore Indigenous-led resources — First Nations Health Authority, H.E.A.L. Healthcare, Whose Land.</div>
+    <div style="margin-top:8px;font-size:13px;color:#7a6050;"><strong>CPD:</strong> Attend CCHPBC Module 5 webinar. Consider reading one of the recommended books from the module resource list.</div>
+  </div>
+
+</div>
+
 <!-- ACTION ITEMS -->
 <div class="screen" id="tab-actions">
 
@@ -1233,7 +1367,7 @@ function showTab(name) {
 }
 function setNav(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { overview: 0, module1: 1, module2: 2, module3: 3, module4: 4, actions: 5 };
+  const map = { overview: 0, module1: 1, module2: 2, module3: 3, module4: 4, module5: 5, actions: 6 };
   document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
 }
 function togglePrinciple(id) {
