@@ -252,6 +252,7 @@
   <button class="nav-btn" onclick="showTab('module3')">Module 3</button>
   <button class="nav-btn" onclick="showTab('module4')">Module 4</button>
   <button class="nav-btn" onclick="showTab('module5')">Module 5</button>
+  <button class="nav-btn" onclick="showTab('conclusion')">Conclusion</button>
   <button class="nav-btn" onclick="showTab('actions')">Action Items</button>
 </div>
 
@@ -299,6 +300,14 @@
       <div class="module-info">
         <div class="module-name">Module 5 — Truth & Reconciliation <span class="badge-pill">Complete</span></div>
         <div class="module-status">Completed Sep 18, 2026 · 4 Principles · Reflective</div>
+      </div>
+      <span style="color:#a07850;font-size:18px;">›</span>
+    </div>
+    <div class="module-card" onclick="showTab('conclusion'); setNav('conclusion')">
+      <div class="module-badge badge-done">✅</div>
+      <div class="module-info">
+        <div class="module-name">Conclusion Module — Knowledge Check <span class="badge-pill">Complete</span></div>
+        <div class="module-status">Completed Sep 18, 2026 · 29 practice questions</div>
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
@@ -1410,6 +1419,80 @@
 
 </div>
 
+<!-- CONCLUSION MODULE -->
+<div class="screen" id="tab-conclusion">
+
+  <div style="padding-top:8px;"></div>
+
+  <div class="card" style="background:#2e5e2e;color:white;">
+    <div style="font-size:13px;opacity:0.8;margin-bottom:4px;">CCHPBC Learning Series</div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px;">Conclusion Module — Knowledge Check Practice Questions</div>
+    <div style="font-size:13px;opacity:0.8;">Completed Sep 18, 2026 · 29 questions · All standards covered</div>
+  </div>
+
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('kc1')">
+      <h2>Questions 1–8 — Cultural Safety, Consent & Person-Centred Care</h2>
+      <span class="arrow" id="kc1-arrow">›</span>
+    </div>
+    <div class="principle-body" id="kc1-body">
+      <div class="qa"><div class="q">Q1: Which topic is least directly related to cultural safety, cultural humility, anti-discrimination and anti-racism?</div><div class="answer-box"><div class="answer-label">✅ A — Canadian Constitution</div>The Constitution sets out democratic government principles but doesn’t directly support Indigenous cultural safety or anti-racism learning.</div></div>
+      <div class="qa"><div class="q">Q2: Ongoing reflective practice must include which area?</div><div class="answer-box"><div class="answer-label">✅ D — Colonialism and trauma affecting how a person views or accesses health care</div></div></div>
+      <div class="qa"><div class="q">Q3: Which statement reflects a strengths-based approach to care?</div><div class="answer-box"><div class="answer-label">✅ A — A collaborative approach that includes a person’s existing resources</div>Strengths-based = building on what the patient already has, not focusing on deficits.</div></div>
+      <div class="qa"><div class="q">Q4: Which accurately describes “capacity” as it relates to informed consent?</div><div class="answer-box"><div class="answer-label">✅ D — The ability to understand the effects of the proposed treatment and alternatives</div>Age alone doesn’t determine capacity.</div></div>
+      <div class="qa"><div class="q">Q5: A patient reacts and pulls away during treatment. Best response?</div><div class="answer-box"><div class="answer-label">✅ D — Stop and ask if the patient wishes to modify or continue</div>Prior consent doesn’t mean ongoing consent.</div></div>
+      <div class="qa"><div class="q">Q6: Patient withdraws consent. Beyond date and withdrawal, what else must be documented?</div><div class="answer-box"><div class="answer-label">✅ B — Any concerns raised during the consent process</div></div></div>
+      <div class="qa"><div class="q">Q7: Patient expresses concerns about disrobing. How should you proceed?</div><div class="answer-box"><div class="answer-label">✅ A — Adjust care to uphold the patient’s right to retain some or all clothing</div>Never pressure a patient to disrobe.</div></div>
+      <div class="qa"><div class="q">Q8: Which term refers to “treating patients as individuals and partners in their own care”?</div><div class="answer-box"><div class="answer-label">✅ B — Person-centred care</div></div></div>
+    </div>
+  </div>
+
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('kc2')">
+      <h2>Questions 9–16 — Termination, Environment, Billing & Delegation</h2>
+      <span class="arrow" id="kc2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="kc2-body">
+      <div class="qa"><div class="q">Q9: Beyond written notice and documentation, what else is required when terminating?</div><div class="answer-box"><div class="answer-label">✅ D — Inform the patient they are entitled to a copy of their records and the process to obtain them</div></div></div>
+      <div class="qa"><div class="q">Q10: Which is grounds for immediate termination of the therapeutic relationship?</div><div class="answer-box"><div class="answer-label">✅ C — The patient makes discriminatory comments to the licensee</div>If YOU have discriminatory feelings toward a patient, you cannot terminate because of that — that would be discriminatory.</div></div>
+      <div class="qa"><div class="q">Q11: In a multidisciplinary setting, who is responsible for cleaning treatment areas?</div><div class="answer-box"><div class="answer-label">✅ A — Each licensee is individually responsible</div>Cannot delegate to reception or cleaning staff.</div></div>
+      <div class="qa"><div class="q">Q12: When are licensees required to participate in emergency preparedness drills?</div><div class="answer-box"><div class="answer-label">✅ C — As frequent as appropriate to the practice setting</div></div></div>
+      <div class="qa"><div class="q">Q13: Patient presents with symptoms of an infectious communicable disease. What else may be required beyond documentation?</div><div class="answer-box"><div class="answer-label">✅ B — Report to Public Health</div>Under the Public Health Act — you don’t automatically refuse care or notify family.</div></div>
+      <div class="qa"><div class="q">Q14: A licensee delegates a task to an unlicensed individual. What is the licensee’s responsibility?</div><div class="answer-box"><div class="answer-label">✅ D — Accountable for the outcomes of care they provide AND the care they delegate</div>Delegating doesn’t transfer responsibility.</div></div>
+      <div class="qa"><div class="q">Q15: In addition to personal biases, which factors should licensees examine?</div><div class="answer-box"><div class="answer-label">✅ A — Assumptions, stereotypes, and beliefs</div></div></div>
+      <div class="qa"><div class="q">Q16: Licensee bills based on appointment length. Which requirement must apply?</div><div class="answer-box"><div class="answer-label">✅ D — Patients must understand fees prior to receiving health services</div>Always transparency upfront.</div></div>
+    </div>
+  </div>
+
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('kc3')">
+      <h2>Questions 17–29 — Records, Advertising, Scope & Boundaries</h2>
+      <span class="arrow" id="kc3-arrow">›</span>
+    </div>
+    <div class="principle-body" id="kc3-body">
+      <div class="qa"><div class="q">Q17: Retention requirement for billing and receipt records?</div><div class="answer-box"><div class="answer-label">✅ A — 7 years</div>Billing/receipts = 7 years. Health care records = 16 years. Don’t confuse the two!</div></div>
+      <div class="qa"><div class="q">Q18: Retired licensee retains custody of patient records. What is their responsibility?</div><div class="answer-box"><div class="answer-label">✅ C — Must adhere to retention requirements in the Professional Standards</div>Retirement doesn’t exempt you.</div></div>
+      <div class="qa"><div class="q">Q19: Best way to maintain current knowledge and skill?</div><div class="answer-box"><div class="answer-label">✅ B — Participate in continuing professional development</div></div></div>
+      <div class="qa"><div class="q">Q20: Beyond cost, benefits, and delivery — what else must be communicated for informed consent?</div><div class="answer-box"><div class="answer-label">✅ A — Potential risks involved</div></div></div>
+      <div class="qa"><div class="q">Q21: Patient asks about a medication outside your scope. How do you validate while staying within scope?</div><div class="answer-box"><div class="answer-label">✅ A — Facilitate a referral to an appropriate health care practitioner</div></div></div>
+      <div class="qa"><div class="q">Q22: Which record-keeping practice applies to the hired licensee?</div><div class="answer-box"><div class="answer-label">✅ C — Document all assessments, treatments, and responses to treatment</div></div></div>
+      <div class="qa"><div class="q">Q23: How should a licensee advertise services where additional training has been obtained?</div><div class="answer-box"><div class="answer-label">✅ D — “Licensee A has training in the following areas of interest…”</div>No “advanced” or “expert” language — accurate and verifiable only.</div></div>
+      <div class="qa"><div class="q">Q24: What is true about before and after photos in advertising?</div><div class="answer-box"><div class="answer-label">✅ D — Included in the definition of testimonials and not permitted</div>Never permitted — even with patient consent.</div></div>
+      <div class="qa"><div class="q">Q25: Best alternate wording for “guaranteed results after just one use”?</div><div class="answer-box"><div class="answer-label">✅ A — “Individual results may vary”</div>Accurate, honest, no outcome guarantees.</div></div>
+      <div class="qa"><div class="q">Q26: When can a licensee use comparative language like “best clinic in town”?</div><div class="answer-box"><div class="answer-label">✅ B — Never permitted</div>Regardless of reviews, recognition, or training.</div></div>
+      <div class="qa"><div class="q">Q27: Why is the patient vulnerable when asking the licensee on a date?</div><div class="answer-box"><div class="answer-label">✅ C — The therapeutic relationship involves an inherent power imbalance</div></div></div>
+      <div class="qa"><div class="q">Q28: Most appropriate course of action when a patient asks the licensee on a date?</div><div class="answer-box"><div class="answer-label">✅ D — Re-establish professional boundaries and do not pursue a relationship</div>Referral is only required if boundaries cannot be re-established.</div></div>
+      <div class="qa"><div class="q">Q29: What is the primary professional boundary issue in the scenario?</div><div class="answer-box"><div class="answer-label">✅ D — Discussing personal details and shared interests during treatments</div>That’s the root boundary problem — where it all started.</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="background:#e8f5e9;border-left:4px solid #388e3c;">
+    <div style="font-size:16px;font-weight:700;color:#2e5e2e;margin-bottom:6px;">🎉 Learning Series Complete!</div>
+    <div style="font-size:13px;color:#2e5e2e;line-height:1.7;">All 5 modules + Conclusion Module finished. The Knowledge Check exam will be available through the CCHPBC Licensee Portal in <strong>October 2026</strong>. A minimum score of <strong>70%</strong> is required to pass.</div>
+  </div>
+
+</div>
+
 <!-- ACTION ITEMS -->
 <div class="screen" id="tab-actions">
 
@@ -1454,7 +1537,7 @@ function showTab(name) {
 }
 function setNav(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  const map = { overview: 0, module1: 1, module2: 2, module3: 3, module4: 4, module5: 5, actions: 6 };
+  const map = { overview: 0, module1: 1, module2: 2, module3: 3, module4: 4, module5: 5, conclusion: 6, actions: 7 };
   document.querySelectorAll('.nav-btn')[map[name]].classList.add('active');
 }
 function togglePrinciple(id) {
