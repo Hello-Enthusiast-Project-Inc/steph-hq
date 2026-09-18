@@ -289,8 +289,8 @@
     <div class="module-card" onclick="showTab('module4'); setNav('module4')">
       <div class="module-badge" style="background:#fff3e0;">🔄</div>
       <div class="module-info">
-        <div class="module-name">Module 4 — Communication, Professionalism & Practice Environment <span class="wip-badge">In Progress</span></div>
-        <div class="module-status">Started Sep 18, 2026 · 2 workbooks · Comm & Prof complete</div>
+        <div class="module-name">Module 4 — Communication, Professionalism & Practice Environment <span class="badge-pill">Complete</span></div>
+        <div class="module-status">Completed Sep 18, 2026 · 2 workbooks · All principles done</div>
       </div>
       <span style="color:#a07850;font-size:18px;">›</span>
     </div>
@@ -1191,9 +1191,96 @@
     </div>
   </div>
 
-  <div class="card" style="background:#f5f0eb;border:2px dashed #c9b89a;">
-    <div style="font-size:14px;font-weight:700;color:#7a5c42;margin-bottom:6px;">📖 Practice Environment — Principles 2–4</div>
-    <div style="font-size:13px;color:#7a6050;line-height:1.6;">To be completed in the next session.</div>
+  <!-- Practice Environment Principle 2 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('pe2')">
+      <h2>Practice Environment — Principle 2: Clean, Hygienic & Safe</h2>
+      <span class="arrow" id="pe2-arrow">›</span>
+    </div>
+    <div class="principle-body" id="pe2-body">
+      <div class="qa">
+        <div class="q">Q1: Which must you include in your maintenance checklist? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, B, D, E</div>A — Clean and disinfect all surfaces · B — Clean and disinfect all equipment · D — Keep free of obstacles · E — Implement IPAC practices. C (restocking magazines) is not a hygiene/safety requirement.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Room contains only necessary items. Sheets changed and surfaces cleaned and disinfected between each patient. IPAC practices followed throughout.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: Beyond a fire extinguisher and first aid kit, what else is required for emergency preparedness?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer (Principle 2.7)</div>Emergency contact numbers posted and accessible · Emergency response plan in place · Staff trained in emergency procedures · Regular inspections of emergency supplies and equipment.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Emergency supplies checked every 6 months. No formal emergency drills currently in place — identified as an area for growth. ⚠️</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: Which of the following defines an electronic recording device?</div>
+        <div class="answer-box"><div class="answer-label">✅ B — Photographic, Video, Audio</div>A cell phone qualifies as an electronic recording device since it can do all three. Important to be aware of in the treatment room.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q4: What requirements must be met to use an electronic recording device during patient care?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Obtain and document patient consent before using any electronic recording device (including cell phones) in the treatment room during patient care.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q5: True or False — You must wear a mask and gown for all patients during cold and flu season.</div>
+        <div class="answer-box"><div class="answer-label">✅ False</div>PPE requirements are determined by a point-of-care risk assessment for each patient. PPE is chosen based on the level of risk and type of care — not a blanket rule.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Environment Principle 3 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('pe3')">
+      <h2>Practice Environment — Principle 3: Contamination & Transmission Risk Assessment</h2>
+      <span class="arrow" id="pe3-arrow">›</span>
+    </div>
+    <div class="principle-body" id="pe3-body">
+      <div class="qa">
+        <div class="q">Q1: How often must you conduct a point-of-care risk assessment?</div>
+        <div class="answer-box"><div class="answer-label">✅ C — Before each patient</div>Every single patient gets their own point-of-care risk assessment before treatment begins — not once a day, every time.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Before each patient: ask if they’re feeling unwell, check for visible signs of illness, and adjust approach (PPE, treatment plan) based on risk identified.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: Equipment wasn't properly cleaned and resulted in an IPAC incident. What must you document, who must you notify, and what Act applies?</div>
+        <div class="answer-box"><div class="answer-label">✅ Standard Answer</div>Document: the incident, what happened, corrective actions taken, and outcome.<br>Notify: public health authorities and any affected patients.<br>Comply with: the <strong>Public Health Act</strong>.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Environment Principle 4 -->
+  <div class="principle">
+    <div class="principle-header" onclick="togglePrinciple('pe4')">
+      <h2>Practice Environment — Principle 4: Group Settings</h2>
+      <span class="arrow" id="pe4-arrow">›</span>
+    </div>
+    <div class="principle-body" id="pe4-body">
+      <div class="qa">
+        <div class="q">Q1: What factors must be considered before providing treatment in a group setting? Select all that apply.</div>
+        <div class="answer-box"><div class="answer-label">✅ A, B, C</div>A — Care needs · B — Health status · C — Personal circumstances. D (Licensee preferences) doesn’t factor in — it’s always about what’s best for the patient.</div>
+        <div class="in-practice"><div class="in-practice-label">In Your Practice</div>Not appropriate when the patient is uncomfortable, when privacy is needed, when treatment requires individualized attention, or when health status/personal circumstances make a group setting unsuitable.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q2: True or False — You are required to provide a private room or alternative arrangements when a patient requests privacy in a group setting.</div>
+        <div class="answer-box"><div class="answer-label">✅ True</div>Patient’s right to privacy always takes priority over the convenience of the group setting.</div>
+      </div>
+      <div class="qa">
+        <div class="q">Q3: True or False — Promoting group treatments as a social ‘treatment-party’ is permitted if all participants sign a consent form.</div>
+        <div class="answer-box"><div class="answer-label">✅ False</div>Never permitted regardless of consent forms. It compromises the quality and professionalism of care and creates privacy and boundary risks.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Practice Environment Areas for Growth -->
+  <div class="card">
+    <div class="card-title">📊 Areas for Growth — Practice Environment</div>
+    <div style="font-size:12px;font-weight:700;color:#388e3c;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Consistently Meeting ✅</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Cleaning and changing sheets between every patient</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Room kept clear of unnecessary items and obstacles</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Patient consent obtained before using electronic devices</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Point-of-care risk assessment before each patient</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>PPE chosen based on risk level</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Emergency supplies checked every 6 months</div>
+    <div class="gap-item"><div class="gap-dot dot-green"></div>Privacy always provided when requested</div>
+    <div style="font-size:12px;font-weight:700;color:#e65100;margin:16px 0 8px;text-transform:uppercase;letter-spacing:0.5px;">Areas for Growth ⚠️</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>No formal emergency drills in place</div>
+    <div class="gap-item"><div class="gap-dot dot-amber"></div>Not fully aware of IPAC incident reporting requirements under the Public Health Act</div>
+    <div style="margin-top:14px;font-size:13px;color:#7a6050;"><strong>Action (1–3 months):</strong> Set up a simple emergency response plan and run at least one informal drill. Review Public Health Act requirements around IPAC incident reporting.</div>
+    <div style="margin-top:8px;font-size:13px;color:#7a6050;"><strong>CPD:</strong> Attend CCHPBC Module 4 webinar on Practice Environment. Review BCCDC resources on IPAC best practices for massage therapy settings.</div>
   </div>
 
 </div>
